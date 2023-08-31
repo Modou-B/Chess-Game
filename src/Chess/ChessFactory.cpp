@@ -3,3 +3,7 @@
 //
 
 #include "ChessFactory.h"
+
+ChessCreator ChessFactory::createChessCreator() {
+    return ChessCreator();
+}

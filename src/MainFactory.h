@@ -10,8 +10,6 @@
 
 class MainFactory: public AbstractFactory {
 public:
-    void testFactory();
-
     ChessFacade *getChessFacade();
 };
 

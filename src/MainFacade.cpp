@@ -3,12 +3,12 @@
 //
 
 #include "MainFacade.h"
-
-
-void MainFacade::testResolver() {
-    this->getFactory()->testFactory();
-}
+#include "iostream"
 
 MainFactory* MainFacade::getFactory() {
     return static_cast<MainFactory*>(this->findFactory(typeid(MainFactory).name()));
+}
+
+void MainFacade::initializeGui(QWidget *mainWindow) {
+    this->getFactory()->getChessFacade()->createChessField(mainWindow);
 }

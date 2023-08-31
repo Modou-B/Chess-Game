@@ -8,10 +8,13 @@
 #include <string>
 #include "../Application/Facade/AbstractFacade.h"
 #include "ChessFactory.h"
+#include "typeinfo"
+
+class QWidget;
 
 class ChessFacade: public AbstractFacade {
 public:
-    std::string test();
+    void createChessField(QWidget *mainWindow);
 
     ChessFactory *getFactory() override;
 };
