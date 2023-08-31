@@ -9,9 +9,12 @@
 #include "MainFactory.h"
 #include "typeinfo"
 
+class QWidget;
+
 class MainFacade: AbstractFacade {
 public:
-    void testResolver();
+    void initializeGui(QWidget* mainWindow);
+
     MainFactory * getFactory() override;
 };
 

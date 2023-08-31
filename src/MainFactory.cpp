@@ -6,11 +6,6 @@
 #include "Chess/ChessFacade.h"
 #include "iostream"
 
-void MainFactory::testFactory() {
-
-    std::cout <<  this->getChessFacade()->test() << std::endl;
-}
-
 ChessFacade *MainFactory::getChessFacade() {
     return static_cast<ChessFacade*>(this->findFacade(typeid(ChessFacade).name()));
 }

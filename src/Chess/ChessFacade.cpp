@@ -3,9 +3,11 @@
 //
 
 #include "ChessFacade.h"
+#include "iostream"
 
-std::string ChessFacade::test() {
-    return "das ist ein Test";
+
+void ChessFacade::createChessField(QWidget *mainWindow) {
+    ChessFacade::getFactory()->createChessCreator().createChessField(mainWindow);
 }
 
 ChessFactory *ChessFacade::getFactory() {
