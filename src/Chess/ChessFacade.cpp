@@ -3,11 +3,18 @@
 //
 
 #include "ChessFacade.h"
-#include "iostream"
+#include "Model/ChessCell.h"
 
+ChessField *ChessFacade::createChessField() {
+    return ChessFacade::getFactory()->createChessCreator()->createChessField();
+}
 
-void ChessFacade::createChessField(QWidget *mainWindow) {
-    ChessFacade::getFactory()->createChessCreator().createChessField(mainWindow);
+ChessCell *ChessFacade::createChessCell(ChessCellTransfer *chessCellTransfer) {
+    return ChessFacade::getFactory()->createChessCreator()->createChessCell(chessCellTransfer);
+}
+
+BaseChessPiece *ChessFacade::createChessPiece(ChessPieceTransfer *chessPieceTransfer) {
+    return ChessFacade::getFactory()->createChessCreator()->createChessPiece(chessPieceTransfer);
 }
 
 ChessFactory *ChessFacade::getFactory() {

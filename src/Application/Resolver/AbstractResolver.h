@@ -11,9 +11,10 @@ class AbstractResolver {
 private:
     static Container* container;
 
-public:
+protected:
     Container* getContainer();
 
+public:
     static void setContainer(Container* serviceContainer);
 };
 

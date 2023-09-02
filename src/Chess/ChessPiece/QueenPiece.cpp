@@ -3,7 +3,3 @@
 //
 
 #include "QueenPiece.h"
-
-QueenPiece::QueenPiece() : BaseChessPiece("Queen") {
-}
-

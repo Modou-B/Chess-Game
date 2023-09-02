@@ -6,11 +6,11 @@
 #define CHESSAPPLICATION_MAINFACTORY_H
 
 #include "Application/Factory/AbstractFactory.h"
-#include "Chess/ChessFacade.h"
+#include "ChessGui/ChessGuiFacade.h"
 
 class MainFactory: public AbstractFactory {
 public:
-    ChessFacade *getChessFacade();
+    ChessGuiFacade *getChessGuiFacade();
 };
 
 

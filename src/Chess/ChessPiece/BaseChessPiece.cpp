@@ -8,8 +8,9 @@ void BaseChessPiece::determinePossibleMoves() {
     return;
 }
 
-BaseChessPiece::BaseChessPiece(std::string type) {
+BaseChessPiece::BaseChessPiece(std::string type, int player) {
     this->type = type;
+    this->player = player;
 }
 
 std::string BaseChessPiece::getType() {

@@ -11,7 +11,7 @@ class AbstractFactory {
 public:
     FacadeResolver getFacadeResolver();
 
-    AbstractFacade* findFacade(std::string test);
+    AbstractFacade* findFacade(std::string facadeName);
 };
 
 

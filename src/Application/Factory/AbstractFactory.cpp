@@ -8,6 +8,6 @@ FacadeResolver AbstractFactory::getFacadeResolver() {
     return FacadeResolver();
 }
 
-AbstractFacade *AbstractFactory::findFacade(std::string test) {
-    return this->getFacadeResolver().getFacadePointer(test);
+AbstractFacade *AbstractFactory::findFacade(std::string facadeName) {
+    return this->getFacadeResolver().getFacadePointer(facadeName);
 }

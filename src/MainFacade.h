@@ -15,7 +15,7 @@ class MainFacade: AbstractFacade {
 public:
     void initializeGui(QWidget* mainWindow);
 
-    MainFactory * getFactory() override;
+    MainFactory *getFactory() override;
 };
 
 

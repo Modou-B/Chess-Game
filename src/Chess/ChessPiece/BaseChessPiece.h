@@ -5,20 +5,15 @@
 #ifndef CHESSAPPLICATION_BASECHESSPIECE_H
 #define CHESSAPPLICATION_BASECHESSPIECE_H
 
-#include <utility>
 #include <string>
-
-class Chess;
 
 class BaseChessPiece {
 private:
     std::string type;
     int player;
-    int xCoordinate;
-    int yCoordinate;
     std::pair<int, int> possibleMoves[25];
 public:
-    explicit BaseChessPiece(std::string type);
+    BaseChessPiece(std::string type, int player);
 
     void determinePossibleMoves();
 

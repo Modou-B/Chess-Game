@@ -8,7 +8,8 @@
 #include "BaseChessPiece.h"
 
 class PawnPiece: public BaseChessPiece {
-
+public:
+    PawnPiece(int player);
 };
 
 
