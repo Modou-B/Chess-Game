@@ -5,8 +5,8 @@
 #include "ChessField.h"
 #include "ChessCell.h"
 
-ChessCell *ChessField::getChessCell(int xPosition, int yPosition) {
-    return this->chessField[xPosition][yPosition];
+ChessCell *ChessField::getChessCell(std::pair<int, int> coordinates) {
+    return this->chessField[coordinates.first][coordinates.second];
 }
 
 void ChessField::addChessCell(ChessCell *chessCell) {
@@ -14,3 +14,4 @@ void ChessField::addChessCell(ChessCell *chessCell) {
 
     this->chessField[coordinates.first][coordinates.second] = chessCell;
 }
+

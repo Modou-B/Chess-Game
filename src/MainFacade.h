@@ -13,6 +13,7 @@ class QWidget;
 
 class MainFacade: AbstractFacade {
 public:
+    void initializeChessGame();
     void initializeGui(QWidget* mainWindow);
 
     MainFactory *getFactory() override;

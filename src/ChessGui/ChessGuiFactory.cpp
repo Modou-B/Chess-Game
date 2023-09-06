@@ -11,4 +11,3 @@ ChessGuiRenderer *ChessGuiFactory::createChessGuiRenderer() {
 ChessFacade *ChessGuiFactory::getChessFacade() {
     return static_cast<ChessFacade*>(this->findFacade(typeid(ChessFacade).name()));
 }
-

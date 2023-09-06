@@ -5,14 +5,15 @@
 #ifndef CHESSAPPLICATION_CHESSFIELD_H
 #define CHESSAPPLICATION_CHESSFIELD_H
 
+#include <utility>
+
 class ChessCell;
 
 class ChessField {
 private:
     ChessCell *chessField[8][8];
-
 public:
-    ChessCell *getChessCell(int xPosition, int yPosition);
+    ChessCell *getChessCell(std::pair<int, int> coordinates);
 
     void addChessCell(ChessCell *chessCell);
 };

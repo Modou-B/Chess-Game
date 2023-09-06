@@ -7,8 +7,6 @@
 
 
 class QWidget;
-class ChessCell;
-class ChessField;
 class QGridLayout;
 class ChessFacade;
 
@@ -19,9 +17,9 @@ private:
 protected:
     QGridLayout *createChessGridLayout(QWidget *mainWindow);
 
-    void fillFieldWithEmptyCells(QGridLayout *layout, ChessField *chessFieldModel);
+    void fillFieldWithEmptyCells(QGridLayout *layout);
 
-    void addPawnsToCells(ChessField *chessFieldModel);
+    void addPawnsToCells(QGridLayout *layout);
 
 public:
     explicit ChessGuiRenderer(ChessFacade *chessFacade);

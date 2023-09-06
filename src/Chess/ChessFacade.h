@@ -17,11 +17,7 @@ class ChessPieceTransfer;
 
 class ChessFacade: public AbstractFacade {
 public:
-    ChessField *createChessField();
-
-    ChessCell *createChessCell(ChessCellTransfer *chessCellTransfer);
-
-    BaseChessPiece *createChessPiece(ChessPieceTransfer *chessPieceTransfer);
+    void initiateChessGame();
 
     ChessFactory *getFactory() override;
 };

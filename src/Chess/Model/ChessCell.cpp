@@ -4,17 +4,47 @@
 
 #include "ChessCell.h"
 
-ChessCell::ChessCell(ChessField *chessFieldModel, BaseChessPiece *chessPiece, std::pair<int, int> coordinates) {
-    this->chessFieldModel = chessFieldModel;
+ChessCell::ChessCell(BaseChessPiece *chessPiece, std::pair<int, int> coordinates) {
     this->chessPiece = chessPiece;
     this->coordinates = coordinates;
-    // Connect button signal to appropriate slot
-    this->connect(this, &QPushButton::released, this, &ChessCell::handleButton);
 }
 
-void ChessCell::handleButton() {
+void ChessCell::handleCellClick() {
+    /*
+    std::cout << this->chessFieldModel->wasCellWithChessPieceClicked() << std::endl;
 
-    exit(1);
+    if (!this->chessFieldModel->wasCellWithChessPieceClicked() && this->chessPiece) {
+        this->chessFieldModel->toggleCellWithChessPieceClickedValue();
+
+        this->chessFieldModel->setPreviouslyClickedCellCoordinates(this->coordinates);
+
+        return;
+    }
+
+    if (this->chessFieldModel->wasCellWithChessPieceClicked()) {
+        std::cout << "this->chessFieldModel->wasCellWithChessPieceClicked()" << std::endl;
+
+        auto previouslyClickedCellCoordinates = this->chessFieldModel->getPreviouslyClickedCellCoordinates();
+        auto previousChessCell = this->chessFieldModel->getChessCell(
+                previouslyClickedCellCoordinates.first,
+                previouslyClickedCellCoordinates.second
+        );
+
+        this->chessPiece = previousChessCell->getChessPiece();
+
+
+        auto *chessCell = new ChessCell(
+                nullptr,
+                nullptr,
+        previouslyClickedCellCoordinates);
+
+        this->chessFieldModel->getGridLayout()->addWidget(previousChessCell, this->getCoordinates().first, this->getCoordinates().second);
+        this->chessFieldModel->getGridLayout()->addWidget(chessCell, previousChessCell->getCoordinates().first, previousChessCell->getCoordinates().second);
+
+        this->chessFieldModel->toggleCellWithChessPieceClickedValue();
+    }
+*/
+    return;
 }
 
 void ChessCell::setChessPiece(BaseChessPiece *baseChessPiece) {
@@ -23,4 +53,8 @@ void ChessCell::setChessPiece(BaseChessPiece *baseChessPiece) {
 
 std::pair<int, int> ChessCell::getCoordinates() {
     return this->coordinates;
+}
+
+BaseChessPiece *ChessCell::getChessPiece() {
+    return this->chessPiece;
 }

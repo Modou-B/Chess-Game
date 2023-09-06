@@ -7,3 +7,7 @@
 ChessCreator *ChessFactory::createChessCreator() {
     return new ChessCreator();
 }
+
+GameApplicationManager *ChessFactory::createGameApplicationManager() {
+    return new GameApplicationManager(this->createChessCreator());
+}
