@@ -12,6 +12,7 @@ int main(int argc, char *argv[]) {
     MainFacade mainFacade = MainFacade();
     QWidget *window = new QWidget;
 
+    mainFacade.initializeChessGame();
     mainFacade.initializeGui(window);
 
     window->show();
