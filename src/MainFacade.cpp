@@ -3,12 +3,16 @@
 //
 
 #include "MainFacade.h"
-#include "iostream"
+
+void MainFacade::initializeGui(QWidget *mainWindow) {
+    this->getFactory()->getChessGuiFacade()->initializeChessField(mainWindow);
+}
 
 MainFactory* MainFacade::getFactory() {
     return static_cast<MainFactory*>(this->findFactory(typeid(MainFactory).name()));
 }
 
-void MainFacade::initializeGui(QWidget *mainWindow) {
-    this->getFactory()->getChessFacade()->createChessField(mainWindow);
+void MainFacade::initializeChessGame() {
+    this->getFactory()->getChessFacade()->initiateChessGame();
 }
+

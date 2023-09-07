@@ -3,3 +3,7 @@
 //
 
 #include "PawnPiece.h"
+
+PawnPiece::PawnPiece(int player): BaseChessPiece("Pawn", player) {
+
+}

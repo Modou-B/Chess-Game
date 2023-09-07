@@ -5,17 +5,25 @@
 #ifndef CHESSAPPLICATION_CHESSCELL_H
 #define CHESSAPPLICATION_CHESSCELL_H
 
-#include <QPushButton>
-#include "../ChessPiece//BaseChessPiece.h"
+#include <utility>
 
-class ChessCell: public QPushButton {
+class BaseChessPiece;
+
+class ChessCell {
 private:
     BaseChessPiece *chessPiece;
+    std::pair<int, int> coordinates;
 
 public:
-    explicit ChessCell(BaseChessPiece* chessPiece);
+    ChessCell(BaseChessPiece* chessPiece, std::pair<int, int> coordinates);
 
-    void handleButton();
+    void handleCellClick();
+
+    void setChessPiece(BaseChessPiece *baseChessPiece);
+
+    std::pair<int, int> getCoordinates();
+
+    BaseChessPiece *getChessPiece();
 };
 
 
