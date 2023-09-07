@@ -48,27 +48,63 @@ void ChessCreator::fillFieldWithEmptyCells(ChessField *chessField) {
 void ChessCreator::addChessPiecesToFieldCells(ChessField *chessField) {
     this->fillFieldWithPawns(chessField);
     this->fillFieldWithQueens(chessField);
+    this->fillFieldWithKings(chessField);
+    this->fillFieldWithBishops(chessField);
+    this->fillFieldWithKnights(chessField);
+    this->fillFieldWithRooks(chessField);
+}
+
+void ChessCreator::fillFieldWithPieces(ChessField *chessField, std::string pieceType, int player, int row, int column) {
+        std::pair<int, int> rowCoordinates = std::make_pair(row, column);
+        auto *piecePlayer = this->createChessPiece(pieceType, player);
+
+        ChessCell *rowChessCell = chessField->getChessCell(rowCoordinates);
+        rowChessCell->setChessPiece(piecePlayer);
 }
 
 void ChessCreator::fillFieldWithPawns(ChessField *chessField) {
     for (int i = 0; i < 8; i++) {
-        std::pair<int, int> topRowCoordinates = std::make_pair(1, i);
-        std::pair<int, int> bottomRowCoordinates = std::make_pair(6, i);
-
-        auto *pawnPiecePlayer1 = this->createChessPiece(ChessConstants::PAWN_PIECE_TYPE, 1);
-        auto *pawnPiecePlayer2 = this->createChessPiece(ChessConstants::PAWN_PIECE_TYPE, 2);
-
-        ChessCell *topRowChessCell = chessField->getChessCell(topRowCoordinates);
-        ChessCell *bottomRowChessCell = chessField->getChessCell(bottomRowCoordinates);
-
-        topRowChessCell->setChessPiece(pawnPiecePlayer2);
-        bottomRowChessCell->setChessPiece(pawnPiecePlayer1);
+        fillFieldWithPieces(chessField, ChessConstants::PAWN_PIECE_TYPE, 1, 1, i);
+        fillFieldWithPieces(chessField, ChessConstants::PAWN_PIECE_TYPE, 2, 6,i);
     }
 }
 
 void ChessCreator::fillFieldWithQueens(ChessField *chessField) {
-    return;
+    fillFieldWithPieces(chessField, ChessConstants::QUEEN_PIECE_TYPE, 1, 0, 3);
+    fillFieldWithPieces(chessField, ChessConstants::QUEEN_PIECE_TYPE, 2, 7, 3);
 }
+
+void ChessCreator::fillFieldWithKings(ChessField *chessField) {
+    fillFieldWithPieces(chessField, ChessConstants::KING_PIECE_TYPE, 1, 0, 4);
+    fillFieldWithPieces(chessField, ChessConstants::KING_PIECE_TYPE, 2, 7, 4);
+}
+
+void ChessCreator::fillFieldWithBishops(ChessField *chessField) {
+    fillFieldWithPieces(chessField, ChessConstants::BISHOP_PIECE_TYPE, 1, 0, 3);
+    fillFieldWithPieces(chessField, ChessConstants::BISHOP_PIECE_TYPE, 1, 0, 5);
+
+    fillFieldWithPieces(chessField, ChessConstants::BISHOP_PIECE_TYPE, 2, 7, 3);
+    fillFieldWithPieces(chessField, ChessConstants::BISHOP_PIECE_TYPE, 2, 7, 5);
+}
+
+void ChessCreator::fillFieldWithKnights(ChessField *chessField) {
+    fillFieldWithPieces(chessField, ChessConstants::KNIGHT_PIECE_TYPE, 1, 0, 1);
+    fillFieldWithPieces(chessField, ChessConstants::KNIGHT_PIECE_TYPE, 1, 0, 6);
+
+    fillFieldWithPieces(chessField, ChessConstants::KNIGHT_PIECE_TYPE, 2, 7, 1);
+    fillFieldWithPieces(chessField, ChessConstants::KNIGHT_PIECE_TYPE, 2, 7, 6);
+}
+
+void ChessCreator::fillFieldWithRooks(ChessField *chessField) {
+    fillFieldWithPieces(chessField, ChessConstants::ROOK_PIECE_TYPE, 1, 0, 0);
+    fillFieldWithPieces(chessField, ChessConstants::ROOK_PIECE_TYPE, 1, 0, 7);
+
+    fillFieldWithPieces(chessField, ChessConstants::ROOK_PIECE_TYPE, 2, 7, 0);
+    fillFieldWithPieces(chessField, ChessConstants::ROOK_PIECE_TYPE, 2, 7, 7);
+}
+
+
+
 
 
 

@@ -26,6 +26,12 @@ public:
 
     void fillFieldWithPawns(ChessField *chessField);
     void fillFieldWithQueens(ChessField *chessField);
+    void fillFieldWithKings(ChessField *chessField);
+    void fillFieldWithBishops(ChessField *chessField);
+    void fillFieldWithKnights(ChessField *chessField);
+    void fillFieldWithRooks(ChessField *chessField);
+    void fillFieldWithPieces(ChessField *chessField, std::string pieceType, int player, int row, int column);
+
 };
 
 #endif //CHESSAPPLICATION_CHESSCREATOR_H
