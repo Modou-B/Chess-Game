@@ -10,7 +10,6 @@
 
 class QueenPiece: public BaseChessPiece {
 public:
-    QueenPiece();
 };
 
 

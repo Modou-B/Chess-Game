@@ -8,13 +8,16 @@
 #include <string>
 #include "../Application/Facade/AbstractFacade.h"
 #include "ChessFactory.h"
-#include "typeinfo"
 
-class QWidget;
+class ChessCell;
+class ChessField;
+class BaseChessPiece;
+class ChessCellTransfer;
+class ChessPieceTransfer;
 
 class ChessFacade: public AbstractFacade {
 public:
-    void createChessField(QWidget *mainWindow);
+    void initiateChessGame();
 
     ChessFactory *getFactory() override;
 };

@@ -3,13 +3,12 @@
 //
 
 #include "ChessFacade.h"
-#include "iostream"
-
-
-void ChessFacade::createChessField(QWidget *mainWindow) {
-    ChessFacade::getFactory()->createChessCreator().createChessField(mainWindow);
-}
+#include "Model/ChessCell.h"
 
 ChessFactory *ChessFacade::getFactory() {
     return static_cast<ChessFactory*>(this->findFactory(typeid(ChessFactory).name()));
+}
+
+void ChessFacade::initiateChessGame() {
+    ChessFacade::getFactory()->createGameApplicationManager()->initiateChessApplication();
 }

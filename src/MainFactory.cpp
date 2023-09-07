@@ -3,8 +3,10 @@
 //
 
 #include "MainFactory.h"
-#include "Chess/ChessFacade.h"
-#include "iostream"
+
+ChessGuiFacade *MainFactory::getChessGuiFacade() {
+    return static_cast<ChessGuiFacade*>(this->findFacade(typeid(ChessGuiFacade).name()));
+}
 
 ChessFacade *MainFactory::getChessFacade() {
     return static_cast<ChessFacade*>(this->findFacade(typeid(ChessFacade).name()));

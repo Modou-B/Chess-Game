@@ -6,11 +6,14 @@
 #define CHESSAPPLICATION_CHESSFACTORY_H
 
 #include "../Application/Factory/AbstractFactory.h"
-#include "ChessCreator/ChessCreator.h"
+#include "Creator/ChessCreator.h"
+#include "GameApplication/GameApplicationManager.h"
 
 class ChessFactory: public AbstractFactory {
 public:
-    ChessCreator createChessCreator();
+    ChessCreator *createChessCreator();
+
+    GameApplicationManager *createGameApplicationManager();
 };
 
 
