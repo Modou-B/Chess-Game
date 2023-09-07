@@ -20,6 +20,11 @@ void ChessGuiRenderer::createChessField(QWidget *mainWindow) {
 
     this->fillFieldWithEmptyCells(layout);
     this->addPawnsToCells(layout);
+    this->addQueensToCells(layout);
+    this->addKingsToCells(layout);
+    this->addBishopsToCells(layout);
+    this->addKnightsToCells(layout);
+    this->addRooksToCells(layout);
 }
 
 
@@ -54,17 +59,49 @@ void ChessGuiRenderer::fillFieldWithEmptyCells(QGridLayout *layout) {
 
     layout->setSpacing(0);
 }
+void ChessGuiRenderer::addChessPieceToCells(QGridLayout *layout, std::string pieceType, int row, int column) {
+    QString str = QString::fromStdString(pieceType);
+
+    ChessGuiCell *chessGuiCell = static_cast<ChessGuiCell*>(layout->itemAtPosition(row, column)->widget());
+    chessGuiCell->setText(str);
+}
 
 
 void ChessGuiRenderer::addPawnsToCells(QGridLayout *layout) {
     for (int i = 0; i < 8; i++) {
-        QString str = QString::fromStdString(ChessConstants::PAWN_PIECE_TYPE);
-
-        ChessGuiCell *chessGuiTopCell = static_cast<ChessGuiCell*>(layout->itemAtPosition(1, i)->widget());
-        ChessGuiCell *chessGuiBottomCell = static_cast<ChessGuiCell*>(layout->itemAtPosition(6, i)->widget());
-
-        chessGuiTopCell->setText(str);
-        chessGuiBottomCell->setText(str);
+        addChessPieceToCells(layout, ChessConstants::PAWN_PIECE_TYPE, 1, i);
+        addChessPieceToCells(layout, ChessConstants::PAWN_PIECE_TYPE, 6, i);
     }
+}
+
+void ChessGuiRenderer::addQueensToCells(QGridLayout *layout) {
+    addChessPieceToCells(layout, ChessConstants::QUEEN_PIECE_TYPE, 0, 3);
+    addChessPieceToCells(layout, ChessConstants::QUEEN_PIECE_TYPE, 7, 3);
+}
+
+void ChessGuiRenderer::addKingsToCells(QGridLayout *layout) {
+    addChessPieceToCells(layout, ChessConstants::KING_PIECE_TYPE, 0, 4);
+    addChessPieceToCells(layout, ChessConstants::KING_PIECE_TYPE, 7, 4);
+}
+
+void ChessGuiRenderer::addBishopsToCells(QGridLayout *layout) {
+    addChessPieceToCells(layout, ChessConstants::BISHOP_PIECE_TYPE, 0, 2);
+    addChessPieceToCells(layout, ChessConstants::BISHOP_PIECE_TYPE, 0, 5);
+    addChessPieceToCells(layout, ChessConstants::BISHOP_PIECE_TYPE, 7, 2);
+    addChessPieceToCells(layout, ChessConstants::BISHOP_PIECE_TYPE, 7, 5);
+}
+
+void ChessGuiRenderer::addKnightsToCells(QGridLayout *layout) {
+    addChessPieceToCells(layout, ChessConstants::KNIGHT_PIECE_TYPE, 0, 1);
+    addChessPieceToCells(layout, ChessConstants::KNIGHT_PIECE_TYPE, 0, 6);
+    addChessPieceToCells(layout, ChessConstants::KNIGHT_PIECE_TYPE, 7, 1);
+    addChessPieceToCells(layout, ChessConstants::KNIGHT_PIECE_TYPE, 7, 6);
+}
+
+void ChessGuiRenderer::addRooksToCells(QGridLayout *layout) {
+    addChessPieceToCells(layout, ChessConstants::ROOK_PIECE_TYPE, 0, 0);
+    addChessPieceToCells(layout, ChessConstants::ROOK_PIECE_TYPE, 0, 7);
+    addChessPieceToCells(layout, ChessConstants::ROOK_PIECE_TYPE, 7, 0);
+    addChessPieceToCells(layout, ChessConstants::ROOK_PIECE_TYPE, 7, 7);
 }
 

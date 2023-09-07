@@ -5,6 +5,7 @@
 #ifndef CHESSAPPLICATION_CHESSGUIRENDERER_H
 #define CHESSAPPLICATION_CHESSGUIRENDERER_H
 
+#include <string>
 
 class QWidget;
 class QGridLayout;
@@ -20,6 +21,12 @@ protected:
     void fillFieldWithEmptyCells(QGridLayout *layout);
 
     void addPawnsToCells(QGridLayout *layout);
+    void addQueensToCells(QGridLayout *layout);
+    void addKingsToCells(QGridLayout *layout);
+    void addBishopsToCells(QGridLayout *layout);
+    void addKnightsToCells(QGridLayout *layout);
+    void addRooksToCells(QGridLayout *layout);
+    void addChessPieceToCells(QGridLayout *layout, std::string pieceType, int row, int column);
 
 public:
     explicit ChessGuiRenderer(ChessFacade *chessFacade);
