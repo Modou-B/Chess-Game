@@ -10,6 +10,7 @@
 class QWidget;
 class QGridLayout;
 class ChessFacade;
+class QIcon;
 
 class ChessGuiRenderer {
 private:
@@ -26,8 +27,9 @@ protected:
     void addBishopsToCells(QGridLayout *layout);
     void addKnightsToCells(QGridLayout *layout);
     void addRooksToCells(QGridLayout *layout);
-    void addChessPieceToCells(QGridLayout *layout, std::string pieceType, int row, int column);
+    void addChessPieceToCells(QGridLayout *layout, QIcon icon, int column, int row);
 
+    QIcon createIconFromFile(std::string fileName);
 public:
     explicit ChessGuiRenderer(ChessFacade *chessFacade);
 

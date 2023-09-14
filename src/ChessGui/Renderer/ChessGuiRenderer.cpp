@@ -6,10 +6,13 @@
 #include <QGridLayout>
 #include "../Chess/ChessFacade.h"
 #include "../Shared/Chess/ChessConstants.h"
+#include "../Shared/ChessGui/ChessGuiConstants.h"
 #include "../Model/ChessGuiCell.h"
 #include "QWidget"
-#include "QLayoutItem"
 #include <utility>
+#include "QImage"
+#include "QPainter"
+#include <filesystem>
 
 ChessGuiRenderer::ChessGuiRenderer(ChessFacade *chessFacade) {
     this->chessFacade = chessFacade;
@@ -41,9 +44,9 @@ void ChessGuiRenderer::fillFieldWithEmptyCells(QGridLayout *layout) {
             ChessGuiCell *chessGuiCell = new ChessGuiCell(layout, this->chessFacade, coordinates);
 
             if (j % 2 - counter == 0) {
-                chessGuiCell->setCellColor(Qt::black);
+                chessGuiCell->setCellColor(ChessGuiConstants::CELL_YELLOW_COLOR);
             } else {
-                chessGuiCell->setCellColor(Qt::white);
+                chessGuiCell->setCellColor(ChessGuiConstants::CELL_GREEN_COLOR);
             }
 
             chessGuiCell->setBaseCellSize();
@@ -59,49 +62,58 @@ void ChessGuiRenderer::fillFieldWithEmptyCells(QGridLayout *layout) {
 
     layout->setSpacing(0);
 }
-void ChessGuiRenderer::addChessPieceToCells(QGridLayout *layout, std::string pieceType, int row, int column) {
-    QString str = QString::fromStdString(pieceType);
-
+void ChessGuiRenderer::addChessPieceToCells(QGridLayout *layout, QIcon icon, int row, int column) {
     ChessGuiCell *chessGuiCell = static_cast<ChessGuiCell*>(layout->itemAtPosition(row, column)->widget());
-    chessGuiCell->setText(str);
+
+    chessGuiCell->setIcon(icon);
+    chessGuiCell->setIconSize(QSize(50, 50));
 }
 
 
 void ChessGuiRenderer::addPawnsToCells(QGridLayout *layout) {
+
     for (int i = 0; i < 8; i++) {
-        addChessPieceToCells(layout, ChessConstants::PAWN_PIECE_TYPE, 1, i);
-        addChessPieceToCells(layout, ChessConstants::PAWN_PIECE_TYPE, 6, i);
+        this->addChessPieceToCells(layout, this->createIconFromFile(ChessConstants::BLACK_PAWN_PIECE_FILENAME), 1, i);
+        this->addChessPieceToCells(layout, this->createIconFromFile(ChessConstants::WHITE_PAWN_PIECE_FILENAME), 6, i);
     }
 }
 
 void ChessGuiRenderer::addQueensToCells(QGridLayout *layout) {
-    addChessPieceToCells(layout, ChessConstants::QUEEN_PIECE_TYPE, 0, 3);
-    addChessPieceToCells(layout, ChessConstants::QUEEN_PIECE_TYPE, 7, 3);
+    this->addChessPieceToCells(layout, this->createIconFromFile(ChessConstants::BLACK_QUEEN_PIECE_FILENAME), 0, 3);
+    this->addChessPieceToCells(layout, this->createIconFromFile(ChessConstants::WHITE_QUEEN_PIECE_FILENAME), 7, 3);
 }
 
 void ChessGuiRenderer::addKingsToCells(QGridLayout *layout) {
-    addChessPieceToCells(layout, ChessConstants::KING_PIECE_TYPE, 0, 4);
-    addChessPieceToCells(layout, ChessConstants::KING_PIECE_TYPE, 7, 4);
+    this->addChessPieceToCells(layout, this->createIconFromFile(ChessConstants::BLACK_KING_PIECE_FILENAME), 0, 4);
+    this->addChessPieceToCells(layout, this->createIconFromFile(ChessConstants::WHITE_KING_PIECE_FILENAME), 7, 4);
 }
 
 void ChessGuiRenderer::addBishopsToCells(QGridLayout *layout) {
-    addChessPieceToCells(layout, ChessConstants::BISHOP_PIECE_TYPE, 0, 2);
-    addChessPieceToCells(layout, ChessConstants::BISHOP_PIECE_TYPE, 0, 5);
-    addChessPieceToCells(layout, ChessConstants::BISHOP_PIECE_TYPE, 7, 2);
-    addChessPieceToCells(layout, ChessConstants::BISHOP_PIECE_TYPE, 7, 5);
+    this->addChessPieceToCells(layout, this->createIconFromFile(ChessConstants::BLACK_BISHOP_PIECE_FILENAME), 0, 2);
+    this->addChessPieceToCells(layout, this->createIconFromFile(ChessConstants::BLACK_BISHOP_PIECE_FILENAME), 0, 5);
+    this->addChessPieceToCells(layout, this->createIconFromFile(ChessConstants::WHITE_BISHOP_PIECE_FILENAME), 7, 2);
+    this->addChessPieceToCells(layout, this->createIconFromFile(ChessConstants::WHITE_BISHOP_PIECE_FILENAME), 7, 5);
 }
 
 void ChessGuiRenderer::addKnightsToCells(QGridLayout *layout) {
-    addChessPieceToCells(layout, ChessConstants::KNIGHT_PIECE_TYPE, 0, 1);
-    addChessPieceToCells(layout, ChessConstants::KNIGHT_PIECE_TYPE, 0, 6);
-    addChessPieceToCells(layout, ChessConstants::KNIGHT_PIECE_TYPE, 7, 1);
-    addChessPieceToCells(layout, ChessConstants::KNIGHT_PIECE_TYPE, 7, 6);
+    this->addChessPieceToCells(layout, this->createIconFromFile(ChessConstants::BLACK_KNIGHT_PIECE_FILENAME), 0, 1);
+    this->addChessPieceToCells(layout, this->createIconFromFile(ChessConstants::BLACK_KNIGHT_PIECE_FILENAME), 0, 6);
+    this->addChessPieceToCells(layout, this->createIconFromFile(ChessConstants::WHITE_KNIGHT_PIECE_FILENAME), 7, 1);
+    this->addChessPieceToCells(layout, this->createIconFromFile(ChessConstants::WHITE_KNIGHT_PIECE_FILENAME), 7, 6);
 }
 
 void ChessGuiRenderer::addRooksToCells(QGridLayout *layout) {
-    addChessPieceToCells(layout, ChessConstants::ROOK_PIECE_TYPE, 0, 0);
-    addChessPieceToCells(layout, ChessConstants::ROOK_PIECE_TYPE, 0, 7);
-    addChessPieceToCells(layout, ChessConstants::ROOK_PIECE_TYPE, 7, 0);
-    addChessPieceToCells(layout, ChessConstants::ROOK_PIECE_TYPE, 7, 7);
+    this->addChessPieceToCells(layout, this->createIconFromFile(ChessConstants::BLACK_ROOK_PIECE_FILENAME), 0, 0);
+    this->addChessPieceToCells(layout, this->createIconFromFile(ChessConstants::BLACK_ROOK_PIECE_FILENAME), 0, 7);
+    this->addChessPieceToCells(layout, this->createIconFromFile(ChessConstants::WHITE_ROOK_PIECE_FILENAME), 7, 0);
+    this->addChessPieceToCells(layout, this->createIconFromFile(ChessConstants::WHITE_ROOK_PIECE_FILENAME), 7, 7);
+}
+
+QIcon ChessGuiRenderer::createIconFromFile(std::string fileName) {
+    std::string pathToFile = std::filesystem::current_path();
+    pathToFile.append("/../../public/");
+    pathToFile.append(fileName);
+
+    return QIcon(QString::fromStdString(pathToFile));
 }
 

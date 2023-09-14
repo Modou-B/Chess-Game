@@ -1,6 +1,7 @@
 file(GLOB_RECURSE SOURCES
         *.h
         *.cpp
+        *.png
         )
 
 add_library(ChessGuiLib
