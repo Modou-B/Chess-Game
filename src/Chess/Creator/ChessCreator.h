@@ -30,7 +30,7 @@ public:
     void fillFieldWithBishops(ChessField *chessField);
     void fillFieldWithKnights(ChessField *chessField);
     void fillFieldWithRooks(ChessField *chessField);
-    void fillFieldWithPieces(ChessField *chessField, std::string pieceType, int player, int row, int column);
+    void fillFieldWithPieces(ChessField *chessField, std::string pieceType, int player, int column, int row);
 
 };
 

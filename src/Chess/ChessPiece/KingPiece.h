@@ -8,7 +8,14 @@
 #include "BaseChessPiece.h"
 
 class KingPiece: public BaseChessPiece {
+protected:
+    std::vector<std::pair<int, int>> checkHorizontalMovement(
+            ChessField *chessField, std::vector<std::pair<int, int>> possibleMoves, int xCoordinate, int yCoordinate);
+public:
+    KingPiece(int player);
 
+    std::vector<std::pair<int, int>> determinePossibleMovesForSpecificPiece(
+            ChessField *chessField, std::vector<std::pair<int, int>> possibleMoves, int xCoordinate, int yCoordinate) override;
 };
 
 

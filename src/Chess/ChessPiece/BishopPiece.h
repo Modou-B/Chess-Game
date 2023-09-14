@@ -8,7 +8,11 @@
 #include "BaseChessPiece.h"
 
 class BishopPiece: public BaseChessPiece {
+public:
+    BishopPiece(int player);
 
+    std::vector<std::pair<int, int>> determinePossibleMovesForSpecificPiece(
+            ChessField *chessField, std::vector<std::pair<int, int>> possibleMoves, int xCoordinate, int yCoordinate) override;
 };
 
 
