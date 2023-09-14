@@ -4,6 +4,7 @@
 
 #include "ChessFacade.h"
 #include "Model/ChessCell.h"
+#include "../Shared/Chess/Transfer/ChessMovementResponseTransfer.h"
 
 ChessFactory *ChessFacade::getFactory() {
     return static_cast<ChessFactory*>(this->findFactory(typeid(ChessFactory).name()));
@@ -11,4 +12,8 @@ ChessFactory *ChessFacade::getFactory() {
 
 void ChessFacade::initiateChessGame() {
     ChessFacade::getFactory()->createGameApplicationManager()->initiateChessApplication();
+}
+
+ChessMovementResponseTransfer ChessFacade::handleChessMovement(std::pair<int, int> currentCellCoordinates) {
+    return ChessFacade::getFactory()->createGameApplicationManager()->handleChessMovement(currentCellCoordinates);
 }

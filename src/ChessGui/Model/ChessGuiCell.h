@@ -7,9 +7,11 @@
 
 #include <QPushButton>
 #include <utility>
+#include <string>
 
 class ChessFacade;
 class QGridLayout;
+class ChessMovementResponseTransfer;
 
 class ChessGuiCell: public QPushButton {
 private:
@@ -19,16 +21,19 @@ private:
     std::pair<int, int> coordinates;
 
     Qt::GlobalColor currentColor;
+
 public:
     ChessGuiCell(QGridLayout *gridLayout, ChessFacade *chessFacade, std::pair<int, int> coordinates);
 
     void handleCellClick();
+    void handleChessPieceMovement(ChessMovementResponseTransfer chessMovementResponseTransfer);
 
     Qt::GlobalColor getCellColor();
     QGridLayout *getGridLayout();
 
     void setBaseCellSize();
-    void setCellColor(Qt::GlobalColor color);
+    void setCellColor(QColor color);
+    void setChessPiece(std::string pieceType);
 };
 
 
