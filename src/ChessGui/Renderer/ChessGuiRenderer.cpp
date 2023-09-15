@@ -70,7 +70,7 @@ void ChessGuiRenderer::addChessPieceToCells(QGridLayout *layout, std::string ico
 
     auto icon = this->chessGuiPieceIconGenerator->generateIconFromFile(iconFileName);
 
-    chessGuiCell->setIcon(icon);
+    chessGuiCell->setChessPieceIcon(ChessGuiConstants::STATE_REAL_CHESS_PIECE_ICON, icon);
     chessGuiCell->setIconSize(QSize(50, 50));
     chessGuiCell->setChessPieceType(pieceType);
 }

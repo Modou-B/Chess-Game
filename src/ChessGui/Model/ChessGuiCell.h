@@ -13,6 +13,7 @@ class ChessFacade;
 class QGridLayout;
 class ChessMovementResponseTransfer;
 class ChessGuiPieceIconGenerator;
+class QIcon;
 
 class ChessGuiCell: public QPushButton {
 private:
@@ -25,6 +26,8 @@ private:
     Qt::GlobalColor currentColor;
 
     std::string chessPieceType;
+    std::string chessPieceIconState;
+
 public:
     ChessGuiCell(QGridLayout *gridLayout, ChessFacade *chessFacade, std::pair<int, int> coordinates, ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator);
 
@@ -33,6 +36,8 @@ public:
 
     Qt::GlobalColor getCellColor();
     QGridLayout *getGridLayout();
+    std::string getChessPieceIconState();
+    std::string getChessPieceType();
 
     void setBaseCellSize();
     void setCellColor(QColor color);
@@ -40,6 +45,8 @@ public:
 
     void renderPossibleMovesForPiece(ChessMovementResponseTransfer chessMovementResponseTransfer);
     void clearPossibleMovesForPreviousPieceClick(ChessMovementResponseTransfer chessMovementResponseTransfer);
+
+    void setChessPieceIcon(std::string iconState, QIcon chessPieceIcon);
 };
 
 
