@@ -17,10 +17,8 @@ class GameApplicationManager {
 private:
     ChessCreator *chessCreator;
 
+    static std::vector<std::pair<int, int>> previousPossibleMovesForClickedCell;
     static std::vector<std::pair<int, int>> possibleMovesForClickedCell;
-
-protected:
-    void endCurrentTurn();
 
 public:
     GameApplicationManager(ChessCreator *chessCreator);
@@ -34,9 +32,11 @@ public:
     ChessMovementResponseTransfer moveChessPiece(ChessCell *previousChessCell, ChessCell *currentChessCell, ChessMovementResponseTransfer chessMovementResponseTransfer);
 
     ChessMovementResponseTransfer saveClickedCellCoordinates(std::pair<int, int> currentCellCoordinates, ChessMovementResponseTransfer chessMovementResponseTransfer);
-    void savePossibleMovesForClickedPiece(BaseChessPiece *clickedChessPiece, std::pair<int, int> currentCellCoordinates);
+    ChessMovementResponseTransfer savePossibleMovesForClickedPiece(BaseChessPiece *clickedChessPiece, std::pair<int, int> currentCellCoordinates, ChessMovementResponseTransfer chessMovementResponseTransfer);
 
     bool doesChessPieceBelongToCurrentPlayer(BaseChessPiece *currentChessPiece);
+
+    void endCurrentTurn();
 };
 
 

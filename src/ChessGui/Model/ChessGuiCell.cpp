@@ -4,15 +4,19 @@
 
 #include "ChessGuiCell.h"
 #include "../../Shared/Chess/Transfer/ChessMovementResponseTransfer.h"
+#include "../../Shared/Chess/ChessConstants.h"
 #include "../../Chess/ChessFacade.h"
+#include "Generator/ChessGuiPieceIconGenerator.h"
 #include "QGridLayout"
 #include "QString"
 #include "iostream"
+#include "QGraphicsOpacityEffect"
 
-ChessGuiCell::ChessGuiCell(QGridLayout *gridLayout, ChessFacade *chessFacade, std::pair<int, int> coordinates) {
+ChessGuiCell::ChessGuiCell(QGridLayout *gridLayout, ChessFacade *chessFacade, std::pair<int, int> coordinates, ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator) {
     this->gridLayout = gridLayout;
     this->chessFacade = chessFacade;
     this->coordinates = coordinates;
+    this->chessGuiPieceIconGenerator = chessGuiPieceIconGenerator;
 
     connect(this, &QPushButton::released, this, &ChessGuiCell::handleCellClick);
 }
@@ -20,11 +24,20 @@ ChessGuiCell::ChessGuiCell(QGridLayout *gridLayout, ChessFacade *chessFacade, st
 void ChessGuiCell::handleCellClick() {
     ChessMovementResponseTransfer chessMovementResponseTransfer = this->chessFacade->handleChessMovement(this->coordinates);
 
+    if (chessMovementResponseTransfer.getState() == ChessConstants::STATE_SWITCHED_PIECE) {
+        this->clearPossibleMovesForPreviousPieceClick(chessMovementResponseTransfer);
+    }
+
+    if (chessMovementResponseTransfer.doesPieceHasPossibleMoves()) {
+        this->renderPossibleMovesForPiece(chessMovementResponseTransfer);
+    }
+
     if (!chessMovementResponseTransfer.wasPieceMoved()) {
         return;
     }
 
     this->handleChessPieceMovement(chessMovementResponseTransfer);
+    this->chessFacade->endCurrentTurn();
 }
 
 Qt::GlobalColor ChessGuiCell::getCellColor() {
@@ -36,7 +49,7 @@ QGridLayout *ChessGuiCell::getGridLayout() {
 }
 
 void ChessGuiCell::setBaseCellSize() {
-    this->setMinimumSize(50,50);
+    this->setMinimumSize(80,80);
     this->setMaximumSize(1000,1000);
 }
 
@@ -51,6 +64,8 @@ void ChessGuiCell::setCellColor(QColor color) {
 }
 
 void ChessGuiCell::handleChessPieceMovement(ChessMovementResponseTransfer chessMovementResponseTransfer) {
+    this->clearPossibleMovesForPreviousPieceClick(chessMovementResponseTransfer);
+
     std::pair<int, int> previousGuiCellCoordinates = chessMovementResponseTransfer.getPreviousCellCoordinates();
 
     ChessGuiCell *previousChessGuiCell = static_cast<ChessGuiCell*>(this->gridLayout->itemAtPosition(
@@ -62,8 +77,32 @@ void ChessGuiCell::handleChessPieceMovement(ChessMovementResponseTransfer chessM
     previousChessGuiCell->setIcon(QIcon());
 }
 
-void ChessGuiCell::setChessPiece(std::string pieceType) {
-    QString str = QString::fromStdString(pieceType);
+void ChessGuiCell::renderPossibleMovesForPiece(ChessMovementResponseTransfer chessMovementResponseTransfer) {
+    for (auto & possibleCoordinates : *chessMovementResponseTransfer.getPossibleMoves())
+    {
+        ChessGuiCell *possibleChessCellToMove = static_cast<ChessGuiCell*>(this->gridLayout->itemAtPosition(
+                possibleCoordinates.second, possibleCoordinates.first)->widget());
 
-    this->setText(str);
+
+        std::string pieceType = this->chessPieceType;
+        pieceType.append("-black");
+
+        possibleChessCellToMove->setIcon(this->chessGuiPieceIconGenerator->generateTransparentIconFromFile(pieceType));
+        possibleChessCellToMove->setIconSize(QSize(40, 40));
+    }
+}
+
+void ChessGuiCell::clearPossibleMovesForPreviousPieceClick(ChessMovementResponseTransfer chessMovementResponseTransfer) {
+    for (auto & possibleCoordinates : *chessMovementResponseTransfer.getPreviousPossibleMoves())
+    {
+        ChessGuiCell *possibleChessCellToMove = static_cast<ChessGuiCell*>(this->gridLayout->itemAtPosition(
+                possibleCoordinates.second, possibleCoordinates.first)->widget());
+
+        possibleChessCellToMove->setIcon(QIcon());
+        possibleChessCellToMove->setIconSize(QSize(40, 40));
+    }
+}
+
+void ChessGuiCell::setChessPieceType(std::string pieceType) {
+    this->chessPieceType = pieceType;
 }

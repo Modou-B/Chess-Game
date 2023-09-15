@@ -41,7 +41,7 @@ void GameApplication::toggleCellWithChessPieceClickedValue() {
 void GameApplication::setPreviouslyClickedCellCoordinates(std::pair<int, int> currentCellCoordinates) {
     GameApplication::previouslyClickedCell = currentCellCoordinates;
 
-    GameApplication::togglePreviousClickedCellValue();
+    GameApplication::hasPreviousClickedCell = true;
 }
 
 void GameApplication::togglePreviousClickedCellValue() {

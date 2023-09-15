@@ -3,7 +3,7 @@
 //
 
 #include "QueenPiece.h"
-
+#include "iostream"
 QueenPiece::QueenPiece(int player): BaseChessPiece("Queen", player) {}
 
 std::vector<std::pair<int, int>> QueenPiece::determinePossibleMovesForSpecificPiece(

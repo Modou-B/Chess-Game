@@ -17,3 +17,7 @@ void ChessFacade::initiateChessGame() {
 ChessMovementResponseTransfer ChessFacade::handleChessMovement(std::pair<int, int> currentCellCoordinates) {
     return ChessFacade::getFactory()->createGameApplicationManager()->handleChessMovement(currentCellCoordinates);
 }
+
+void ChessFacade::endCurrentTurn() {
+    ChessFacade::getFactory()->createGameApplicationManager()->endCurrentTurn();
+}
