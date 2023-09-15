@@ -18,6 +18,7 @@ class ChessMovementResponseTransfer;
 class ChessFacade: public AbstractFacade {
 public:
     void initiateChessGame();
+    void endCurrentTurn();
 
     ChessMovementResponseTransfer handleChessMovement(std::pair<int, int> currentCellCoordinates);
 

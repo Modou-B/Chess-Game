@@ -8,10 +8,12 @@
 #include "../Application/Factory/AbstractFactory.h"
 #include "Renderer/ChessGuiRenderer.h"
 #include "../Chess/ChessFacade.h"
+#include "Model/Generator/ChessGuiPieceIconGenerator.h"
 
 class ChessGuiFactory: public AbstractFactory {
 public:
     ChessGuiRenderer *createChessGuiRenderer();
+    ChessGuiPieceIconGenerator *createChessGuiPieceIconGenerator();
 
     ChessFacade *getChessFacade();
 };

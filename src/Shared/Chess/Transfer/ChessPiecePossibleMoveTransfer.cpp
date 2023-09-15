@@ -6,6 +6,7 @@
 
 ChessPiecePossibleMoveTransfer::ChessPiecePossibleMoveTransfer() {
     this->hasOpponentPieceAsPossibleMove = false;
+    this->isOwnChessPieceIsInFront = false;
 }
 
 std::vector<std::pair<int, int>> *ChessPiecePossibleMoveTransfer::getPossibleMoveVector() {
@@ -22,4 +23,12 @@ bool ChessPiecePossibleMoveTransfer::getHasOpponentPieceAsPossibleMove() {
 
 void ChessPiecePossibleMoveTransfer::setHasOpponentPieceAsPossibleMove(bool value) {
     this->hasOpponentPieceAsPossibleMove = value;
+}
+
+bool ChessPiecePossibleMoveTransfer::getIsOwnChessPieceIsInFront() {
+    return this->isOwnChessPieceIsInFront;
+}
+
+void ChessPiecePossibleMoveTransfer::setIsOwnChessPieceIsInFront(bool value) {
+    this->isOwnChessPieceIsInFront = value;
 }
