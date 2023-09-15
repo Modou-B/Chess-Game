@@ -29,6 +29,10 @@ QIcon ChessGuiPieceIconGenerator::generateTransparentIconFromFile(std::string fi
     return QIcon(pixmap);
 }
 
+QIcon ChessGuiPieceIconGenerator::generateEmptyIcon() {
+    return QIcon();
+}
+
 std::string ChessGuiPieceIconGenerator::getFullPathToFile(std::string fileName) {
     std::string pathToFile = std::filesystem::current_path();
 

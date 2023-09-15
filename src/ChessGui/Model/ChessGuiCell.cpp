@@ -5,6 +5,7 @@
 #include "ChessGuiCell.h"
 #include "../../Shared/Chess/Transfer/ChessMovementResponseTransfer.h"
 #include "../../Shared/Chess/ChessConstants.h"
+#include "../../Shared/ChessGui/ChessGuiConstants.h"
 #include "../../Chess/ChessFacade.h"
 #include "Generator/ChessGuiPieceIconGenerator.h"
 #include "QGridLayout"
@@ -17,6 +18,7 @@ ChessGuiCell::ChessGuiCell(QGridLayout *gridLayout, ChessFacade *chessFacade, st
     this->chessFacade = chessFacade;
     this->coordinates = coordinates;
     this->chessGuiPieceIconGenerator = chessGuiPieceIconGenerator;
+    this->chessPieceIconState = ChessGuiConstants::STATE_EMPTY_CHESS_PIECE_ICON;
 
     connect(this, &QPushButton::released, this, &ChessGuiCell::handleCellClick);
 }
@@ -71,10 +73,14 @@ void ChessGuiCell::handleChessPieceMovement(ChessMovementResponseTransfer chessM
     ChessGuiCell *previousChessGuiCell = static_cast<ChessGuiCell*>(this->gridLayout->itemAtPosition(
             previousGuiCellCoordinates.first, previousGuiCellCoordinates.second)->widget());
 
-    this->setIcon(previousChessGuiCell->icon());
+    this->setChessPieceIcon(
+            ChessGuiConstants::STATE_REAL_CHESS_PIECE_ICON, previousChessGuiCell->icon());
     this->setIconSize(previousChessGuiCell->iconSize());
+    this->setChessPieceType(previousChessGuiCell->getChessPieceType());
 
-    previousChessGuiCell->setIcon(QIcon());
+    previousChessGuiCell->setChessPieceIcon(
+            ChessGuiConstants::STATE_EMPTY_CHESS_PIECE_ICON, this->chessGuiPieceIconGenerator->generateEmptyIcon());
+    previousChessGuiCell->setChessPieceType(ChessConstants::EMPTY_PIECE_TYPE);
 }
 
 void ChessGuiCell::renderPossibleMovesForPiece(ChessMovementResponseTransfer chessMovementResponseTransfer) {
@@ -83,12 +89,14 @@ void ChessGuiCell::renderPossibleMovesForPiece(ChessMovementResponseTransfer che
         ChessGuiCell *possibleChessCellToMove = static_cast<ChessGuiCell*>(this->gridLayout->itemAtPosition(
                 possibleCoordinates.second, possibleCoordinates.first)->widget());
 
+        if (possibleChessCellToMove->getChessPieceIconState() == ChessGuiConstants::STATE_EMPTY_CHESS_PIECE_ICON) {
+            std::string pieceType = this->getChessPieceType();
+            pieceType.append("-black");
 
-        std::string pieceType = this->chessPieceType;
-        pieceType.append("-black");
-
-        possibleChessCellToMove->setIcon(this->chessGuiPieceIconGenerator->generateTransparentIconFromFile(pieceType));
-        possibleChessCellToMove->setIconSize(QSize(40, 40));
+            possibleChessCellToMove->setChessPieceIcon(
+                    ChessGuiConstants::STATE_PREVIEW_CHESS_PIECE_ICON, this->chessGuiPieceIconGenerator->generateTransparentIconFromFile(pieceType));
+            possibleChessCellToMove->setIconSize(QSize(40, 40));
+        }
     }
 }
 
@@ -98,11 +106,28 @@ void ChessGuiCell::clearPossibleMovesForPreviousPieceClick(ChessMovementResponse
         ChessGuiCell *possibleChessCellToMove = static_cast<ChessGuiCell*>(this->gridLayout->itemAtPosition(
                 possibleCoordinates.second, possibleCoordinates.first)->widget());
 
-        possibleChessCellToMove->setIcon(QIcon());
-        possibleChessCellToMove->setIconSize(QSize(40, 40));
+        if (possibleChessCellToMove->getChessPieceIconState() == ChessGuiConstants::STATE_PREVIEW_CHESS_PIECE_ICON) {
+            possibleChessCellToMove->setChessPieceIcon(
+                    ChessGuiConstants::STATE_EMPTY_CHESS_PIECE_ICON,this->chessGuiPieceIconGenerator->generateEmptyIcon());
+            possibleChessCellToMove->setIconSize(QSize(40, 40));
+        }
     }
 }
 
 void ChessGuiCell::setChessPieceType(std::string pieceType) {
     this->chessPieceType = pieceType;
+}
+
+void ChessGuiCell::setChessPieceIcon(std::string iconState, QIcon chessPieceIcon) {
+    this->chessPieceIconState = iconState;
+
+    this->setIcon(chessPieceIcon);
+}
+
+std::string ChessGuiCell::getChessPieceIconState() {
+    return this->chessPieceIconState;
+}
+
+std::string ChessGuiCell::getChessPieceType() {
+    return this->chessPieceType;
 }

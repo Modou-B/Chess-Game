@@ -15,7 +15,7 @@ private:
 
 public:
     QIcon generateIconFromFile(std::string fileName);
-
+    QIcon generateEmptyIcon();
     QIcon generateTransparentIconFromFile(std::string fileName);
 };
 

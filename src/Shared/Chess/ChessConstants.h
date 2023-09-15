@@ -15,6 +15,7 @@ namespace ChessConstants
     const std::string KNIGHT_PIECE_TYPE = "knight";
     const std::string ROOK_PIECE_TYPE = "rook";
     const std::string PAWN_PIECE_TYPE = "pawn";
+    const std::string EMPTY_PIECE_TYPE = "empty";
 
     const std::string WHITE_KING_PIECE_FILENAME = "king-white";
     const std::string BLACK_KING_PIECE_FILENAME = "king-black";
