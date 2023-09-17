@@ -3,12 +3,13 @@
 //
 
 #include "KingPiece.h"
+#include "../../Shared/Chess/Transfer/ChessPiecePossibleMoveTransfer.h"
 
-KingPiece::KingPiece(int player): BaseChessPiece("King", player) {
+KingPiece::KingPiece(int player, ChessPieceMovementGenerator *chessPieceMovementGenerator): BaseChessPiece("King", player, chessPieceMovementGenerator) {
 }
 
-std::vector<std::pair<int, int>> KingPiece::determinePossibleMovesForSpecificPiece(
-        ChessField *chessField, std::vector<std::pair<int, int>> possibleMoves, int xCoordinate, int yCoordinate) {
+std::vector<ChessPiecePossibleMoveTransfer*> KingPiece::determinePossibleMovesForSpecificPiece(
+        ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate) {
 
     possibleMoves = this->tryToAddCoordinates(chessField, possibleMoves, xCoordinate, (yCoordinate + 1));
     possibleMoves = this->tryToAddCoordinates(chessField, possibleMoves, xCoordinate, (yCoordinate - 1));
@@ -22,8 +23,8 @@ std::vector<std::pair<int, int>> KingPiece::determinePossibleMovesForSpecificPie
     return possibleMoves;
 }
 
-std::vector<std::pair<int, int>> KingPiece::checkHorizontalMovement(
-        ChessField *chessField, std::vector<std::pair<int, int>> possibleMoves, int xCoordinate, int yCoordinate) {
+std::vector<ChessPiecePossibleMoveTransfer*> KingPiece::checkHorizontalMovement(
+        ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate) {
     possibleMoves = this->tryToAddCoordinates(chessField, possibleMoves, (xCoordinate + 1), yCoordinate);
     possibleMoves = this->tryToAddCoordinates(chessField, possibleMoves, (xCoordinate - 1), yCoordinate);
 

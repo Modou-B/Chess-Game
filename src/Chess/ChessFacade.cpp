@@ -14,10 +14,10 @@ void ChessFacade::initiateChessGame() {
     ChessFacade::getFactory()->createGameApplicationManager()->initiateChessApplication();
 }
 
-ChessMovementResponseTransfer ChessFacade::handleChessMovement(std::pair<int, int> currentCellCoordinates) {
-    return ChessFacade::getFactory()->createGameApplicationManager()->handleChessMovement(currentCellCoordinates);
+ChessMovementResponseTransfer ChessFacade::handleChessCellClick(std::pair<int, int> currentCellCoordinates) {
+    return ChessFacade::getFactory()->createGameApplicationManager()->handleChessCellClick(currentCellCoordinates);
 }
 
-void ChessFacade::endCurrentTurn() {
-    ChessFacade::getFactory()->createGameApplicationManager()->endCurrentTurn();
+void ChessFacade::endCurrentTurn(ChessMovementResponseTransfer chessMovementResponseTransfer) {
+    ChessFacade::getFactory()->createGameApplicationManager()->endCurrentTurn(chessMovementResponseTransfer);
 }

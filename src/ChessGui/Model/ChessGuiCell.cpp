@@ -4,7 +4,10 @@
 
 #include "ChessGuiCell.h"
 #include "../../Shared/Chess/Transfer/ChessMovementResponseTransfer.h"
+#include "../../Shared/Chess/Transfer/ChessPiecePossibleMoveTransfer.h"
+#include "../../Shared/Chess/Transfer/ChessPieceMovementTransfer.h"
 #include "../../Shared/Chess/ChessConstants.h"
+#include "../../Shared/Chess/ChessMovementConstants.h"
 #include "../../Shared/ChessGui/ChessGuiConstants.h"
 #include "../../Chess/ChessFacade.h"
 #include "Generator/ChessGuiPieceIconGenerator.h"
@@ -24,7 +27,7 @@ ChessGuiCell::ChessGuiCell(QGridLayout *gridLayout, ChessFacade *chessFacade, st
 }
 
 void ChessGuiCell::handleCellClick() {
-    ChessMovementResponseTransfer chessMovementResponseTransfer = this->chessFacade->handleChessMovement(this->coordinates);
+    ChessMovementResponseTransfer chessMovementResponseTransfer = this->chessFacade->handleChessCellClick(this->coordinates);
 
     if (chessMovementResponseTransfer.getState() == ChessConstants::STATE_SWITCHED_PIECE) {
         this->clearPossibleMovesForPreviousPieceClick(chessMovementResponseTransfer);
@@ -39,7 +42,7 @@ void ChessGuiCell::handleCellClick() {
     }
 
     this->handleChessPieceMovement(chessMovementResponseTransfer);
-    this->chessFacade->endCurrentTurn();
+    this->chessFacade->endCurrentTurn(chessMovementResponseTransfer);
 }
 
 Qt::GlobalColor ChessGuiCell::getCellColor() {
@@ -68,26 +71,32 @@ void ChessGuiCell::setCellColor(QColor color) {
 void ChessGuiCell::handleChessPieceMovement(ChessMovementResponseTransfer chessMovementResponseTransfer) {
     this->clearPossibleMovesForPreviousPieceClick(chessMovementResponseTransfer);
 
-    std::pair<int, int> previousGuiCellCoordinates = chessMovementResponseTransfer.getPreviousCellCoordinates();
+    for (auto &chessPieceMovementTransfer : *chessMovementResponseTransfer.getChessPiecesToMove())
+    {
+        ChessGuiCell *oldChessGuiCell = static_cast<ChessGuiCell*>(this->gridLayout->itemAtPosition(
+                chessPieceMovementTransfer->getOldCoordinates().first, chessPieceMovementTransfer->getOldCoordinates().second)->widget());
 
-    ChessGuiCell *previousChessGuiCell = static_cast<ChessGuiCell*>(this->gridLayout->itemAtPosition(
-            previousGuiCellCoordinates.first, previousGuiCellCoordinates.second)->widget());
+        if (chessPieceMovementTransfer->getAction() == ChessMovementConstants::ACTION_MOVE) {
+            ChessGuiCell *newChessGuiCell = static_cast<ChessGuiCell*>(this->gridLayout->itemAtPosition(
+                    chessPieceMovementTransfer->getNewCoordinates().first, chessPieceMovementTransfer->getNewCoordinates().second)->widget());
 
-    this->setChessPieceIcon(
-            ChessGuiConstants::STATE_REAL_CHESS_PIECE_ICON, previousChessGuiCell->icon());
-    this->setIconSize(previousChessGuiCell->iconSize());
-    this->setChessPieceType(previousChessGuiCell->getChessPieceType());
+            newChessGuiCell->setChessPieceIcon(
+                ChessGuiConstants::STATE_REAL_CHESS_PIECE_ICON, oldChessGuiCell->icon());
+            newChessGuiCell->setIconSize(oldChessGuiCell->iconSize());
+            newChessGuiCell->setChessPieceType(oldChessGuiCell->getChessPieceType());
+        }
 
-    previousChessGuiCell->setChessPieceIcon(
+        oldChessGuiCell->setChessPieceIcon(
             ChessGuiConstants::STATE_EMPTY_CHESS_PIECE_ICON, this->chessGuiPieceIconGenerator->generateEmptyIcon());
-    previousChessGuiCell->setChessPieceType(ChessConstants::EMPTY_PIECE_TYPE);
+        oldChessGuiCell->setChessPieceType(ChessConstants::EMPTY_PIECE_TYPE);
+    }
 }
 
 void ChessGuiCell::renderPossibleMovesForPiece(ChessMovementResponseTransfer chessMovementResponseTransfer) {
-    for (auto & possibleCoordinates : *chessMovementResponseTransfer.getPossibleMoves())
+    for (auto &possibleCoordinates : *chessMovementResponseTransfer.getPossibleMoves())
     {
         ChessGuiCell *possibleChessCellToMove = static_cast<ChessGuiCell*>(this->gridLayout->itemAtPosition(
-                possibleCoordinates.second, possibleCoordinates.first)->widget());
+                possibleCoordinates->getYCoordinate(), possibleCoordinates->getXCoordinate())->widget());
 
         if (possibleChessCellToMove->getChessPieceIconState() == ChessGuiConstants::STATE_EMPTY_CHESS_PIECE_ICON) {
             std::string pieceType = this->getChessPieceType();
@@ -101,10 +110,10 @@ void ChessGuiCell::renderPossibleMovesForPiece(ChessMovementResponseTransfer che
 }
 
 void ChessGuiCell::clearPossibleMovesForPreviousPieceClick(ChessMovementResponseTransfer chessMovementResponseTransfer) {
-    for (auto & possibleCoordinates : *chessMovementResponseTransfer.getPreviousPossibleMoves())
+    for (auto &possibleCoordinates : *chessMovementResponseTransfer.getPreviousPossibleMoves())
     {
         ChessGuiCell *possibleChessCellToMove = static_cast<ChessGuiCell*>(this->gridLayout->itemAtPosition(
-                possibleCoordinates.second, possibleCoordinates.first)->widget());
+                possibleCoordinates->getYCoordinate(), possibleCoordinates->getXCoordinate())->widget());
 
         if (possibleChessCellToMove->getChessPieceIconState() == ChessGuiConstants::STATE_PREVIEW_CHESS_PIECE_ICON) {
             possibleChessCellToMove->setChessPieceIcon(

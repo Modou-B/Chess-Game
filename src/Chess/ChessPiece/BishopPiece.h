@@ -7,12 +7,15 @@
 
 #include "BaseChessPiece.h"
 
+class ChessPieceMovementGenerator;
+class ChessPiecePossibleMoveTransfer;
+
 class BishopPiece: public BaseChessPiece {
 public:
-    BishopPiece(int player);
+    BishopPiece(int player, ChessPieceMovementGenerator *chessPieceMovementGenerator);
 
-    std::vector<std::pair<int, int>> determinePossibleMovesForSpecificPiece(
-            ChessField *chessField, std::vector<std::pair<int, int>> possibleMoves, int xCoordinate, int yCoordinate) override;
+    std::vector<ChessPiecePossibleMoveTransfer*> determinePossibleMovesForSpecificPiece(
+            ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate) override;
 };
 
 
