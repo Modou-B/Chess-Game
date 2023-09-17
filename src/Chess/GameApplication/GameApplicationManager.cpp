@@ -45,5 +45,7 @@ void GameApplicationManager::updateStateLastTurnChessPieces() {
     }
 
     auto *lastTurnClickedChessCellChessPiece = GameApplication::getChessCell(GameApplication::getCoordinatesOfLastTurnClickedCell())->getChessPiece();
-    lastTurnClickedChessCellChessPiece->updateLastTurnMovedStatus();
+    if (lastTurnClickedChessCellChessPiece) {
+        lastTurnClickedChessCellChessPiece->updateLastTurnMovedStatus();
+    }
 }
