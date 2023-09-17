@@ -3,11 +3,12 @@
 //
 
 #include "QueenPiece.h"
-#include "iostream"
-QueenPiece::QueenPiece(int player): BaseChessPiece("Queen", player) {}
+#include "../../Shared/Chess/Transfer/ChessPiecePossibleMoveTransfer.h"
 
-std::vector<std::pair<int, int>> QueenPiece::determinePossibleMovesForSpecificPiece(
-        ChessField *chessField, std::vector<std::pair<int, int>> possibleMoves, int xCoordinate, int yCoordinate) {
+QueenPiece::QueenPiece(int player, ChessPieceMovementGenerator *chessPieceMovementGenerator): BaseChessPiece("Queen", player, chessPieceMovementGenerator) {}
+
+std::vector<ChessPiecePossibleMoveTransfer*> QueenPiece::determinePossibleMovesForSpecificPiece(
+        ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate) {
     possibleMoves = this->tryToAddCoordinatesForDiagonalMovement(chessField, possibleMoves, xCoordinate, yCoordinate);
     possibleMoves = this->tryToAddCoordinatesForVerticalMovement(chessField, possibleMoves, xCoordinate, yCoordinate);
     possibleMoves = this->tryToAddCoordinatesForHorizontalMovement(chessField, possibleMoves, xCoordinate, yCoordinate);

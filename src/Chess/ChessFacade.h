@@ -18,9 +18,9 @@ class ChessMovementResponseTransfer;
 class ChessFacade: public AbstractFacade {
 public:
     void initiateChessGame();
-    void endCurrentTurn();
+    void endCurrentTurn(ChessMovementResponseTransfer chessMovementResponseTransfer);
 
-    ChessMovementResponseTransfer handleChessMovement(std::pair<int, int> currentCellCoordinates);
+    ChessMovementResponseTransfer handleChessCellClick(std::pair<int, int> currentCellCoordinates);
 
     ChessFactory *getFactory() override;
 };

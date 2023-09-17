@@ -1,34 +1,36 @@
 //
-// Created by Julian Sommer on 10.09.23.
+// Created by Julian Sommer on 17.09.23.
 //
 
 #include "ChessPiecePossibleMoveTransfer.h"
 
-ChessPiecePossibleMoveTransfer::ChessPiecePossibleMoveTransfer() {
-    this->hasOpponentPieceAsPossibleMove = false;
-    this->isOwnChessPieceIsInFront = false;
+ChessPiecePossibleMoveTransfer &ChessPiecePossibleMoveTransfer::setMoveType(std::string moveType) {
+    this->moveType = moveType;
+
+    return *this;
 }
 
-std::vector<std::pair<int, int>> *ChessPiecePossibleMoveTransfer::getPossibleMoveVector() {
-    return this->possibleMoves;
+ChessPiecePossibleMoveTransfer &ChessPiecePossibleMoveTransfer::setXCoordinate(int xCoordinate) {
+    this->xCoordinate = xCoordinate;
+
+    return *this;
 }
 
-void ChessPiecePossibleMoveTransfer::setPossibleMoveVector(std::vector<std::pair<int, int>> *possibleMoves) {
-    this->possibleMoves = possibleMoves;
+ChessPiecePossibleMoveTransfer &ChessPiecePossibleMoveTransfer::setYCoordinate(int yCoordinate) {
+    this->yCoordinate = yCoordinate;
+
+    return *this;
 }
 
-bool ChessPiecePossibleMoveTransfer::getHasOpponentPieceAsPossibleMove() {
-    return this->hasOpponentPieceAsPossibleMove;
+std::string ChessPiecePossibleMoveTransfer::getMoveType() {
+    return this->moveType;
 }
 
-void ChessPiecePossibleMoveTransfer::setHasOpponentPieceAsPossibleMove(bool value) {
-    this->hasOpponentPieceAsPossibleMove = value;
+int ChessPiecePossibleMoveTransfer::getXCoordinate() {
+    return this->xCoordinate;
 }
 
-bool ChessPiecePossibleMoveTransfer::getIsOwnChessPieceIsInFront() {
-    return this->isOwnChessPieceIsInFront;
+int ChessPiecePossibleMoveTransfer::getYCoordinate() {
+    return this->yCoordinate;
 }
 
-void ChessPiecePossibleMoveTransfer::setIsOwnChessPieceIsInFront(bool value) {
-    this->isOwnChessPieceIsInFront = value;
-}

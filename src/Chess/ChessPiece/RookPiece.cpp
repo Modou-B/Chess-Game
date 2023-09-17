@@ -3,11 +3,12 @@
 //
 
 #include "RookPiece.h"
+#include "../../Shared/Chess/Transfer/ChessPiecePossibleMoveTransfer.h"
 
-RookPiece::RookPiece(int player): BaseChessPiece("Rook", player) {}
+RookPiece::RookPiece(int player, ChessPieceMovementGenerator *chessPieceMovementGenerator): BaseChessPiece("Rook", player, chessPieceMovementGenerator) {}
 
-std::vector<std::pair<int, int>> RookPiece::determinePossibleMovesForSpecificPiece(
-        ChessField *chessField, std::vector<std::pair<int, int>> possibleMoves, int xCoordinate, int yCoordinate) {
+std::vector<ChessPiecePossibleMoveTransfer*> RookPiece::determinePossibleMovesForSpecificPiece(
+        ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate) {
 
     possibleMoves = this->tryToAddCoordinatesForHorizontalMovement(chessField, possibleMoves, xCoordinate, yCoordinate);
     possibleMoves = this->tryToAddCoordinatesForVerticalMovement(chessField, possibleMoves, xCoordinate, yCoordinate);

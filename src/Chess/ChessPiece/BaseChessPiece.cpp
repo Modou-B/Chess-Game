@@ -5,12 +5,18 @@
 #include "BaseChessPiece.h"
 #include "../Model/ChessField.h"
 #include "../Model/ChessCell.h"
+#include "../../Shared/Chess/Transfer/ChessPiecePossibleMoveCollectionTransfer.h"
 #include "../../Shared/Chess/Transfer/ChessPiecePossibleMoveTransfer.h"
+#include "../../Shared/Chess/ChessMovementConstants.h"
+#include "Generator/ChessPieceMovementGenerator.h"
 #include "iostream"
 
-BaseChessPiece::BaseChessPiece(std::string type, int player) {
+BaseChessPiece::BaseChessPiece(std::string type, int player, ChessPieceMovementGenerator *chessPieceMovementGenerator) {
     this->type = type;
     this->player = player;
+    this->chessPieceMovementGenerator = chessPieceMovementGenerator;
+    this->moveCounter = 0;
+    this->wasMovedLastTurn = false;
 }
 
 std::string BaseChessPiece::getType() {
@@ -21,8 +27,8 @@ int BaseChessPiece::getPlayer() {
     return this->player;
 }
 
-std::vector<std::pair<int, int>> BaseChessPiece::determinePossibleMoves(ChessField *chessField, std::pair<int, int> currentCoordinates) {
-    std::vector<std::pair<int, int>> possibleMoves = std::vector<std::pair<int, int>>();
+std::vector<ChessPiecePossibleMoveTransfer*> BaseChessPiece::determinePossibleMoves(ChessField *chessField, std::pair<int, int> currentCoordinates) {
+    std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves = std::vector<ChessPiecePossibleMoveTransfer*>();
 
     int xCoordinate = currentCoordinates.second;
     int yCoordinate = currentCoordinates.first;
@@ -30,38 +36,35 @@ std::vector<std::pair<int, int>> BaseChessPiece::determinePossibleMoves(ChessFie
     return this->determinePossibleMovesForSpecificPiece(chessField, possibleMoves, xCoordinate, yCoordinate);
 }
 
-std::vector<std::pair<int, int>> BaseChessPiece::determinePossibleMovesForSpecificPiece(
-        ChessField *chessField, std::vector<std::pair<int, int>> possibleMoves, int xCoordinate, int yCoordinate) {
+std::vector<ChessPiecePossibleMoveTransfer*> BaseChessPiece::determinePossibleMovesForSpecificPiece(
+        ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate) {
 
     return possibleMoves;
 }
 
-std::vector<std::pair<int, int>> BaseChessPiece::tryToAddCoordinates(
-        ChessField *chessField, std::vector<std::pair<int, int>> possibleMoves, int xCoordinate, int yCoordinate) {
+std::vector<ChessPiecePossibleMoveTransfer*> BaseChessPiece::tryToAddCoordinates(
+        ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate) {
     if (this->areCoordinatesOutOfBounds(xCoordinate, yCoordinate)) {
         return possibleMoves;
     }
 
     std::pair<int, int> coordinates = this->generateCoordinates(yCoordinate, xCoordinate);
-
     BaseChessPiece *chessPieceOnCell = chessField->getChessCell(coordinates)->getChessPiece();
 
     if (chessPieceOnCell && chessPieceOnCell->player == this->player) {
         return possibleMoves;
     }
 
-    std::pair<int, int> actualCoords = this->generateCoordinates(xCoordinate, yCoordinate);
-
-    possibleMoves.push_back(actualCoords);
+    possibleMoves.push_back(this->chessPieceMovementGenerator->generateChessPiecePossibleMoveTransfer(
+            ChessMovementConstants::MOVE_TYPE_NORMAL, xCoordinate, yCoordinate));
 
     return possibleMoves;
 }
 
-std::vector<std::pair<int, int>> BaseChessPiece::tryToAddCoordinatesForDiagonalMovement(
-        ChessField *chessField, std::vector<std::pair<int, int>> possibleMoves, int xCoordinate, int yCoordinate) {
-    ChessPiecePossibleMoveTransfer chessPiecePossibleMoveTransfer = ChessPiecePossibleMoveTransfer();
+std::vector<ChessPiecePossibleMoveTransfer*> BaseChessPiece::tryToAddCoordinatesForDiagonalMovement(
+        ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate) {
+    ChessPiecePossibleMoveCollectionTransfer chessPiecePossibleMoveTransfer = ChessPiecePossibleMoveCollectionTransfer();
     chessPiecePossibleMoveTransfer.setPossibleMoveVector(&possibleMoves);
-
 
     int originalYCoordinate = yCoordinate;
     int originalXCoordinate = xCoordinate;
@@ -69,7 +72,7 @@ std::vector<std::pair<int, int>> BaseChessPiece::tryToAddCoordinatesForDiagonalM
     // Top right diagonal
     yCoordinate--;
     xCoordinate++;
-    while (this->areCoordinatesOutOfBounds(xCoordinate, yCoordinate) == false) {
+    while (!this->areCoordinatesOutOfBounds(xCoordinate, yCoordinate)) {
         if (chessPiecePossibleMoveTransfer.getHasOpponentPieceAsPossibleMove() || chessPiecePossibleMoveTransfer.getIsOwnChessPieceIsInFront()) {
             break;
         }
@@ -143,9 +146,9 @@ std::vector<std::pair<int, int>> BaseChessPiece::tryToAddCoordinatesForDiagonalM
     return *chessPiecePossibleMoveTransfer.getPossibleMoveVector();
 }
 
-std::vector<std::pair<int, int>> BaseChessPiece::tryToAddCoordinatesForVerticalMovement(
-        ChessField *chessField, std::vector<std::pair<int, int>> possibleMoves, int xCoordinate, int yCoordinate) {
-    ChessPiecePossibleMoveTransfer chessPiecePossibleMoveTransfer = ChessPiecePossibleMoveTransfer();
+std::vector<ChessPiecePossibleMoveTransfer*> BaseChessPiece::tryToAddCoordinatesForVerticalMovement(
+        ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate) {
+    ChessPiecePossibleMoveCollectionTransfer chessPiecePossibleMoveTransfer = ChessPiecePossibleMoveCollectionTransfer();
     chessPiecePossibleMoveTransfer.setPossibleMoveVector(&possibleMoves);
 
     int originalYCoordinate = yCoordinate;
@@ -178,9 +181,9 @@ std::vector<std::pair<int, int>> BaseChessPiece::tryToAddCoordinatesForVerticalM
     return *chessPiecePossibleMoveTransfer.getPossibleMoveVector();
 }
 
-std::vector<std::pair<int, int>> BaseChessPiece::tryToAddCoordinatesForHorizontalMovement(
-        ChessField *chessField, std::vector<std::pair<int, int>> possibleMoves, int xCoordinate, int yCoordinate) {
-    ChessPiecePossibleMoveTransfer chessPiecePossibleMoveTransfer = ChessPiecePossibleMoveTransfer();
+std::vector<ChessPiecePossibleMoveTransfer*> BaseChessPiece::tryToAddCoordinatesForHorizontalMovement(
+        ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate) {
+    ChessPiecePossibleMoveCollectionTransfer chessPiecePossibleMoveTransfer = ChessPiecePossibleMoveCollectionTransfer();
     chessPiecePossibleMoveTransfer.setPossibleMoveVector(&possibleMoves);
 
     int originalXCoordinate = xCoordinate;
@@ -213,8 +216,8 @@ std::vector<std::pair<int, int>> BaseChessPiece::tryToAddCoordinatesForHorizonta
     return *chessPiecePossibleMoveTransfer.getPossibleMoveVector();
 }
 
-ChessPiecePossibleMoveTransfer BaseChessPiece::checkOneLineMovement(
-        ChessField *chessField, ChessPiecePossibleMoveTransfer *chessPiecePossibleMoveTransfer, int xCoordinate, int yCoordinate) {
+ChessPiecePossibleMoveCollectionTransfer BaseChessPiece::checkOneLineMovement(
+        ChessField *chessField, ChessPiecePossibleMoveCollectionTransfer *chessPiecePossibleMoveTransfer, int xCoordinate, int yCoordinate) {
     std::pair<int, int> coordinates = this->generateCoordinates(yCoordinate, xCoordinate);
     BaseChessPiece *chessPieceOnCell = chessField->getChessCell(coordinates)->getChessPiece();
 
@@ -227,15 +230,16 @@ ChessPiecePossibleMoveTransfer BaseChessPiece::checkOneLineMovement(
 
         chessPiecePossibleMoveTransfer->setHasOpponentPieceAsPossibleMove(true);
     }
-    std::pair<int, int> coordinates2 = this->generateCoordinates(xCoordinate, yCoordinate);
 
-    chessPiecePossibleMoveTransfer->getPossibleMoveVector()->push_back(coordinates2);
+    chessPiecePossibleMoveTransfer->getPossibleMoveVector()->push_back(
+            this->chessPieceMovementGenerator->generateChessPiecePossibleMoveTransfer(ChessMovementConstants::MOVE_TYPE_NORMAL, xCoordinate, yCoordinate));
 
     return *chessPiecePossibleMoveTransfer;
 }
 
-void BaseChessPiece::handleMovement() {
-    return;
+void BaseChessPiece::handleMovement(ChessPiecePossibleMoveTransfer *usedMove) {
+    this->moveCounter++;
+    this->wasMovedLastTurn = true;
 }
 
 std::pair<int, int> BaseChessPiece::generateCoordinates(int xCoordinate, int yCoordinate) {
@@ -248,4 +252,36 @@ bool BaseChessPiece::areCoordinatesOutOfBounds(int xCoordinate, int yCoordinate)
     }
 
     return false;
+}
+
+bool BaseChessPiece::hasCellOpponentChessPiece(ChessField *chessField, std::pair<int, int> coordinates) {
+    BaseChessPiece *chessPieceOnCell = chessField->getChessCell(coordinates)->getChessPiece();
+
+    return this->isOpponentChessPiece(chessPieceOnCell);
+}
+
+BaseChessPiece *BaseChessPiece::getChessPiece(ChessField *chessField, int xCoordinate, int yCoordinate) {
+    auto coordinates = this->generateCoordinates(yCoordinate, xCoordinate);
+
+    return chessField->getChessCell(coordinates)->getChessPiece();
+}
+
+bool BaseChessPiece::isOpponentChessPiece(BaseChessPiece *chessPiece) {
+    if (chessPiece && chessPiece->player != this->player) {
+        return true;
+    }
+
+    return false;
+}
+
+int BaseChessPiece::getMoveCounter() {
+    return this->moveCounter;
+}
+
+bool BaseChessPiece::wasChessPieceMovedLastTurn() {
+    return this->wasMovedLastTurn;
+}
+
+void BaseChessPiece::updateLastTurnMovedStatus() {
+    this->wasMovedLastTurn = false;
 }

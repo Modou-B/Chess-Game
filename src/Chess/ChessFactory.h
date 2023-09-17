@@ -7,11 +7,15 @@
 
 #include "../Application/Factory/AbstractFactory.h"
 #include "Creator/ChessCreator.h"
+#include "ChessPiece/Movement/ChessPieceMovementManager.h"
+#include "ChessPiece/Generator/ChessPieceMovementGenerator.h"
 #include "GameApplication/GameApplicationManager.h"
 
 class ChessFactory: public AbstractFactory {
 public:
     ChessCreator *createChessCreator();
+    ChessPieceMovementManager *createChessPieceMovementManager();
+    ChessPieceMovementGenerator *createChessPieceMovementGenerator();
 
     GameApplicationManager *createGameApplicationManager();
 };

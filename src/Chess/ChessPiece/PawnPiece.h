@@ -9,25 +9,37 @@
 #include <vector>
 #include <utility>
 
+class ChessPieceMovementGenerator;
+class ChessPiecePossibleMoveTransfer;
+
 class PawnPiece: public BaseChessPiece {
 private:
-    bool hasMoved;
+    bool usedDoubleMove;
 
 protected:
-    std::vector<std::pair<int, int>> determinePossibleMovesForPlayer1(
-            ChessField *chessField, std::vector<std::pair<int, int>> possibleMoves, int xCoordinate, int yCoordinate);
-    std::vector<std::pair<int, int>> determinePossibleMovesForPlayer2(
-            ChessField *chessField, std::vector<std::pair<int, int>> possibleMoves, int xCoordinate, int yCoordinate);
+    std::vector<ChessPiecePossibleMoveTransfer*> determinePossibleMovesForPlayer1(
+            ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate);
+    std::vector<ChessPiecePossibleMoveTransfer*> determinePossibleMovesForPlayer2(
+            ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate);
 
-    // method checkForEnPassant
-    // method checkForDiagonalPieces
+    std::vector<ChessPiecePossibleMoveTransfer*> checkForDoubleMove(
+        ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate);
+    std::vector<ChessPiecePossibleMoveTransfer*> checkForDiagonalPieces(
+            ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate);
+
+    std::vector<ChessPiecePossibleMoveTransfer*> checkForEnPassant(
+            ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate, int yValueToAdd);
+
+    bool isEnPassantPossible(ChessField *chessField, int xCoordinate, int yCoordinate);
+
+    bool wasDoubleMoveUsed();
 public:
-    PawnPiece(int player);
+    PawnPiece(int player, ChessPieceMovementGenerator *chessPieceMovementGenerator);
 
-    std::vector<std::pair<int, int>> determinePossibleMovesForSpecificPiece(
-            ChessField *chessField, std::vector<std::pair<int, int>> possibleMoves, int xCoordinate, int yCoordinate) override;
+    std::vector<ChessPiecePossibleMoveTransfer*> determinePossibleMovesForSpecificPiece(
+            ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate) override;
 
-    void handleMovement() override;
+    void handleMovement(ChessPiecePossibleMoveTransfer *usedMove) override;
 };
 
 

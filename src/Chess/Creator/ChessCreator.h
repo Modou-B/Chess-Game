@@ -10,8 +10,12 @@
 class ChessField;
 class ChessCell;
 class BaseChessPiece;
+class ChessPieceMovementGenerator;
 
 class ChessCreator {
+protected:
+    ChessPieceMovementGenerator *createChessPieceMovementGenerator();
+
 public:
     BaseChessPiece *createChessPiece(std::string type, int player);
 

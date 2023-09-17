@@ -13,25 +13,26 @@
 #include "../ChessPiece/RookPiece.h"
 #include "../ChessPiece/QueenPiece.h"
 #include "../ChessPiece/KingPiece.h"
+#include "../ChessPiece/Generator/ChessPieceMovementGenerator.h"
 
 BaseChessPiece *ChessCreator::createChessPiece(std::string type, int player) {
     if (type == ChessConstants::PAWN_PIECE_TYPE) {
-        return new PawnPiece(player);
+        return new PawnPiece(player, this->createChessPieceMovementGenerator());
     }
     if (type == ChessConstants::KNIGHT_PIECE_TYPE) {
-        return new KnightPiece(player);
+        return new KnightPiece(player, this->createChessPieceMovementGenerator());
     }
     if (type == ChessConstants::KING_PIECE_TYPE) {
-        return new KingPiece(player);
+        return new KingPiece(player, this->createChessPieceMovementGenerator());
     }
     if (type == ChessConstants::ROOK_PIECE_TYPE) {
-        return new RookPiece(player);
+        return new RookPiece(player, this->createChessPieceMovementGenerator());
     }
     if (type == ChessConstants::QUEEN_PIECE_TYPE) {
-        return new QueenPiece(player);
+        return new QueenPiece(player, this->createChessPieceMovementGenerator());
     }
     if (type == ChessConstants::BISHOP_PIECE_TYPE) {
-        return new BishopPiece(player);
+        return new BishopPiece(player, this->createChessPieceMovementGenerator());
     }
 
     return nullptr;
@@ -122,6 +123,11 @@ void ChessCreator::fillFieldWithRooks(ChessField *chessField) {
     this->fillFieldWithPieces(chessField, ChessConstants::ROOK_PIECE_TYPE, 1, 7, 0);
     this->fillFieldWithPieces(chessField, ChessConstants::ROOK_PIECE_TYPE, 1, 7, 7);
 }
+
+ChessPieceMovementGenerator *ChessCreator::createChessPieceMovementGenerator() {
+    return new ChessPieceMovementGenerator;
+}
+
 
 
 
