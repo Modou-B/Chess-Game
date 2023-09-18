@@ -76,6 +76,10 @@ ChessMovementResponseTransfer ChessPieceMovementManager::moveChessPiece(
         chessMovementResponseTransfer = this->addEnPassantChessPieceMovement(previousChessCell, currentChessCell, chessMovementResponseTransfer);
     }
 
+    if (usedMove->getMoveType() == ChessMovementConstants::MOVE_TYPE_CASTLING) {
+        chessMovementResponseTransfer = this->addCastlingChessPieceMovement(currentChessCell, chessMovementResponseTransfer);
+    }
+
     currentChessCell->setChessPiece(previousChessCell->getChessPiece());
     previousChessCell->setChessPiece(nullptr);
 
@@ -102,11 +106,43 @@ ChessMovementResponseTransfer ChessPieceMovementManager::addEnPassantChessPieceM
       chessMovementResponseTransfer.addChessPieceMovementTransfer(
           this->chessPieceMovementGenerator->generateChessPieceMovementTransfer(
               ChessMovementConstants::ACTION_DELETE, coordinatesOfOpponentPawnPiece));
-
     }
 
     auto *chessCellWithOpponentPawnPiece = GameApplication::getChessCell(coordinatesOfOpponentPawnPiece);
     chessCellWithOpponentPawnPiece->setChessPiece(nullptr);
+
+    return chessMovementResponseTransfer;
+}
+
+ChessMovementResponseTransfer ChessPieceMovementManager::addCastlingChessPieceMovement(
+    ChessCell *currentChessCell, ChessMovementResponseTransfer chessMovementResponseTransfer) {
+
+    auto currentCoordinates = currentChessCell->getCoordinates();
+
+    auto oldCoordinatesOfRookPiece = std::pair<int,int>();
+    auto newCoordinatesOfRookPiece = std::pair<int,int>();
+
+    if (currentCoordinates.second == 6) {
+        oldCoordinatesOfRookPiece = std::make_pair(currentCoordinates.first, 7);
+        newCoordinatesOfRookPiece = std::make_pair(currentCoordinates.first, (currentCoordinates.second-1));
+
+        chessMovementResponseTransfer.addChessPieceMovementTransfer(
+            this->chessPieceMovementGenerator->generateChessPieceMovementTransfer(
+                ChessMovementConstants::ACTION_MOVE, oldCoordinatesOfRookPiece, newCoordinatesOfRookPiece));
+    } else {
+        oldCoordinatesOfRookPiece = std::make_pair(currentCoordinates.first, 0);
+        newCoordinatesOfRookPiece = std::make_pair(currentCoordinates.first, (currentCoordinates.second+1));
+
+        chessMovementResponseTransfer.addChessPieceMovementTransfer(
+            this->chessPieceMovementGenerator->generateChessPieceMovementTransfer(
+                ChessMovementConstants::ACTION_MOVE, oldCoordinatesOfRookPiece, newCoordinatesOfRookPiece));
+    }
+
+    auto *oldChessCellWithRookPiece = GameApplication::getChessCell(oldCoordinatesOfRookPiece);
+    auto *newChessCellWithRookPiece = GameApplication::getChessCell(newCoordinatesOfRookPiece);
+
+    newChessCellWithRookPiece->setChessPiece(oldChessCellWithRookPiece->getChessPiece());
+    oldChessCellWithRookPiece->setChessPiece(nullptr);
 
     return chessMovementResponseTransfer;
 }
