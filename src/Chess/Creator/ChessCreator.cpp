@@ -8,10 +8,31 @@
 #include <utility>
 #include "../Shared/Chess/ChessConstants.h"
 #include "../ChessPiece/PawnPiece.h"
+#include "../ChessPiece/KnightPiece.h"
+#include "../ChessPiece/BishopPiece.h"
+#include "../ChessPiece/RookPiece.h"
+#include "../ChessPiece/QueenPiece.h"
+#include "../ChessPiece/KingPiece.h"
+#include "../ChessPiece/Generator/ChessPieceMovementGenerator.h"
 
 BaseChessPiece *ChessCreator::createChessPiece(std::string type, int player) {
     if (type == ChessConstants::PAWN_PIECE_TYPE) {
-        return new PawnPiece(player);
+        return new PawnPiece(player, this->createChessPieceMovementGenerator());
+    }
+    if (type == ChessConstants::KNIGHT_PIECE_TYPE) {
+        return new KnightPiece(player, this->createChessPieceMovementGenerator());
+    }
+    if (type == ChessConstants::KING_PIECE_TYPE) {
+        return new KingPiece(player, this->createChessPieceMovementGenerator());
+    }
+    if (type == ChessConstants::ROOK_PIECE_TYPE) {
+        return new RookPiece(player, this->createChessPieceMovementGenerator());
+    }
+    if (type == ChessConstants::QUEEN_PIECE_TYPE) {
+        return new QueenPiece(player, this->createChessPieceMovementGenerator());
+    }
+    if (type == ChessConstants::BISHOP_PIECE_TYPE) {
+        return new BishopPiece(player, this->createChessPieceMovementGenerator());
     }
 
     return nullptr;
@@ -48,27 +69,68 @@ void ChessCreator::fillFieldWithEmptyCells(ChessField *chessField) {
 void ChessCreator::addChessPiecesToFieldCells(ChessField *chessField) {
     this->fillFieldWithPawns(chessField);
     this->fillFieldWithQueens(chessField);
+    this->fillFieldWithKings(chessField);
+    this->fillFieldWithBishops(chessField);
+    this->fillFieldWithKnights(chessField);
+    this->fillFieldWithRooks(chessField);
+}
+
+void ChessCreator::fillFieldWithPieces(ChessField *chessField, std::string pieceType, int player, int row, int column) {
+        std::pair<int, int> coordinates = std::make_pair(row, column);
+        auto *piecePlayer = this->createChessPiece(pieceType, player);
+
+        ChessCell *rowChessCell = chessField->getChessCell(coordinates);
+        rowChessCell->setChessPiece(piecePlayer);
 }
 
 void ChessCreator::fillFieldWithPawns(ChessField *chessField) {
     for (int i = 0; i < 8; i++) {
-        std::pair<int, int> topRowCoordinates = std::make_pair(1, i);
-        std::pair<int, int> bottomRowCoordinates = std::make_pair(6, i);
-
-        auto *pawnPiecePlayer1 = this->createChessPiece(ChessConstants::PAWN_PIECE_TYPE, 1);
-        auto *pawnPiecePlayer2 = this->createChessPiece(ChessConstants::PAWN_PIECE_TYPE, 2);
-
-        ChessCell *topRowChessCell = chessField->getChessCell(topRowCoordinates);
-        ChessCell *bottomRowChessCell = chessField->getChessCell(bottomRowCoordinates);
-
-        topRowChessCell->setChessPiece(pawnPiecePlayer2);
-        bottomRowChessCell->setChessPiece(pawnPiecePlayer1);
+        this->fillFieldWithPieces(chessField, ChessConstants::PAWN_PIECE_TYPE, 2, 1, i);
+        this->fillFieldWithPieces(chessField, ChessConstants::PAWN_PIECE_TYPE, 1, 6, i);
     }
 }
 
 void ChessCreator::fillFieldWithQueens(ChessField *chessField) {
-    return;
+    this->fillFieldWithPieces(chessField, ChessConstants::QUEEN_PIECE_TYPE, 2, 0, 3);
+    this->fillFieldWithPieces(chessField, ChessConstants::QUEEN_PIECE_TYPE, 1, 7, 3);
 }
+
+void ChessCreator::fillFieldWithKings(ChessField *chessField) {
+    this->fillFieldWithPieces(chessField, ChessConstants::KING_PIECE_TYPE, 2, 0, 4);
+    this->fillFieldWithPieces(chessField, ChessConstants::KING_PIECE_TYPE, 1, 7, 4);
+}
+
+void ChessCreator::fillFieldWithBishops(ChessField *chessField) {
+    this->fillFieldWithPieces(chessField, ChessConstants::BISHOP_PIECE_TYPE, 2, 0, 2);
+    this->fillFieldWithPieces(chessField, ChessConstants::BISHOP_PIECE_TYPE, 2, 0, 5);
+
+    this->fillFieldWithPieces(chessField, ChessConstants::BISHOP_PIECE_TYPE, 1, 7, 2);
+    this->fillFieldWithPieces(chessField, ChessConstants::BISHOP_PIECE_TYPE, 1, 7, 5);
+}
+
+void ChessCreator::fillFieldWithKnights(ChessField *chessField) {
+    this->fillFieldWithPieces(chessField, ChessConstants::KNIGHT_PIECE_TYPE, 2, 0, 1);
+    this->fillFieldWithPieces(chessField, ChessConstants::KNIGHT_PIECE_TYPE, 2, 0, 6);
+
+    this->fillFieldWithPieces(chessField, ChessConstants::KNIGHT_PIECE_TYPE, 1, 7, 1);
+    this->fillFieldWithPieces(chessField, ChessConstants::KNIGHT_PIECE_TYPE, 1, 7, 6);
+}
+
+void ChessCreator::fillFieldWithRooks(ChessField *chessField) {
+    this->fillFieldWithPieces(chessField, ChessConstants::ROOK_PIECE_TYPE, 2, 0, 0);
+    this->fillFieldWithPieces(chessField, ChessConstants::ROOK_PIECE_TYPE, 2, 0, 7);
+
+    this->fillFieldWithPieces(chessField, ChessConstants::ROOK_PIECE_TYPE, 1, 7, 0);
+    this->fillFieldWithPieces(chessField, ChessConstants::ROOK_PIECE_TYPE, 1, 7, 7);
+}
+
+ChessPieceMovementGenerator *ChessCreator::createChessPieceMovementGenerator() {
+    return new ChessPieceMovementGenerator;
+}
+
+
+
+
 
 
 

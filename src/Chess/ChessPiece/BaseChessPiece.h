@@ -6,18 +6,61 @@
 #define CHESSAPPLICATION_BASECHESSPIECE_H
 
 #include <string>
+#include <vector>
+#include <utility>
+
+class ChessField;
+class ChessPiecePossibleMoveCollectionTransfer;
+class ChessPiecePossibleMoveTransfer;
+class ChessPieceMovementGenerator;
 
 class BaseChessPiece {
 private:
     std::string type;
     int player;
-    std::pair<int, int> possibleMoves[25];
-public:
-    BaseChessPiece(std::string type, int player);
+    bool wasMovedLastTurn;
 
-    void determinePossibleMoves();
+protected:
+    ChessPieceMovementGenerator *chessPieceMovementGenerator;
+    int moveCounter;
+
+    std::pair<int, int> generateCoordinates(int xCoordinate, int yCoordinate);
+    std::vector<ChessPiecePossibleMoveTransfer*> tryToAddCoordinates(
+            ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate);
+
+    bool areCoordinatesOutOfBounds(int xCoordinate, int yCoordinate);
+
+    std::vector<ChessPiecePossibleMoveTransfer*> tryToAddCoordinatesForVerticalMovement(
+            ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate);
+    std::vector<ChessPiecePossibleMoveTransfer*> tryToAddCoordinatesForHorizontalMovement(
+            ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate);
+
+    std::vector<ChessPiecePossibleMoveTransfer*> tryToAddCoordinatesForDiagonalMovement(
+            ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate);
+
+    ChessPiecePossibleMoveCollectionTransfer checkOneLineMovement(
+            ChessField *chessField, ChessPiecePossibleMoveCollectionTransfer *chessPiecePossibleMoveTransfer, int xCoordinate, int yCoordinate);
+
+    bool hasCellOpponentChessPiece(ChessField *chessField, std::pair<int, int> coordinates);
+
+    bool isOpponentChessPiece(BaseChessPiece *chessPiece);
+
+    BaseChessPiece *getChessPiece(ChessField *chessField, int xCoordinate, int yCoordinate);
+public:
+    BaseChessPiece(std::string type, int player, ChessPieceMovementGenerator *chessPieceMovementGenerator);
 
     std::string getType();
+    int getPlayer();
+    int getMoveCounter();
+    bool wasChessPieceMovedLastTurn();
+
+    std::vector<ChessPiecePossibleMoveTransfer*> determinePossibleMoves(ChessField *chessField, std::pair<int, int> currentCoordinates);
+    virtual std::vector<ChessPiecePossibleMoveTransfer*> determinePossibleMovesForSpecificPiece(
+            ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate);
+
+    virtual void handleMovement(ChessPiecePossibleMoveTransfer *usedMove);
+
+    void updateLastTurnMovedStatus();
 };
 
 

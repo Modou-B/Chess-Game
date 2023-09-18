@@ -10,8 +10,12 @@
 class ChessField;
 class ChessCell;
 class BaseChessPiece;
+class ChessPieceMovementGenerator;
 
 class ChessCreator {
+protected:
+    ChessPieceMovementGenerator *createChessPieceMovementGenerator();
+
 public:
     BaseChessPiece *createChessPiece(std::string type, int player);
 
@@ -26,6 +30,12 @@ public:
 
     void fillFieldWithPawns(ChessField *chessField);
     void fillFieldWithQueens(ChessField *chessField);
+    void fillFieldWithKings(ChessField *chessField);
+    void fillFieldWithBishops(ChessField *chessField);
+    void fillFieldWithKnights(ChessField *chessField);
+    void fillFieldWithRooks(ChessField *chessField);
+    void fillFieldWithPieces(ChessField *chessField, std::string pieceType, int player, int column, int row);
+
 };
 
 #endif //CHESSAPPLICATION_CHESSCREATOR_H

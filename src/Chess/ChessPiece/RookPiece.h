@@ -7,8 +7,15 @@
 
 #include "BaseChessPiece.h"
 
-class RookPiece: public BaseChessPiece {
+class ChessPieceMovementGenerator;
+class ChessPiecePossibleMoveTransfer;
 
+class RookPiece: public BaseChessPiece {
+public:
+    RookPiece(int player, ChessPieceMovementGenerator *chessPieceMovementGenerator);
+
+    std::vector<ChessPiecePossibleMoveTransfer*> determinePossibleMovesForSpecificPiece(
+            ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate) override;
 };
 
 

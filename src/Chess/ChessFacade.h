@@ -6,18 +6,21 @@
 #define CHESSAPPLICATION_CHESSFACADE_H
 
 #include <string>
+#include <utility>
 #include "../Application/Facade/AbstractFacade.h"
 #include "ChessFactory.h"
 
 class ChessCell;
 class ChessField;
 class BaseChessPiece;
-class ChessCellTransfer;
-class ChessPieceTransfer;
+class ChessMovementResponseTransfer;
 
 class ChessFacade: public AbstractFacade {
 public:
     void initiateChessGame();
+    void endCurrentTurn(ChessMovementResponseTransfer chessMovementResponseTransfer);
+
+    ChessMovementResponseTransfer handleChessCellClick(std::pair<int, int> currentCellCoordinates);
 
     ChessFactory *getFactory() override;
 };
