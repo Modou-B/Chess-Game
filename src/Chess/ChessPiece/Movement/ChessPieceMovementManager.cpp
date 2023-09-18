@@ -12,6 +12,7 @@
 #include "../../../Shared/Chess/ChessMovementConstants.h"
 #include "../Generator/ChessPieceMovementGenerator.h"
 #include "../PawnPiece.h"
+#include "../../../ChessGui/Renderer/ChessGuiRenderer.h"
 
 // initialize static variables
 std::vector<ChessPiecePossibleMoveTransfer*> ChessPieceMovementManager::possibleMovesForClickedCell;
@@ -130,6 +131,8 @@ ChessMovementResponseTransfer ChessPieceMovementManager::handleMovementWithoutPr
 
 ChessMovementResponseTransfer ChessPieceMovementManager::saveClickedCellCoordinates(std::pair<int, int> currentCellCoordinates, ChessMovementResponseTransfer chessMovementResponseTransfer) {
     GameApplication::setPreviouslyClickedCellCoordinates(currentCellCoordinates);
+
+    ChessGuiRenderer::addListWidgetItem(currentCellCoordinates);
 
     return chessMovementResponseTransfer;
 }

@@ -17,6 +17,7 @@ class ChessGuiRenderer {
 private:
     ChessFacade *chessFacade;
     ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator;
+    static void TimeSlot();
 
 protected:
     QGridLayout *createChessGridLayout(QWidget *mainWindow);
@@ -35,6 +36,10 @@ public:
     ChessGuiRenderer(ChessFacade *chessFacade, ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator);
 
     void createChessField(QWidget *mainWindow);
+    void onRewindButtonPress();
+    void onPauseButtonPress();
+    void onSkipButtonPress();
+    static void addListWidgetItem(std::pair<int, int> currentCellCoordinates);
 };
 
 

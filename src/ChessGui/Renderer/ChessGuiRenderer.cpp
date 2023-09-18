@@ -13,6 +13,15 @@
 #include <utility>
 #include "QImage"
 #include "QPainter"
+#include "QLabel"
+#include "QPushButton"
+#include "QLCDNumber"
+#include "QTimer"
+#include "QTime"
+#include "QListWidget"
+#include "QListWidgetItem"
+
+
 
 ChessGuiRenderer::ChessGuiRenderer(ChessFacade *chessFacade, ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator) {
     this->chessFacade = chessFacade;
@@ -20,17 +29,103 @@ ChessGuiRenderer::ChessGuiRenderer(ChessFacade *chessFacade, ChessGuiPieceIconGe
 }
 
 void ChessGuiRenderer::createChessField(QWidget *mainWindow) {
-    auto mainLayout = new QHBoxLayout(mainWindow);
-    auto *layout = this->createChessGridLayout(mainWindow);
-    mainLayout->addLayout(layout);
+    auto hBoxMainBracketLayout = new QHBoxLayout(mainWindow);
+    auto vBox1Layout = new QVBoxLayout(mainWindow);
+    auto vBox2Layout = new QVBoxLayout(mainWindow);
 
-    this->fillFieldWithEmptyCells(layout);
-    this->addPawnsToCells(layout);
-    this->addQueensToCells(layout);
-    this->addKingsToCells(layout);
-    this->addBishopsToCells(layout);
-    this->addKnightsToCells(layout);
-    this->addRooksToCells(layout);
+
+    auto hBoxPlaybuttonsLayout = new QHBoxLayout(mainWindow);
+    auto hBoxCountdownLayout = new QHBoxLayout(mainWindow);
+    auto hBoxRewindLayout = new QHBoxLayout(mainWindow);
+
+    auto hboxTopPanelLayout = new QHBoxLayout(mainWindow);
+    auto hboxBottomPanelLayout = new QHBoxLayout(mainWindow);
+
+    auto player1Label = new QLabel("Player 1");
+    auto player1ActiveLabel = new QLabel("*Am Zug");
+    auto player2Label = new QLabel("Player 2");
+    auto player2ActiveLabel = new QLabel("*Am Zug");
+
+    auto *buttonRewind = new QPushButton("<<");
+    auto *buttonPause = new QPushButton(">||");
+    auto *buttonSkip = new QPushButton(">>");
+
+    auto *gridLayout = this->createChessGridLayout(mainWindow);
+
+    auto *digitalClock = new QLCDNumber();
+
+    auto *timer = new QTimer(mainWindow);
+
+
+    auto *rewindList = new QListWidget(mainWindow);
+
+    auto *rewindListEntry = new QListWidgetItem();
+
+
+
+
+    QObject::connect(timer,SIGNAL(timeout()), digitalClock, SLOT(TestTimer()));
+    //timer->start(1000);
+
+    //auto *time = new QTime(0,1,0);
+
+    digitalClock->display(QString::fromStdString(std::string("1000")));
+    //digitalClock->display(time);
+
+
+    // MainWindow Player1 -> Grid -> Player2
+    vBox1Layout->addLayout(hboxTopPanelLayout);
+    vBox1Layout->addLayout(gridLayout);
+    vBox1Layout->addLayout(hboxBottomPanelLayout);
+
+
+    // Befüllen von Labels
+    hboxTopPanelLayout->addWidget(player1Label);
+    hboxTopPanelLayout->addWidget(player1ActiveLabel);
+    hboxBottomPanelLayout->addWidget(player2Label);
+    hboxBottomPanelLayout->addWidget(player2ActiveLabel);
+
+    // Playbuttons
+    hBoxPlaybuttonsLayout->addWidget(buttonRewind);
+    hBoxPlaybuttonsLayout->addWidget(buttonPause);
+    hBoxPlaybuttonsLayout->addWidget(buttonSkip);
+
+
+    //auto *rewindAction = new QAction();
+    // QObject::connect(buttonRewind, SIGNAL(triggered()), rewindAction,SLOT(onRewindButtonPress()));
+
+
+
+
+    // Countdown
+    hBoxCountdownLayout->addWidget(digitalClock);
+
+    // Rewindlist
+    hBoxRewindLayout->addWidget(rewindList);
+
+    vBox2Layout->addLayout(hBoxCountdownLayout);
+    vBox2Layout->addLayout(hBoxRewindLayout);
+    vBox2Layout->addLayout(hBoxPlaybuttonsLayout);
+
+    // In den horizontalen Rahmen das Grid und die Playerlabel einsetzen
+    hBoxMainBracketLayout->addLayout(vBox1Layout);
+    hBoxMainBracketLayout->addLayout(vBox2Layout);
+
+    // Das rechte Menü samt Countdown und playerbutton einsetzen
+    hBoxMainBracketLayout->addLayout(hBoxCountdownLayout);
+
+    this->fillFieldWithEmptyCells(gridLayout);
+    this->addPawnsToCells(gridLayout);
+    this->addQueensToCells(gridLayout);
+    this->addKingsToCells(gridLayout);
+    this->addBishopsToCells(gridLayout);
+    this->addKnightsToCells(gridLayout);
+    this->addRooksToCells(gridLayout);
+}
+
+void ChessGuiRenderer::TimeSlot() {
+    //counter ++;
+    qDebug() << QString("Test");
 }
 
 
@@ -112,4 +207,24 @@ void ChessGuiRenderer::addRooksToCells(QGridLayout *layout) {
     this->addChessPieceToCells(layout, ChessConstants::BLACK_ROOK_PIECE_FILENAME, ChessConstants::ROOK_PIECE_TYPE, 0, 7);
     this->addChessPieceToCells(layout, ChessConstants::WHITE_ROOK_PIECE_FILENAME, ChessConstants::ROOK_PIECE_TYPE, 7, 0);
     this->addChessPieceToCells(layout, ChessConstants::WHITE_ROOK_PIECE_FILENAME, ChessConstants::ROOK_PIECE_TYPE, 7, 7);
+}
+
+void ChessGuiRenderer::onSkipButtonPress() {
+
+}
+
+void ChessGuiRenderer::onPauseButtonPress() {
+
+}
+
+void ChessGuiRenderer::onRewindButtonPress() {
+    qDebug() << "Test";
+}
+
+void ChessGuiRenderer::addListWidgetItem(std::pair<int, int> currentCellCoordinates) {
+    qDebug() << "First: "+QString::number(currentCellCoordinates.first);
+    qDebug() << "Second: "+QString::number(currentCellCoordinates.second);
+    //rewindListEntry->setText("test");
+
+    //rewindList->insertItem(0, rewindListEntry);
 }
