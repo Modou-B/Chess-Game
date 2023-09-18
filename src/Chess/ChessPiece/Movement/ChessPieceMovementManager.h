@@ -31,6 +31,9 @@ protected:
     ChessMovementResponseTransfer addEnPassantChessPieceMovement(
         ChessCell *previousChessCell, ChessCell *currentChessCell, ChessMovementResponseTransfer chessMovementResponseTransfer);
 
+    ChessMovementResponseTransfer addCastlingChessPieceMovement(
+        ChessCell *currentChessCell, ChessMovementResponseTransfer chessMovementResponseTransfer);
+
     ChessMovementResponseTransfer saveClickedCellCoordinates(std::pair<int, int> currentCellCoordinates, ChessMovementResponseTransfer chessMovementResponseTransfer);
     ChessMovementResponseTransfer savePossibleMovesForClickedPiece(BaseChessPiece *clickedChessPiece, std::pair<int, int> currentCellCoordinates, ChessMovementResponseTransfer chessMovementResponseTransfer);
 
