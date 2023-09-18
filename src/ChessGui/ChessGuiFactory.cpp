@@ -5,9 +5,13 @@
 #include "ChessGuiFactory.h"
 
 ChessGuiRenderer *ChessGuiFactory::createChessGuiRenderer() {
-    return new ChessGuiRenderer(this->getChessFacade());
+    return new ChessGuiRenderer(this->getChessFacade(), this->createChessGuiPieceIconGenerator());
 }
 
 ChessFacade *ChessGuiFactory::getChessFacade() {
     return static_cast<ChessFacade*>(this->findFacade(typeid(ChessFacade).name()));
+}
+
+ChessGuiPieceIconGenerator *ChessGuiFactory::createChessGuiPieceIconGenerator() {
+    return new ChessGuiPieceIconGenerator();
 }

@@ -7,15 +7,18 @@
 
 #include "BaseChessPiece.h"
 
+class ChessPieceMovementGenerator;
+class ChessPiecePossibleMoveTransfer;
+
 class KingPiece: public BaseChessPiece {
 protected:
-    std::vector<std::pair<int, int>> checkHorizontalMovement(
-            ChessField *chessField, std::vector<std::pair<int, int>> possibleMoves, int xCoordinate, int yCoordinate);
+    std::vector<ChessPiecePossibleMoveTransfer*> checkHorizontalMovement(
+            ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate);
 public:
-    KingPiece(int player);
+    KingPiece(int player, ChessPieceMovementGenerator *chessPieceMovementGenerator);
 
-    std::vector<std::pair<int, int>> determinePossibleMovesForSpecificPiece(
-            ChessField *chessField, std::vector<std::pair<int, int>> possibleMoves, int xCoordinate, int yCoordinate) override;
+    std::vector<ChessPiecePossibleMoveTransfer*> determinePossibleMovesForSpecificPiece(
+            ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate) override;
 };
 
 

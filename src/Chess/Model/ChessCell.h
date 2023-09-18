@@ -17,8 +17,6 @@ private:
 public:
     ChessCell(BaseChessPiece* chessPiece, std::pair<int, int> coordinates);
 
-    void handleCellClick();
-
     void setChessPiece(BaseChessPiece *baseChessPiece);
 
     std::pair<int, int> getCoordinates();

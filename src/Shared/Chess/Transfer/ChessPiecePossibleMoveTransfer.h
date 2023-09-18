@@ -1,26 +1,27 @@
 //
-// Created by Julian Sommer on 10.09.23.
+// Created by Julian Sommer on 17.09.23.
 //
 
 #ifndef CHESSAPPLICATION_CHESSPIECEPOSSIBLEMOVETRANSFER_H
 #define CHESSAPPLICATION_CHESSPIECEPOSSIBLEMOVETRANSFER_H
 
-#include <utility>
-#include <vector>
+#include <string>
 
 class ChessPiecePossibleMoveTransfer {
 private:
-    std::vector<std::pair<int, int>> *possibleMoves;
-    bool hasOpponentPieceAsPossibleMove;
+    std::string moveType;
+
+    int xCoordinate;
+    int yCoordinate;
 
 public:
-    ChessPiecePossibleMoveTransfer();
+    ChessPiecePossibleMoveTransfer &setMoveType(std::string moveType);
+    ChessPiecePossibleMoveTransfer &setXCoordinate(int xCoordinate);
+    ChessPiecePossibleMoveTransfer &setYCoordinate(int yCoordinate);
 
-    std::vector<std::pair<int, int>> *getPossibleMoveVector();
-    bool getHasOpponentPieceAsPossibleMove();
-
-    void setPossibleMoveVector(std::vector<std::pair<int, int>> *possibleMoves);
-    void setHasOpponentPieceAsPossibleMove(bool value);
+    std::string getMoveType();
+    int getXCoordinate();
+    int getYCoordinate();
 };
 
 

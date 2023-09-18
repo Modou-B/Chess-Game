@@ -9,34 +9,25 @@
 
 class ChessField;
 class ChessCreator;
-class ChessCell;
+class ChessPieceMovementManager;
 class ChessMovementResponseTransfer;
-class BaseChessPiece;
 
 class GameApplicationManager {
 private:
     ChessCreator *chessCreator;
-
-    static std::vector<std::pair<int, int>> possibleMovesForClickedCell;
+    ChessPieceMovementManager* chessPieceMovementManager;
 
 protected:
-    void endCurrentTurn();
+    void updateStateLastTurnChessPieces();
 
 public:
-    GameApplicationManager(ChessCreator *chessCreator);
+    GameApplicationManager(ChessCreator *chessCreator, ChessPieceMovementManager* chessPieceMovementManager);
 
     void initiateChessApplication();
 
-    ChessMovementResponseTransfer handleChessMovement(std::pair<int, int> currentCellCoordinates);
-    ChessMovementResponseTransfer handleMovementWithoutPreviousClickedCell(ChessCell *currentChessCell, ChessMovementResponseTransfer chessMovementResponseTransfer);
-    ChessMovementResponseTransfer handleMovementWithPreviousClickedCell(ChessCell *currentChessCell, ChessMovementResponseTransfer chessMovementResponseTransfer);
+    ChessMovementResponseTransfer handleChessCellClick(std::pair<int, int> currentCellCoordinates);
 
-    ChessMovementResponseTransfer moveChessPiece(ChessCell *previousChessCell, ChessCell *currentChessCell, ChessMovementResponseTransfer chessMovementResponseTransfer);
-
-    ChessMovementResponseTransfer saveClickedCellCoordinates(std::pair<int, int> currentCellCoordinates, ChessMovementResponseTransfer chessMovementResponseTransfer);
-    void savePossibleMovesForClickedPiece(BaseChessPiece *clickedChessPiece, std::pair<int, int> currentCellCoordinates);
-
-    bool doesChessPieceBelongToCurrentPlayer(BaseChessPiece *currentChessPiece);
+    void endCurrentTurn(ChessMovementResponseTransfer chessMovementResponseTransfer);
 };
 
 
