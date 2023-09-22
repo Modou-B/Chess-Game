@@ -15,6 +15,9 @@
 #include "QString"
 #include "iostream"
 #include "QGraphicsOpacityEffect"
+#include "QListWidgetItem"
+#include "../Renderer/ChessGuiRenderer.h"
+#include "../Renderer/ChessCoordinateConverter.h"
 
 ChessGuiCell::ChessGuiCell(QGridLayout *gridLayout, ChessFacade *chessFacade, std::pair<int, int> coordinates, ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator) {
     this->gridLayout = gridLayout;
@@ -42,6 +45,7 @@ void ChessGuiCell::handleCellClick() {
     }
 
     this->handleChessPieceMovement(chessMovementResponseTransfer);
+    this->addListWidgetItem(this->coordinates);
     this->chessFacade->endCurrentTurn(chessMovementResponseTransfer);
 }
 
@@ -139,4 +143,15 @@ std::string ChessGuiCell::getChessPieceIconState() {
 
 std::string ChessGuiCell::getChessPieceType() {
     return this->chessPieceType;
+}
+
+void ChessGuiCell::addListWidgetItem(std::pair<int, int> currentCellCoordinates) {
+    // qDebug() << "First: "+QString::number(currentCellCoordinates.first);
+    // qDebug() << "Second: "+QString::number(currentCellCoordinates.second);
+
+    QString entryStr = QString::fromStdString(ChessCoordinateConverter::GetConvertedChessMatrixValue(currentCellCoordinates)+" -> "+this->getChessPieceType());
+
+
+    auto *rewindListEntry = new QListWidgetItem(entryStr);
+    ChessGuiRenderer::rewindList->insertItem(ChessGuiRenderer::rewindList->count() + 1,rewindListEntry);
 }

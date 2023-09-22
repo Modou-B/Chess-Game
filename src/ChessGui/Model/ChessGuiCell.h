@@ -47,6 +47,7 @@ public:
     void clearPossibleMovesForPreviousPieceClick(ChessMovementResponseTransfer chessMovementResponseTransfer);
 
     void setChessPieceIcon(std::string iconState, QIcon chessPieceIcon);
+    void addListWidgetItem(std::pair<int, int> currentCellCoordinates);
 };
 
 

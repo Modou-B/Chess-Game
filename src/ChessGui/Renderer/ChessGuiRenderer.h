@@ -12,12 +12,14 @@ class QGridLayout;
 class ChessFacade;
 class ChessGuiPieceIconGenerator;
 class QIcon;
+class QListWidget;
 
 class ChessGuiRenderer {
 private:
     ChessFacade *chessFacade;
     ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator;
     static void TimeSlot();
+
 
 protected:
     QGridLayout *createChessGridLayout(QWidget *mainWindow);
@@ -39,7 +41,8 @@ public:
     void onRewindButtonPress();
     void onPauseButtonPress();
     void onSkipButtonPress();
-    static void addListWidgetItem(std::pair<int, int> currentCellCoordinates);
+    static QListWidget *rewindList;
+
 };
 
 
