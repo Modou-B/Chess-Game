@@ -8,10 +8,14 @@
 #include <utility>
 
 class ChessField;
+class ChessPlayerData;
 
 class BareKingDrawStatusChecker {
+protected:
+    bool hasOpponentOnlyKnightOrBishopLeft(ChessPlayerData *opponentChessPlayerData);
+
 public:
-    bool isCheckmateNotPossible(ChessField *chessField, std::pair<int, int> kingPieceCoordinates, int currentPlayer);
+    bool isCheckmateNotPossible(ChessPlayerData *currentChessPlayerData, ChessPlayerData *opponentChessPlayerData);
 };
 
 #endif // CHESSAPPLICATION_BAREKINGDRAWSTATUSCHECKER_H

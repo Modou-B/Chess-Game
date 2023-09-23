@@ -7,6 +7,7 @@
 #include "../../ChessPiece/BaseChessPiece.h"
 
 ChessPlayerData::ChessPlayerData() {
+    this->chessPieceAmount = 16;
     this->isInCheck = false;
     this->activePawnPieces = new std::vector<BaseChessPiece*>;
     this->activeRookPieces = new std::vector<BaseChessPiece*>;
@@ -67,6 +68,10 @@ BaseChessPiece *ChessPlayerData::getKingPiece() {
     return this->activeKingPiece;
 }
 
+int ChessPlayerData::getChessPieceAmount() {
+    return this->chessPieceAmount;
+}
+
 bool ChessPlayerData::isPlayerInCheck() {
     return this->isInCheck;
 }
@@ -76,8 +81,8 @@ void ChessPlayerData::removePiece(BaseChessPiece *chessPiece) {
 
     for (int i = 0; i < activeChessPieces->size(); i++) {
         if (activeChessPieces->at(i) == chessPiece) {
-
             activeChessPieces->erase(activeChessPieces->begin()+ i);
+            this->chessPieceAmount--;
 
             return;
         }

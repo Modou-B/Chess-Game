@@ -35,9 +35,9 @@ public:
     CheckmateManager(
           InCheckStatusChecker *inCheckStatusChecker, InStalemateStatusChecker *inStalemateStatusChecker, BareKingDrawStatusChecker *bareKingDrawStatusChecker);
 
-    void determineCurrentGameState(ChessField *chessField, ChessPlayerData *chessPlayerData, int player);
+    void determineCurrentGameState(ChessField *chessField, ChessPlayerData *currentChessPlayerData, ChessPlayerData *opponentChessPlayerData, int player);
 
-    static void setKingPieceCoordinates(std::pair<int, int> kingPieceCoordinates, int player);
+    void setKingPieceCoordinates(std::pair<int, int> kingPieceCoordinates, int player);
 
     static std::pair<int, int> getKingPieceCoordinatesForPlayer(int player);
 };

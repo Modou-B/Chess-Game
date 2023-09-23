@@ -12,9 +12,6 @@ class ChessPiecePossibleMoveTransfer;
 class KingPieceMovementChecker;
 
 class KingPiece: public BaseChessPiece {
-private:
-    KingPieceMovementChecker *kingPieceMovementChecker;
-
 protected:
     std::vector<ChessPiecePossibleMoveTransfer*> checkHorizontalMovement(
             ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate);
