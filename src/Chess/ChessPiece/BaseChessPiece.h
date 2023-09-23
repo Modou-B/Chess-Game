@@ -73,7 +73,7 @@ public:
 
     void clearCoordinatesThatBlockCheck();
 
-    std::vector<ChessPiecePossibleMoveTransfer*> determinePossibleMoves(ChessField *chessField, std::pair<int, int> currentCoordinates, bool verifyInCheck = false);
+    std::vector<ChessPiecePossibleMoveTransfer*> determinePossibleMoves(ChessField *chessField, std::pair<int, int> currentCoordinates, bool verifyInCheck = true);
     virtual std::vector<ChessPiecePossibleMoveTransfer*> determinePossibleMovesForSpecificPiece(
             ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate);
 
