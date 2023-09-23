@@ -29,9 +29,11 @@ public:
     void initiateChessApplication();
 
     ChessMovementResponseTransfer handleChessCellClick(std::pair<int, int> currentCellCoordinates);
+    void handlePawnPieceSwitch(ChessMovementResponseTransfer chessMovementResponseTransfer, std::string switchedPieceType);
 
     void endCurrentTurn(ChessMovementResponseTransfer chessMovementResponseTransfer);
     void startNewTurn();
+    int getCurrentPlayer();
 };
 
 

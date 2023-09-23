@@ -27,6 +27,8 @@ protected:
 public:
     ChessPlayerData();
 
+    void addPieceByType(BaseChessPiece *chessPiece, std::string pieceType);
+
     void addPawnPiece(BaseChessPiece *pawnPiece);
     void addRookPiece(BaseChessPiece *rookPiece);
     void addKnightPiece(BaseChessPiece *knightPiece);
