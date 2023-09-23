@@ -23,6 +23,7 @@ private:
 
     void resetVerifyData(int *xCoordinateToReset, int *yCoordinateToReset, InCheckVerifierTransfer *inCheckVerifierTransfer, int xValue, int yValue);
     void mapToInCheckResponseTransfer(std::string pieceType, std::vector<InCheckBlockedCoordinatesTransfer*> checkedCoordinates, InCheckResponseTransfer *inCheckResponseTransfer);
+    bool isPawnViable(std::string diagonalDirection, int pawnPiecePlayer);
 
 protected:
     void checkForKnightsHorizontally(

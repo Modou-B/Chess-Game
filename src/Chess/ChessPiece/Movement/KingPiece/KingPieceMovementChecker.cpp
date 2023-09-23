@@ -86,7 +86,7 @@ InCheckResponseTransfer KingPieceMovementChecker::getDiagonalCheckAmountForGiven
 
     yCoordinate--;
     xCoordinate++;
-    inCheckVerifierTransfer.setYCoordinateToVerify(yCoordinate).setXCoordinateToVerify(xCoordinate);
+    inCheckVerifierTransfer.setYCoordinateToVerify(yCoordinate).setXCoordinateToVerify(xCoordinate).setDiagonalCheckDirection(CheckmateConstants::DIAGONAL_DIRECTION_TOP_RIGHT);
     while (this->continueToVerifyCoordinates(chessField, &inCheckVerifierTransfer, &inCheckResponseTransfer)) {
         yCoordinate--;
         xCoordinate++;
@@ -99,7 +99,7 @@ InCheckResponseTransfer KingPieceMovementChecker::getDiagonalCheckAmountForGiven
 
     yCoordinate--;
     xCoordinate--;
-    inCheckVerifierTransfer.setYCoordinateToVerify(yCoordinate).setXCoordinateToVerify(xCoordinate);
+    inCheckVerifierTransfer.setYCoordinateToVerify(yCoordinate).setXCoordinateToVerify(xCoordinate).setDiagonalCheckDirection(CheckmateConstants::DIAGONAL_DIRECTION_TOP_LEFT);
     while (this->continueToVerifyCoordinates(chessField, &inCheckVerifierTransfer, &inCheckResponseTransfer)) {
         yCoordinate--;
         xCoordinate--;
@@ -112,7 +112,7 @@ InCheckResponseTransfer KingPieceMovementChecker::getDiagonalCheckAmountForGiven
 
     yCoordinate++;
     xCoordinate++;
-    inCheckVerifierTransfer.setYCoordinateToVerify(yCoordinate).setXCoordinateToVerify(xCoordinate);
+    inCheckVerifierTransfer.setYCoordinateToVerify(yCoordinate).setXCoordinateToVerify(xCoordinate).setDiagonalCheckDirection(CheckmateConstants::DIAGONAL_DIRECTION_BOTTOM_RIGHT);
     while (this->continueToVerifyCoordinates(chessField, &inCheckVerifierTransfer, &inCheckResponseTransfer)) {
         yCoordinate++;
         xCoordinate++;
@@ -125,7 +125,7 @@ InCheckResponseTransfer KingPieceMovementChecker::getDiagonalCheckAmountForGiven
 
     yCoordinate++;
     xCoordinate--;
-    inCheckVerifierTransfer.setYCoordinateToVerify(yCoordinate).setXCoordinateToVerify(xCoordinate);
+    inCheckVerifierTransfer.setYCoordinateToVerify(yCoordinate).setXCoordinateToVerify(xCoordinate).setDiagonalCheckDirection(CheckmateConstants::DIAGONAL_DIRECTION_BOTTOM_LEFT);
     while (this->continueToVerifyCoordinates(chessField, &inCheckVerifierTransfer, &inCheckResponseTransfer)) {
         yCoordinate++;
         xCoordinate--;
@@ -193,6 +193,7 @@ bool KingPieceMovementChecker::continueToVerifyCoordinates(
     std::string pieceTypeToCheck = inCheckVerifierTransfer->getPieceTypeToCheck();
     if (pieceTypeToCheck == CheckmateConstants::IN_CHECK_TYPE_HORIZONTAL
         || pieceTypeToCheck == CheckmateConstants::IN_CHECK_TYPE_VERTICALLY) {
+
         if (potentialChessPieceOnCell->getType() == ChessConstants::QUEEN_PIECE_TYPE
             || potentialChessPieceOnCell->getType() == ChessConstants::ROOK_PIECE_TYPE) {
             this->mapToInCheckResponseTransfer(
@@ -200,6 +201,12 @@ bool KingPieceMovementChecker::continueToVerifyCoordinates(
               inCheckVerifierTransfer->getLastInCheckBlockedCoordinatesTransfer(),
               inCheckResponseTransfer
             );
+
+            return false;
+        }
+
+        if (potentialChessPieceOnCell->getMoveCounter() == 1
+            && potentialChessPieceOnCell->getType() == ChessConstants::KING_PIECE_TYPE) {
 
             return false;
         }
@@ -222,7 +229,6 @@ bool KingPieceMovementChecker::continueToVerifyCoordinates(
         return false;
     }
 
-
     if (pieceTypeToCheck == CheckmateConstants::IN_CHECK_TYPE_DIAGONALLY) {
         if (potentialChessPieceOnCell->getType() == ChessConstants::QUEEN_PIECE_TYPE
             || potentialChessPieceOnCell->getType() == ChessConstants::BISHOP_PIECE_TYPE) {
@@ -235,15 +241,28 @@ bool KingPieceMovementChecker::continueToVerifyCoordinates(
             return false;
         }
 
-        if (potentialChessPieceOnCell->getType() == ChessConstants::PAWN_PIECE_TYPE
-            && inCheckVerifierTransfer->getMoveCounter() == 1) {
-            this->mapToInCheckResponseTransfer(
-              potentialChessPieceOnCell->getType(),
-              inCheckVerifierTransfer->getLastInCheckBlockedCoordinatesTransfer(),
-              inCheckResponseTransfer
-            );
+        if (inCheckVerifierTransfer->getMoveCounter() == 1) {
+            if (potentialChessPieceOnCell->getType() == ChessConstants::KING_PIECE_TYPE) {
+                this->mapToInCheckResponseTransfer(
+          potentialChessPieceOnCell->getType(),
+          inCheckVerifierTransfer->getLastInCheckBlockedCoordinatesTransfer(),
+                    inCheckResponseTransfer
+              );
 
-            return false;
+                return false;
+            }
+
+            if (potentialChessPieceOnCell->getType() == ChessConstants::PAWN_PIECE_TYPE
+                && this->isPawnViable(inCheckVerifierTransfer->getDiagonalCheckDirectionFromCell(), potentialChessPieceOnCell->getPlayer())
+            ) {
+                this->mapToInCheckResponseTransfer(
+          potentialChessPieceOnCell->getType(),
+          inCheckVerifierTransfer->getLastInCheckBlockedCoordinatesTransfer(),
+                    inCheckResponseTransfer
+                );
+
+                return false;
+            }
         }
     }
 
@@ -293,4 +312,22 @@ void KingPieceMovementChecker::mapToInCheckResponseTransfer(
     inCheckResponseTransfer->setLatestCoordinatesFromCellToOpponentPiece(checkedCoordinates);
     inCheckResponseTransfer->setLatestPieceTypeThatCheckKing(pieceType);
     inCheckResponseTransfer->setAmountOfPiecesThatCheckCell(inCheckResponseTransfer->getAmountOfPiecesThatCheckCell() + 1);
+}
+
+bool KingPieceMovementChecker::isPawnViable(std::string diagonalDirection, int pawnPiecePlayer) {
+    if (pawnPiecePlayer == 2
+        && (diagonalDirection == CheckmateConstants::DIAGONAL_DIRECTION_TOP_LEFT
+            || diagonalDirection == CheckmateConstants::DIAGONAL_DIRECTION_TOP_RIGHT)
+    ) {
+        return true;
+    }
+
+    if (pawnPiecePlayer == 1
+        && (diagonalDirection == CheckmateConstants::DIAGONAL_DIRECTION_BOTTOM_LEFT
+            || diagonalDirection == CheckmateConstants::DIAGONAL_DIRECTION_BOTTOM_RIGHT)
+    ) {
+        return true;
+    }
+
+    return false;
 }

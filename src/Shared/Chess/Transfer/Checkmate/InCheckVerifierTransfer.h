@@ -18,6 +18,7 @@ private:
     int currentPlayer;
     int moveCounter;
     std::string pieceTypeToCheck;
+    std::string diagonalDirectionFromCell;
 
     std::vector<InCheckBlockedCoordinatesTransfer*> lastCheckedCoordinates;
 public:
@@ -26,6 +27,7 @@ public:
     InCheckVerifierTransfer &setCurrentPlayer(int currentPlayer);
     InCheckVerifierTransfer &setMoveCounter(int currentMove);
     InCheckVerifierTransfer &setPieceTypeToCheck(std::string pieceTypeToCheck);
+    InCheckVerifierTransfer &setDiagonalCheckDirection(std::string diagonalDirection);
 
     void addLastInCheckBlockedCoordinatesTransfer(InCheckBlockedCoordinatesTransfer* inCheckBlockedCoordinatesTransfer);
 
@@ -34,6 +36,8 @@ public:
     int getCurrentPlayer();
     int getMoveCounter();
     std::string getPieceTypeToCheck();
+    std::string getDiagonalCheckDirectionFromCell();
+
     std::vector<InCheckBlockedCoordinatesTransfer*> getLastInCheckBlockedCoordinatesTransfer();
 
     void clearLastCheckedCoordinates();

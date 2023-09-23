@@ -34,6 +34,12 @@ InCheckVerifierTransfer &InCheckVerifierTransfer::setPieceTypeToCheck(std::strin
     return *this;
 }
 
+InCheckVerifierTransfer &InCheckVerifierTransfer::setDiagonalCheckDirection(std::string diagonalDirection) {
+    this->diagonalDirectionFromCell = diagonalDirection;
+
+    return *this;
+}
+
 void InCheckVerifierTransfer::addLastInCheckBlockedCoordinatesTransfer(InCheckBlockedCoordinatesTransfer* inCheckBlockedCoordinatesTransfer) {
     this->lastCheckedCoordinates.push_back(inCheckBlockedCoordinatesTransfer);
 }
@@ -56,6 +62,10 @@ int InCheckVerifierTransfer::getMoveCounter() {
 
 std::string InCheckVerifierTransfer::getPieceTypeToCheck() {
     return this->pieceTypeToCheck;
+}
+
+std::string InCheckVerifierTransfer::getDiagonalCheckDirectionFromCell() {
+    return this->diagonalDirectionFromCell;
 }
 
 std::vector<InCheckBlockedCoordinatesTransfer*> InCheckVerifierTransfer::getLastInCheckBlockedCoordinatesTransfer() {
