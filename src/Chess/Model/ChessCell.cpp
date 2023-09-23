@@ -20,3 +20,7 @@ std::pair<int, int> ChessCell::getCoordinates() {
 BaseChessPiece *ChessCell::getChessPiece() {
     return this->chessPiece;
 }
+
+ChessCell *ChessCell::getCopy() {
+    return new ChessCell(this->chessPiece, this->coordinates);
+}

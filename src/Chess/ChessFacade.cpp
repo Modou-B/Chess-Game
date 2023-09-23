@@ -21,3 +21,7 @@ ChessMovementResponseTransfer ChessFacade::handleChessCellClick(std::pair<int, i
 void ChessFacade::endCurrentTurn(ChessMovementResponseTransfer chessMovementResponseTransfer) {
     ChessFacade::getFactory()->createGameApplicationManager()->endCurrentTurn(chessMovementResponseTransfer);
 }
+
+void ChessFacade::startNewTurn() {
+    ChessFacade::getFactory()->createGameApplicationManager()->startNewTurn();
+}

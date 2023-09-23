@@ -5,7 +5,11 @@
 #include "ChessFactory.h"
 
 GameApplicationManager *ChessFactory::createGameApplicationManager() {
-    return new GameApplicationManager(this->createChessCreator(), this->createChessPieceMovementManager());
+    return new GameApplicationManager(
+      this->createChessCreator(),
+      this->createChessPieceMovementManager(),
+      this->createCheckmateManager()
+      );
 }
 
 ChessPieceMovementGenerator *ChessFactory::createChessPieceMovementGenerator() {
@@ -18,4 +22,28 @@ ChessCreator *ChessFactory::createChessCreator() {
 
 ChessPieceMovementManager *ChessFactory::createChessPieceMovementManager() {
     return new ChessPieceMovementManager(this->createChessPieceMovementGenerator());
+}
+
+CheckmateManager *ChessFactory::createCheckmateManager() {
+    return new CheckmateManager(
+      this->createInCheckStatusChecker(),
+      this->createInStalemateStatusChecker(),
+      this->createBareKingDrawStatusChecker()
+      );
+}
+
+InCheckStatusChecker *ChessFactory::createInCheckStatusChecker() {
+    return new InCheckStatusChecker(this->createKingPieceMovementChecker());
+}
+
+InStalemateStatusChecker *ChessFactory::createInStalemateStatusChecker() {
+    return new InStalemateStatusChecker();
+}
+
+BareKingDrawStatusChecker *ChessFactory::createBareKingDrawStatusChecker() {
+    return new BareKingDrawStatusChecker();
+}
+
+KingPieceMovementChecker *ChessFactory::createKingPieceMovementChecker() {
+    return new KingPieceMovementChecker();
 }

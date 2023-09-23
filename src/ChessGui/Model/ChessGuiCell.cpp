@@ -43,6 +43,7 @@ void ChessGuiCell::handleCellClick() {
 
     this->handleChessPieceMovement(chessMovementResponseTransfer);
     this->chessFacade->endCurrentTurn(chessMovementResponseTransfer);
+    this->chessFacade->startNewTurn();
 }
 
 Qt::GlobalColor ChessGuiCell::getCellColor() {

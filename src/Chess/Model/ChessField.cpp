@@ -15,3 +15,16 @@ void ChessField::addChessCell(ChessCell *chessCell) {
     this->chessField[coordinates.first][coordinates.second] = chessCell;
 }
 
+ChessField *ChessField::getCopy() {
+    auto *chessFieldCopy = new ChessField;
+
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            auto coordinates = std::make_pair(i, j);
+            chessFieldCopy->addChessCell(this->getChessCell(coordinates)->getCopy());
+        }
+    }
+
+    return chessFieldCopy;
+}
+
