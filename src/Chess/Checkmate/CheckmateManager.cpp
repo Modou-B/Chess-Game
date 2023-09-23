@@ -26,7 +26,7 @@ CheckmateManager::CheckmateManager(
 }
 
 
-void CheckmateManager::determineCurrentGameState(ChessField *chessField, ChessPlayerData *chessPlayerData,  int player) {
+void CheckmateManager::determineCurrentGameState(ChessField *chessField, ChessPlayerData *currentChessPlayerData, ChessPlayerData *opponentChessPlayerData, int player) {
     auto kingPieceCoordinates = CheckmateManager::getKingPieceCoordinatesForPlayer(player);
 
     auto inCheckResponseTransfer = this->inCheckStatusChecker->getAmountOfPiecesThatCheckKing(
@@ -35,28 +35,25 @@ void CheckmateManager::determineCurrentGameState(ChessField *chessField, ChessPl
     std::cout << inCheckResponseTransfer.getAmountOfPiecesThatCheckCell() << std::endl;
 
     if (inCheckResponseTransfer.getAmountOfPiecesThatCheckCell() > 0) {
-        chessPlayerData->setInCheckStatus(true);
+        currentChessPlayerData->setInCheckStatus(true);
 
-        this->isPlayerInCheckmate(chessField, kingPieceCoordinates, chessPlayerData, inCheckResponseTransfer, player);
+        this->isPlayerInCheckmate(chessField, kingPieceCoordinates, currentChessPlayerData, inCheckResponseTransfer, player);
 
         return;
     }
 
-    chessPlayerData->setInCheckStatus(false);
-
-    /*
+    currentChessPlayerData->setInCheckStatus(false);
     if (this->inStalemateStatusChecker->isKingInStalemate(
-          chessField, CheckmateManager::getKingPieceCoordinatesForPlayer(player), player)
+          chessField, currentChessPlayerData, CheckmateManager::getKingPieceCoordinatesForPlayer(player))
     ) {
-
+        std::cout << "Stalemate" << std::endl;
+        exit(1);
     }
 
-    if (this->bareKingDrawStatusChecker->isCheckmateNotPossible(
-          chessField, CheckmateManager::getKingPieceCoordinatesForPlayer(player), player)
-    ) {
-
+    if (this->bareKingDrawStatusChecker->isCheckmateNotPossible(currentChessPlayerData, opponentChessPlayerData)) {
+        std::cout << "Bare King" << std::endl;
+        exit(1);
     }
-     */
 }
 
 void CheckmateManager::setKingPieceCoordinates(std::pair<int, int> kingPieceCoordinates, int player) {

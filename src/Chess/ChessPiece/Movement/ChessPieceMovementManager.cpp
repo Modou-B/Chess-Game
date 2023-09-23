@@ -75,6 +75,9 @@ ChessMovementResponseTransfer ChessPieceMovementManager::moveChessPiece(
 
     chessMovementResponseTransfer.togglePieceMovementValue();
     chessMovementResponseTransfer.setState(ChessConstants::STATE_MOVED_PIECE);
+    if (previousChessCell->getChessPiece()->getType() == ChessConstants::KING_PIECE_TYPE) {
+        chessMovementResponseTransfer.setHasKingMoved(true);
+    }
 
     chessMovementResponseTransfer.addChessPieceMovementTransfer(
         this->chessPieceMovementGenerator->generateChessPieceMovementTransfer(
@@ -93,8 +96,8 @@ ChessMovementResponseTransfer ChessPieceMovementManager::moveChessPiece(
     if (currentChessCell->getChessPiece()) {
         opponentPlayerData->removePiece(currentChessCell->getChessPiece());
     }
-    currentChessCell->setChessPiece(previousChessCell->getChessPiece());
 
+    currentChessCell->setChessPiece(previousChessCell->getChessPiece());
     previousChessCell->setChessPiece(nullptr);
 
     return chessMovementResponseTransfer;
@@ -216,12 +219,13 @@ ChessMovementResponseTransfer ChessPieceMovementManager::savePossibleMovesForCli
         ChessPieceMovementManager::previousPossibleMovesForClickedCell = ChessPieceMovementManager::possibleMovesForClickedCell;
     }
 
-    ChessPieceMovementManager::possibleMovesForClickedCell = this->getPossibleMovesForCheckStatus(clickedChessPiece, isPlayerInCheck);
-
-    if (!ChessPieceMovementManager::possibleMovesForClickedCell.empty()) {
-        chessMovementResponseTransfer.setPossibleMoves(&ChessPieceMovementManager::possibleMovesForClickedCell);
-        chessMovementResponseTransfer.togglePossibleMovesCheckValue();
+    auto possibleMoves = this->getPossibleMovesForCheckStatus(clickedChessPiece, isPlayerInCheck);
+    if (!possibleMoves.empty()) {
+        chessMovementResponseTransfer.setPossibleMoves(possibleMoves);
+        chessMovementResponseTransfer.setPossibleMovesCheckValue(true);
     }
+
+    ChessPieceMovementManager::possibleMovesForClickedCell = possibleMoves;
 
     if (!ChessPieceMovementManager::previousPossibleMovesForClickedCell.empty()) {
         chessMovementResponseTransfer.setPreviousPossibleMoves(&ChessPieceMovementManager::previousPossibleMovesForClickedCell);

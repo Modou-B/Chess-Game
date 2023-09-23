@@ -5,15 +5,21 @@
 #include "BaseChessPiece.h"
 #include "../Model/ChessField.h"
 #include "../Model/ChessCell.h"
+#include "../Checkmate/CheckmateManager.h"
+#include "Movement/KingPiece/KingPieceMovementChecker.h"
 #include "../../Shared/Chess/Transfer/ChessPiecePossibleMoveCollectionTransfer.h"
 #include "../../Shared/Chess/Transfer/ChessPiecePossibleMoveTransfer.h"
+#include "../../Shared/Chess/Transfer/Checkmate/InCheckResponseTransfer.h"
+#include "../../Shared/Chess/ChessConstants.h"
 #include "../../Shared/Chess/ChessMovementConstants.h"
 #include "Generator/ChessPieceMovementGenerator.h"
 #include "iostream"
 
-BaseChessPiece::BaseChessPiece(std::string type, int player, ChessPieceMovementGenerator *chessPieceMovementGenerator) {
+BaseChessPiece::BaseChessPiece(
+    std::string type, int player, ChessPieceMovementGenerator *chessPieceMovementGenerator, KingPieceMovementChecker *kingPieceMovementChecker) {
     this->type = type;
     this->player = player;
+    this->kingPieceMovementChecker = kingPieceMovementChecker;
     this->chessPieceMovementGenerator = chessPieceMovementGenerator;
     this->moveCounter = 0;
     this->wasMovedLastTurn = false;
@@ -28,13 +34,49 @@ int BaseChessPiece::getPlayer() {
     return this->player;
 }
 
-std::vector<ChessPiecePossibleMoveTransfer*> BaseChessPiece::determinePossibleMoves(ChessField *chessField, std::pair<int, int> currentCoordinates) {
+std::vector<ChessPiecePossibleMoveTransfer*> BaseChessPiece::determinePossibleMoves(ChessField *chessField, std::pair<int, int> currentCoordinates, bool verifyInCheck) {
     std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves = std::vector<ChessPiecePossibleMoveTransfer*>();
 
     int xCoordinate = currentCoordinates.second;
     int yCoordinate = currentCoordinates.first;
 
-    return this->determinePossibleMovesForSpecificPiece(chessField, possibleMoves, xCoordinate, yCoordinate);
+    possibleMoves = this->determinePossibleMovesForSpecificPiece(chessField, possibleMoves, xCoordinate, yCoordinate);
+
+    if (this->getType() != ChessConstants::KING_PIECE_TYPE && verifyInCheck) {
+        if (this->verifyIfPieceMoveResultsInCheck(chessField, possibleMoves)) {
+            return {};
+        }
+    }
+
+    return possibleMoves;
+}
+
+bool BaseChessPiece::verifyIfPieceMoveResultsInCheck(ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves) {
+    if (possibleMoves.empty()) {
+        return false;
+    }
+
+    auto kingPieceCoordinates = CheckmateManager::getKingPieceCoordinatesForPlayer(this->player);
+    int yCoordinate = kingPieceCoordinates.first;
+    int xCoordinate = kingPieceCoordinates.second;
+
+    ChessField *chessFieldCopy = chessField->getCopy();
+    auto firstPossibleMoveTransfer = possibleMoves.front();
+
+    auto *previousChessCell = chessFieldCopy->getChessCell(this->currentCoordinates);
+    auto *newChessCell = chessFieldCopy->getChessCell(this->generateCoordinates(firstPossibleMoveTransfer->getXCoordinate(), firstPossibleMoveTransfer->getYCoordinate()));
+
+    newChessCell->setChessPiece(previousChessCell->getChessPiece());
+    previousChessCell->setChessPiece(nullptr);
+
+    if (this->kingPieceMovementChecker->getHorizontalCheckAmountForGivenChessCell(chessFieldCopy, xCoordinate, yCoordinate, this->player).getAmountOfPiecesThatCheckCell() > 0
+        || this->kingPieceMovementChecker->getVerticalCheckAmountForGivenChessCell(chessFieldCopy, xCoordinate, yCoordinate, this->player).getAmountOfPiecesThatCheckCell() > 0
+        || this->kingPieceMovementChecker->getDiagonalCheckAmountForGivenChessCell(chessFieldCopy, xCoordinate, yCoordinate, this->player).getAmountOfPiecesThatCheckCell() > 0
+    ) {
+        return true;
+    }
+
+    return false;
 }
 
 std::vector<ChessPiecePossibleMoveTransfer*> BaseChessPiece::determinePossibleMovesForSpecificPiece(
@@ -259,6 +301,16 @@ bool BaseChessPiece::hasCellOpponentChessPiece(ChessField *chessField, std::pair
     BaseChessPiece *chessPieceOnCell = chessField->getChessCell(coordinates)->getChessPiece();
 
     return this->isOpponentChessPiece(chessPieceOnCell);
+}
+
+bool BaseChessPiece::hasCellChessPiece(ChessField *chessField, std::pair<int, int> coordinates) {
+    BaseChessPiece *chessPieceOnCell = chessField->getChessCell(coordinates)->getChessPiece();
+
+    if (chessPieceOnCell) {
+        return true;
+    }
+
+    return false;
 }
 
 BaseChessPiece *BaseChessPiece::getChessPiece(ChessField *chessField, int xCoordinate, int yCoordinate) {

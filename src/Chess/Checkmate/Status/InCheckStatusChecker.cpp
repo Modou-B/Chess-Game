@@ -12,7 +12,6 @@
 #include "../../../Shared/Chess/Transfer/Checkmate/InCheckResponseTransfer.h"
 #include "../../../Shared/Chess/Transfer/Checkmate/InCheckBlockedCoordinatesTransfer.h"
 #include "../../../Shared/Chess/Transfer/ChessPiecePossibleMoveTransfer.h"
-#include "iostream"
 
 InCheckStatusChecker::InCheckStatusChecker(KingPieceMovementChecker *kingPieceMovementChecker) {
     this->kingPieceMovementChecker = kingPieceMovementChecker;
@@ -60,8 +59,6 @@ void InCheckStatusChecker::updateFullInCheckResponseTransfer(InCheckResponseTran
 
 int InCheckStatusChecker::getAmountOfPiecesThatBlockCheck(ChessField *chessField, ChessPlayerData *chessPlayerData, InCheckResponseTransfer inCheckResponseTransfer, std::pair<int, int> kingPieceCoordinates, int currentPlayer) {
     int piecesThatBlockCheck = 0;
-    auto blockedCellCoordinates = inCheckResponseTransfer.getLatestCoordinatesFromCellToOpponentPiece();
-
     this->hashInCheckCords(inCheckResponseTransfer);
 
     auto pawnPieces = chessPlayerData->getAllPawnPieces();
@@ -91,7 +88,7 @@ int InCheckStatusChecker::getCheckBlockAmountForSpecificPieces(
         specificPiece->setCheckBlockAbility(false);
         specificPiece->clearCoordinatesThatBlockCheck();
 
-        auto possibleMoveTransfers = specificPiece->determinePossibleMoves(chessField, specificPiece->getCurrentCoordinates());
+        auto possibleMoveTransfers = specificPiece->determinePossibleMoves(chessField, specificPiece->getCurrentCoordinates(), false);
         for (auto &possibleMoveTransfer : possibleMoveTransfers) {
 
             auto coordinates = std::make_pair(possibleMoveTransfer->getYCoordinate(), possibleMoveTransfer->getXCoordinate());
@@ -140,8 +137,6 @@ bool InCheckStatusChecker::verifyIfPieceTakeResultsInCheck(
 }
 
 void InCheckStatusChecker::hashInCheckCords(InCheckResponseTransfer inCheckResponseTransfer) {
-    auto inCheckCoords = inCheckResponseTransfer.getLatestCoordinatesFromCellToOpponentPiece();
-
     for (auto &inCheckBlockedCoordinatesTransfer : inCheckResponseTransfer.getLatestCoordinatesFromCellToOpponentPiece()) {
         this->hashedCoords[this->getHash(inCheckBlockedCoordinatesTransfer->getBlockedCoordinateFromCellToOpponentPiece())] = inCheckBlockedCoordinatesTransfer;
     }

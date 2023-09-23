@@ -9,10 +9,11 @@
 
 class ChessPieceMovementGenerator;
 class ChessPiecePossibleMoveTransfer;
+class KingPieceMovementChecker;
 
 class BishopPiece: public BaseChessPiece {
 public:
-    BishopPiece(int player, ChessPieceMovementGenerator *chessPieceMovementGenerator);
+    BishopPiece(int player, ChessPieceMovementGenerator *chessPieceMovementGenerator, KingPieceMovementChecker *kingPieceMovementChecker);
 
     std::vector<ChessPiecePossibleMoveTransfer*> determinePossibleMovesForSpecificPiece(
             ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate) override;

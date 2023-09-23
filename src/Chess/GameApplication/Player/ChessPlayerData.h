@@ -19,8 +19,8 @@ private:
     std::vector<BaseChessPiece*> *activeQueenPieces;
     BaseChessPiece *activeKingPiece;
 
+    int chessPieceAmount;
     bool isInCheck;
-
 protected:
     std::vector<BaseChessPiece*> *getChessPiecesForType(std::string pieceType);
 
@@ -41,6 +41,8 @@ public:
     std::vector<BaseChessPiece*> getAllBishopPieces();
     std::vector<BaseChessPiece*> getAllQueenPieces();
     BaseChessPiece *getKingPiece();
+    int getChessPieceAmount();
+
     bool isPlayerInCheck();
 
     void removePiece(BaseChessPiece *chessPiece);

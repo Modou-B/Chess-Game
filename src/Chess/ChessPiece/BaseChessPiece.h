@@ -13,6 +13,8 @@ class ChessField;
 class ChessPiecePossibleMoveCollectionTransfer;
 class ChessPiecePossibleMoveTransfer;
 class ChessPieceMovementGenerator;
+class CheckmateManager;
+class KingPieceMovementChecker;
 
 class BaseChessPiece {
 private:
@@ -25,12 +27,14 @@ private:
     std::vector<ChessPiecePossibleMoveTransfer*> coordinatesThatBlockCheck;
 protected:
     ChessPieceMovementGenerator *chessPieceMovementGenerator;
+    KingPieceMovementChecker *kingPieceMovementChecker;
     int moveCounter;
 
     std::pair<int, int> generateCoordinates(int xCoordinate, int yCoordinate);
     std::vector<ChessPiecePossibleMoveTransfer*> tryToAddCoordinates(
             ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate);
 
+    bool verifyIfPieceMoveResultsInCheck(ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves);
     bool areCoordinatesOutOfBounds(int xCoordinate, int yCoordinate);
 
     std::vector<ChessPiecePossibleMoveTransfer*> tryToAddCoordinatesForVerticalMovement(
@@ -45,13 +49,14 @@ protected:
             ChessField *chessField, ChessPiecePossibleMoveCollectionTransfer *chessPiecePossibleMoveTransfer, int xCoordinate, int yCoordinate);
 
     bool hasCellOpponentChessPiece(ChessField *chessField, std::pair<int, int> coordinates);
+    bool hasCellChessPiece(ChessField *chessField, std::pair<int, int> coordinates);
 
     bool isOpponentChessPiece(BaseChessPiece *chessPiece);
 
     BaseChessPiece *getChessPiece(ChessField *chessField, int xCoordinate, int yCoordinate);
 public:
     BaseChessPiece(
-      std::string type, int player, ChessPieceMovementGenerator *chessPieceMovementGenerator);
+      std::string type, int player, ChessPieceMovementGenerator *chessPieceMovementGenerator, KingPieceMovementChecker *kingPieceMovementChecker);
 
     std::string getType();
     int getPlayer();
@@ -68,7 +73,7 @@ public:
 
     void clearCoordinatesThatBlockCheck();
 
-    std::vector<ChessPiecePossibleMoveTransfer*> determinePossibleMoves(ChessField *chessField, std::pair<int, int> currentCoordinates);
+    std::vector<ChessPiecePossibleMoveTransfer*> determinePossibleMoves(ChessField *chessField, std::pair<int, int> currentCoordinates, bool verifyInCheck = false);
     virtual std::vector<ChessPiecePossibleMoveTransfer*> determinePossibleMovesForSpecificPiece(
             ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate);
 

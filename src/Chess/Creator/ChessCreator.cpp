@@ -19,22 +19,22 @@
 #include "iostream"
 BaseChessPiece *ChessCreator::createChessPiece(std::string type, int player) {
     if (type == ChessConstants::PAWN_PIECE_TYPE) {
-        return new PawnPiece(player, this->createChessPieceMovementGenerator());
+        return new PawnPiece(player, this->createChessPieceMovementGenerator(), this->createKingPieceMovementChecker());
     }
     if (type == ChessConstants::KNIGHT_PIECE_TYPE) {
-        return new KnightPiece(player, this->createChessPieceMovementGenerator());
+        return new KnightPiece(player, this->createChessPieceMovementGenerator(), this->createKingPieceMovementChecker());
     }
     if (type == ChessConstants::KING_PIECE_TYPE) {
         return new KingPiece(player, this->createChessPieceMovementGenerator(), this->createKingPieceMovementChecker());
     }
     if (type == ChessConstants::ROOK_PIECE_TYPE) {
-        return new RookPiece(player, this->createChessPieceMovementGenerator());
+        return new RookPiece(player, this->createChessPieceMovementGenerator(), this->createKingPieceMovementChecker());
     }
     if (type == ChessConstants::QUEEN_PIECE_TYPE) {
-        return new QueenPiece(player, this->createChessPieceMovementGenerator());
+        return new QueenPiece(player, this->createChessPieceMovementGenerator(), this->createKingPieceMovementChecker());
     }
     if (type == ChessConstants::BISHOP_PIECE_TYPE) {
-        return new BishopPiece(player, this->createChessPieceMovementGenerator());
+        return new BishopPiece(player, this->createChessPieceMovementGenerator(), this->createKingPieceMovementChecker());
     }
 
     return nullptr;

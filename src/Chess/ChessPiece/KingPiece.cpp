@@ -14,9 +14,7 @@ KingPiece::KingPiece(
     int player,
     ChessPieceMovementGenerator *chessPieceMovementGenerator,
     KingPieceMovementChecker *kingPieceMovementChecker
-    ): BaseChessPiece(ChessConstants::KING_PIECE_TYPE, player, chessPieceMovementGenerator) {
-
-    this->kingPieceMovementChecker = kingPieceMovementChecker;
+    ): BaseChessPiece(ChessConstants::KING_PIECE_TYPE, player, chessPieceMovementGenerator, kingPieceMovementChecker) {
 }
 
 std::vector<ChessPiecePossibleMoveTransfer*> KingPiece::determinePossibleMovesForSpecificPiece(

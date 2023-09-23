@@ -32,8 +32,8 @@ void GameApplicationManager::initiateChessApplication() {
     GameApplication::setChessPlayer1Data(chessPlayer1Data);
     GameApplication::setChessPlayer2Data(chessPlayer2Data);
 
-    CheckmateManager::setKingPieceCoordinates(std::make_pair(7, 4), 1);
-    CheckmateManager::setKingPieceCoordinates(std::make_pair(0, 4), 2);
+    this->checkmateManager->setKingPieceCoordinates(std::make_pair(7, 4), 1);
+    this->checkmateManager->setKingPieceCoordinates(std::make_pair(0, 4), 2);
 }
 
 ChessMovementResponseTransfer GameApplicationManager::handleChessCellClick(std::pair<int, int> currentCellCoordinates) {
@@ -44,6 +44,10 @@ ChessMovementResponseTransfer GameApplicationManager::handleChessCellClick(std::
 }
 
 void GameApplicationManager::endCurrentTurn(ChessMovementResponseTransfer chessMovementResponseTransfer) {
+    if (chessMovementResponseTransfer.getHasKingMoved()) {
+        this->checkmateManager->setKingPieceCoordinates(chessMovementResponseTransfer.getCurrentCellCoordinates(), GameApplication::getCurrentPlayer());
+    }
+
     GameApplication::toggleCurrentPlayer();
     GameApplication::togglePreviousClickedCellValue();
 
@@ -67,5 +71,10 @@ void GameApplicationManager::updateStateLastTurnChessPieces() {
 }
 
 void GameApplicationManager::startNewTurn() {
-    this->checkmateManager->determineCurrentGameState(GameApplication::getChessField(), GameApplication::getCurrentChessPlayerData(), GameApplication::getCurrentPlayer());
+    this->checkmateManager->determineCurrentGameState(
+      GameApplication::getChessField(),
+      GameApplication::getCurrentChessPlayerData(),
+      GameApplication::getOpponentChessPlayerData(),
+      GameApplication::getCurrentPlayer()
+    );
 }
