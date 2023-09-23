@@ -16,6 +16,28 @@ ChessPlayerData::ChessPlayerData() {
     this->activeQueenPieces = new std::vector<BaseChessPiece*>;
 }
 
+void ChessPlayerData::addPieceByType(BaseChessPiece *chessPiece, std::string pieceType) {
+    if (pieceType == ChessConstants::PAWN_PIECE_TYPE) {
+        this->activePawnPieces->push_back(chessPiece);
+    }
+
+    if (pieceType == ChessConstants::ROOK_PIECE_TYPE) {
+        this->activeRookPieces->push_back(chessPiece);
+    }
+
+    if (pieceType == ChessConstants::KNIGHT_PIECE_TYPE) {
+        this->activeKnightPieces->push_back(chessPiece);
+    }
+
+    if (pieceType == ChessConstants::BISHOP_PIECE_TYPE) {
+        this->activeBishopPieces->push_back(chessPiece);
+    }
+
+    if (pieceType == ChessConstants::QUEEN_PIECE_TYPE) {
+        this->activeQueenPieces->push_back(chessPiece);
+    }
+}
+
 void ChessPlayerData::addPawnPiece(BaseChessPiece *pawnPiece) {
     this->activePawnPieces->push_back(pawnPiece);
 }

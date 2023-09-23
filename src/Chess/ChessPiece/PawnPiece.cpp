@@ -8,7 +8,7 @@
 #include "Generator/ChessPieceMovementGenerator.h"
 #include "../Model/ChessField.h"
 #include "../../Shared/Chess/ChessConstants.h"
-#include "iostream"
+
 PawnPiece::PawnPiece(
     int player,
     ChessPieceMovementGenerator *chessPieceMovementGenerator,
@@ -75,7 +75,7 @@ std::vector<ChessPiecePossibleMoveTransfer *> PawnPiece::checkForDoubleMove(
         return possibleMoves;
     }
 
-    if (!this->usedDoubleMove) {
+    if (this->moveCounter == 0) {
         std::pair<int, int> coordinates = this->generateCoordinates(yCoordinate, xCoordinate);
 
         if (!this->areCoordinatesOutOfBounds(xCoordinate, yCoordinate) && !this->hasCellOpponentChessPiece(chessField, coordinates)) {

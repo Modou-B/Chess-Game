@@ -18,10 +18,18 @@ ChessMovementResponseTransfer ChessFacade::handleChessCellClick(std::pair<int, i
     return ChessFacade::getFactory()->createGameApplicationManager()->handleChessCellClick(currentCellCoordinates);
 }
 
+void ChessFacade::handlePawnPieceSwitch(ChessMovementResponseTransfer chessMovementResponseTransfer, std::string switchedPieceType) {
+    ChessFacade::getFactory()->createGameApplicationManager()->handlePawnPieceSwitch(chessMovementResponseTransfer, switchedPieceType);
+}
+
 void ChessFacade::endCurrentTurn(ChessMovementResponseTransfer chessMovementResponseTransfer) {
     ChessFacade::getFactory()->createGameApplicationManager()->endCurrentTurn(chessMovementResponseTransfer);
 }
 
 void ChessFacade::startNewTurn() {
     ChessFacade::getFactory()->createGameApplicationManager()->startNewTurn();
+}
+
+int ChessFacade::getCurrentPlayer() {
+    return ChessFacade::getFactory()->createGameApplicationManager()->getCurrentPlayer();
 }

@@ -16,7 +16,7 @@
 #include "../ChessPiece/Generator/ChessPieceMovementGenerator.h"
 #include "../ChessPiece/Movement/KingPiece/KingPieceMovementChecker.h"
 #include "../GameApplication/Player/ChessPlayerData.h"
-#include "iostream"
+
 BaseChessPiece *ChessCreator::createChessPiece(std::string type, int player) {
     if (type == ChessConstants::PAWN_PIECE_TYPE) {
         return new PawnPiece(player, this->createChessPieceMovementGenerator(), this->createKingPieceMovementChecker());

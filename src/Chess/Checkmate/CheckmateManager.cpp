@@ -32,7 +32,7 @@ void CheckmateManager::determineCurrentGameState(ChessField *chessField, ChessPl
     auto inCheckResponseTransfer = this->inCheckStatusChecker->getAmountOfPiecesThatCheckKing(
       chessField, kingPieceCoordinates, player);
 
-    std::cout << inCheckResponseTransfer.getAmountOfPiecesThatCheckCell() << std::endl;
+    std::cout << "AmountOfPiecesThatCheckKing " <<inCheckResponseTransfer.getAmountOfPiecesThatCheckCell() << std::endl;
 
     if (inCheckResponseTransfer.getAmountOfPiecesThatCheckCell() > 0) {
         currentChessPlayerData->setInCheckStatus(true);

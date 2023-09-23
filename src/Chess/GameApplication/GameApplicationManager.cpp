@@ -43,6 +43,19 @@ ChessMovementResponseTransfer GameApplicationManager::handleChessCellClick(std::
     return chessMovementResponseTransfer;
 }
 
+void GameApplicationManager::handlePawnPieceSwitch(ChessMovementResponseTransfer chessMovementResponseTransfer, std::string switchedPieceType) {
+    auto currentChessCell = GameApplication::getChessField()->getChessCell(chessMovementResponseTransfer.getCurrentCellCoordinates());
+
+    auto chessPlayerData = GameApplication::getCurrentChessPlayerData();
+    chessPlayerData->removePiece(currentChessCell->getChessPiece());
+
+    auto switchedChessPiece = this->chessCreator->createChessPiece(switchedPieceType, GameApplication::getCurrentPlayer());
+    switchedChessPiece->setCurrentCoordinates(chessMovementResponseTransfer.getCurrentCellCoordinates());
+
+    currentChessCell->setChessPiece(switchedChessPiece);
+    chessPlayerData->addPieceByType(switchedChessPiece, switchedPieceType);
+}
+
 void GameApplicationManager::endCurrentTurn(ChessMovementResponseTransfer chessMovementResponseTransfer) {
     if (chessMovementResponseTransfer.getHasKingMoved()) {
         this->checkmateManager->setKingPieceCoordinates(chessMovementResponseTransfer.getCurrentCellCoordinates(), GameApplication::getCurrentPlayer());
@@ -77,4 +90,8 @@ void GameApplicationManager::startNewTurn() {
       GameApplication::getOpponentChessPlayerData(),
       GameApplication::getCurrentPlayer()
     );
+}
+
+int GameApplicationManager::getCurrentPlayer() {
+    return GameApplication::getCurrentPlayer();
 }

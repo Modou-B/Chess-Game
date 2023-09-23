@@ -42,6 +42,12 @@ void ChessGuiCell::handleCellClick() {
     }
 
     this->handleChessPieceMovement(chessMovementResponseTransfer);
+
+    if (chessMovementResponseTransfer.getState() == ChessConstants::STATE_MOVED_PIECE_PAWN_SWITCH) {
+        this->handlePawnPieceSwitch(chessMovementResponseTransfer);
+        this->chessFacade->handlePawnPieceSwitch(chessMovementResponseTransfer, ChessConstants::QUEEN_PIECE_TYPE);
+    }
+
     this->chessFacade->endCurrentTurn(chessMovementResponseTransfer);
     this->chessFacade->startNewTurn();
 }
@@ -140,4 +146,22 @@ std::string ChessGuiCell::getChessPieceIconState() {
 
 std::string ChessGuiCell::getChessPieceType() {
     return this->chessPieceType;
+}
+
+void ChessGuiCell::handlePawnPieceSwitch(ChessMovementResponseTransfer chessMovementResponseTransfer) {
+    auto currentCellCoordinates = chessMovementResponseTransfer.getCurrentCellCoordinates();
+
+    ChessGuiCell *currentChessGuiCell = static_cast<ChessGuiCell*>(this->gridLayout->itemAtPosition(
+            currentCellCoordinates.first, currentCellCoordinates.second)->widget());
+
+    std::string pieceType = ChessConstants::QUEEN_PIECE_TYPE;
+    if (this->chessFacade->getCurrentPlayer() == 1) {
+          pieceType.append("-white");
+    } else {
+          pieceType.append("-black");
+    }
+
+    currentChessGuiCell->setChessPieceIcon(
+            ChessGuiConstants::STATE_REAL_CHESS_PIECE_ICON, this->chessGuiPieceIconGenerator->generateIconFromFile(pieceType));
+    currentChessGuiCell->setIconSize(QSize(50, 50));
 }

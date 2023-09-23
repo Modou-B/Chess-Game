@@ -97,6 +97,13 @@ ChessMovementResponseTransfer ChessPieceMovementManager::moveChessPiece(
         opponentPlayerData->removePiece(currentChessCell->getChessPiece());
     }
 
+    if (previousChessCell->getChessPiece()->getType() == ChessConstants::PAWN_PIECE_TYPE
+        && (currentChessCell->getCoordinates().first == 7
+            || currentChessCell->getCoordinates().first == 0)
+    ) {
+        chessMovementResponseTransfer.setState(ChessConstants::STATE_MOVED_PIECE_PAWN_SWITCH);
+    }
+
     currentChessCell->setChessPiece(previousChessCell->getChessPiece());
     previousChessCell->setChessPiece(nullptr);
 
