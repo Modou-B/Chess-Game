@@ -16,6 +16,8 @@ public:
     ChessCell *getChessCell(std::pair<int, int> coordinates);
 
     void addChessCell(ChessCell *chessCell);
+
+    ChessField *getCopy();
 };
 
 

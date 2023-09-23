@@ -3,10 +3,12 @@
 //
 
 #include "GameApplication.h"
-
 #include "../Model/ChessField.h"
 
 ChessField *GameApplication::chessField = nullptr;
+ChessPlayerData *GameApplication::chessPlayer1Data = nullptr;
+ChessPlayerData *GameApplication::chessPlayer2Data = nullptr;
+
 int GameApplication::currentPlayer = 1;
 int GameApplication::turnCounter = 0;
 
@@ -33,6 +35,14 @@ std::pair<int, int> GameApplication::getCoordinatesOfLastTurnClickedCell() {
 
 void GameApplication::setChessField(ChessField *chessFieldModel) {
     GameApplication::chessField = chessFieldModel;
+}
+
+void GameApplication::setChessPlayer1Data(ChessPlayerData *chessPlayerData) {
+    GameApplication::chessPlayer1Data = chessPlayerData;
+}
+
+void GameApplication::setChessPlayer2Data(ChessPlayerData *chessPlayerData) {
+    GameApplication::chessPlayer2Data = chessPlayerData;
 }
 
 void GameApplication::setPreviouslyClickedCellCoordinates(std::pair<int, int> currentCellCoordinates) {
@@ -69,6 +79,22 @@ void GameApplication::toggleCurrentPlayer() {
 
 int GameApplication::getTurnCounter() {
     return GameApplication::turnCounter;
+}
+
+ChessPlayerData *GameApplication::getCurrentChessPlayerData() {
+    if (GameApplication::getCurrentPlayer() == 1) {
+        return GameApplication::chessPlayer1Data;
+    }
+
+    return GameApplication::chessPlayer2Data;
+}
+
+ChessPlayerData *GameApplication::getOpponentChessPlayerData() {
+    if (GameApplication::getCurrentPlayer() == 1) {
+        return GameApplication::chessPlayer2Data;
+    }
+
+    return GameApplication::chessPlayer1Data;
 }
 
 void GameApplication::increaseTurnCounter() {

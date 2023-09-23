@@ -10,24 +10,28 @@
 class ChessField;
 class ChessCreator;
 class ChessPieceMovementManager;
+class CheckmateManager;
 class ChessMovementResponseTransfer;
 
 class GameApplicationManager {
 private:
     ChessCreator *chessCreator;
-    ChessPieceMovementManager* chessPieceMovementManager;
+    ChessPieceMovementManager *chessPieceMovementManager;
+    CheckmateManager *checkmateManager;
 
 protected:
     void updateStateLastTurnChessPieces();
 
 public:
-    GameApplicationManager(ChessCreator *chessCreator, ChessPieceMovementManager* chessPieceMovementManager);
+    GameApplicationManager(
+      ChessCreator *chessCreator, ChessPieceMovementManager* chessPieceMovementManager, CheckmateManager *checkmateManager);
 
     void initiateChessApplication();
 
     ChessMovementResponseTransfer handleChessCellClick(std::pair<int, int> currentCellCoordinates);
 
     void endCurrentTurn(ChessMovementResponseTransfer chessMovementResponseTransfer);
+    void startNewTurn();
 };
 
 

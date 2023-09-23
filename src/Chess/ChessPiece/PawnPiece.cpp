@@ -7,8 +7,9 @@
 #include "../../Shared/Chess/ChessMovementConstants.h"
 #include "Generator/ChessPieceMovementGenerator.h"
 #include "../Model/ChessField.h"
+#include "../../Shared/Chess/ChessConstants.h"
 
-PawnPiece::PawnPiece(int player, ChessPieceMovementGenerator *chessPieceMovementGenerator): BaseChessPiece("Pawn", player, chessPieceMovementGenerator) {
+PawnPiece::PawnPiece(int player, ChessPieceMovementGenerator *chessPieceMovementGenerator): BaseChessPiece(ChessConstants::PAWN_PIECE_TYPE, player, chessPieceMovementGenerator) {
     this->usedDoubleMove = false;
 }
 
@@ -27,7 +28,11 @@ std::vector<ChessPiecePossibleMoveTransfer*> PawnPiece::determinePossibleMovesFo
     possibleMoves = this->checkForEnPassant(chessField, possibleMoves, xCoordinate, yCoordinate, -1);
 
     yCoordinate--;
-    possibleMoves = this->tryToAddCoordinates(chessField, possibleMoves, xCoordinate, yCoordinate);
+
+    if (!this->hasCellOpponentChessPiece(chessField, this->generateCoordinates(yCoordinate, xCoordinate))) {
+          possibleMoves = this->tryToAddCoordinates(chessField, possibleMoves, xCoordinate, yCoordinate);
+    }
+
     possibleMoves = this->checkForDiagonalPieces(chessField, possibleMoves, xCoordinate, yCoordinate);
 
     yCoordinate--;

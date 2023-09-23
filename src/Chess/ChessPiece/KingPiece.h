@@ -9,8 +9,12 @@
 
 class ChessPieceMovementGenerator;
 class ChessPiecePossibleMoveTransfer;
+class KingPieceMovementChecker;
 
 class KingPiece: public BaseChessPiece {
+private:
+    KingPieceMovementChecker *kingPieceMovementChecker;
+
 protected:
     std::vector<ChessPiecePossibleMoveTransfer*> checkHorizontalMovement(
             ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate);
@@ -19,8 +23,11 @@ protected:
             ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate);
 
     bool isRookEligibleForCastling(ChessField *chessField, int xCoordinate, int yCoordinate);
+
+    bool doesOpponentChessPieceBlockCoordinates(ChessField *chessField, int xCoordinate, int yCoordinate);
+    std::vector<ChessPiecePossibleMoveTransfer*> tryToAddPossibleKingCoordinates(ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate);
 public:
-    KingPiece(int player, ChessPieceMovementGenerator *chessPieceMovementGenerator);
+    KingPiece(int player, ChessPieceMovementGenerator *chessPieceMovementGenerator, KingPieceMovementChecker *kingPieceMovementChecker);
 
     std::vector<ChessPiecePossibleMoveTransfer*> determinePossibleMovesForSpecificPiece(
             ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate) override;

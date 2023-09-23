@@ -1,0 +1,19 @@
+//
+// Created by Julian Sommer on 18.09.23.
+//
+
+#ifndef CHESSAPPLICATION_CHECKMATECONSTANTS_H
+#define CHESSAPPLICATION_CHECKMATECONSTANTS_H
+
+#include <string>
+
+namespace CheckmateConstants
+{
+    const std::string IN_CHECK_TYPE_HORIZONTAL = "IN_CHECK_TYPE_HORIZONTAL";
+    const std::string IN_CHECK_TYPE_VERTICALLY = "IN_CHECK_TYPE_VERTICALLY";
+    const std::string IN_CHECK_TYPE_DIAGONALLY = "IN_CHECK_TYPE_DIAGONALLY";
+    const std::string IN_CHECK_TYPE_KNIGHT = "IN_CHECK_TYPE_KNIGHT";
+}
+
+#endif // CHESSAPPLICATION_CHECKMATECONSTANTS_H
+

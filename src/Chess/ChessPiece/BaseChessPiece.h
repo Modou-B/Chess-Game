@@ -19,7 +19,10 @@ private:
     std::string type;
     int player;
     bool wasMovedLastTurn;
+    bool canBlockCheck;
 
+    std::pair<int, int> currentCoordinates;
+    std::vector<ChessPiecePossibleMoveTransfer*> coordinatesThatBlockCheck;
 protected:
     ChessPieceMovementGenerator *chessPieceMovementGenerator;
     int moveCounter;
@@ -47,12 +50,23 @@ protected:
 
     BaseChessPiece *getChessPiece(ChessField *chessField, int xCoordinate, int yCoordinate);
 public:
-    BaseChessPiece(std::string type, int player, ChessPieceMovementGenerator *chessPieceMovementGenerator);
+    BaseChessPiece(
+      std::string type, int player, ChessPieceMovementGenerator *chessPieceMovementGenerator);
 
     std::string getType();
     int getPlayer();
     int getMoveCounter();
+    std::pair<int, int> getCurrentCoordinates();
+    std::vector<ChessPiecePossibleMoveTransfer*> getCoordinatesThatBlockCheck();
+
+    bool canPieceBlockCheck();
     bool wasChessPieceMovedLastTurn();
+    void setCheckBlockAbility(bool value);
+    void setCurrentCoordinates(std::pair<int, int> currentCoordinates);
+    void setCoordinatesThatBlockCheck(std::vector<ChessPiecePossibleMoveTransfer*> coordinatesThatBlockCheck);
+    void addCoordinateThatBlockCheck(ChessPiecePossibleMoveTransfer *coordinateThatBlocksCheck);
+
+    void clearCoordinatesThatBlockCheck();
 
     std::vector<ChessPiecePossibleMoveTransfer*> determinePossibleMoves(ChessField *chessField, std::pair<int, int> currentCoordinates);
     virtual std::vector<ChessPiecePossibleMoveTransfer*> determinePossibleMovesForSpecificPiece(

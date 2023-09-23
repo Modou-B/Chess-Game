@@ -17,6 +17,7 @@ BaseChessPiece::BaseChessPiece(std::string type, int player, ChessPieceMovementG
     this->chessPieceMovementGenerator = chessPieceMovementGenerator;
     this->moveCounter = 0;
     this->wasMovedLastTurn = false;
+    this->canBlockCheck = false;
 }
 
 std::string BaseChessPiece::getType() {
@@ -278,8 +279,40 @@ int BaseChessPiece::getMoveCounter() {
     return this->moveCounter;
 }
 
+std::pair<int, int> BaseChessPiece::getCurrentCoordinates() {
+    return this->currentCoordinates;
+}
+
+std::vector<ChessPiecePossibleMoveTransfer *> BaseChessPiece::getCoordinatesThatBlockCheck() {
+    return this->coordinatesThatBlockCheck;
+}
+
+bool BaseChessPiece::canPieceBlockCheck() {
+    return this->canBlockCheck;
+}
+
 bool BaseChessPiece::wasChessPieceMovedLastTurn() {
     return this->wasMovedLastTurn;
+}
+
+void BaseChessPiece::setCheckBlockAbility(bool value) {
+    this->canBlockCheck = value;
+}
+
+void BaseChessPiece::setCurrentCoordinates(std::pair<int, int> currentCoordinates) {
+    this->currentCoordinates = currentCoordinates;
+}
+
+void BaseChessPiece::setCoordinatesThatBlockCheck(std::vector<ChessPiecePossibleMoveTransfer*> coordinatesThatBlockCheck) {
+    this->coordinatesThatBlockCheck = coordinatesThatBlockCheck;
+}
+
+void BaseChessPiece::addCoordinateThatBlockCheck(ChessPiecePossibleMoveTransfer *coordinateThatBlocksCheck) {
+    this->coordinatesThatBlockCheck.push_back(coordinateThatBlocksCheck);
+}
+
+void BaseChessPiece::clearCoordinatesThatBlockCheck() {
+    this->coordinatesThatBlockCheck.clear();
 }
 
 void BaseChessPiece::updateLastTurnMovedStatus() {
