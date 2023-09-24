@@ -13,8 +13,10 @@
 #include "../../../Shared/Chess/ChessMovementConstants.h"
 #include "../Generator/ChessPieceMovementGenerator.h"
 #include "../PawnPiece.h"
+#include "../../../ChessGui/Renderer/ChessGuiRenderer.h"
 #include "../../Model/ChessField.h"
 #include "iostream"
+
 // initialize static variables
 std::vector<ChessPiecePossibleMoveTransfer*> ChessPieceMovementManager::possibleMovesForClickedCell;
 std::vector<ChessPiecePossibleMoveTransfer*> ChessPieceMovementManager::previousPossibleMovesForClickedCell;
