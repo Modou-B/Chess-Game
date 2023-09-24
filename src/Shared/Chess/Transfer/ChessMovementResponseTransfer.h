@@ -16,14 +16,16 @@ class ChessMovementResponseTransfer {
 private:
     std::string state;
 
+    bool hasKingMoved;
     bool hasPieceMoved;
+    bool hasPossibleMoves;
+
     std::pair<int, int> currentCellCoordinates;
 
-    bool hasPossibleMoves;
     std::vector<ChessPiecePossibleMoveTransfer*> *previousPossibleMoves;
-    std::vector<ChessPiecePossibleMoveTransfer*> *possibleMoves;
-
+    std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves;
     std::vector<ChessPieceMovementTransfer*> *chessPiecesToMove;
+
 public:
     ChessMovementResponseTransfer();
 
@@ -34,6 +36,7 @@ public:
     std::vector<ChessPiecePossibleMoveTransfer*> *getPossibleMoves();
     std::vector<ChessPiecePossibleMoveTransfer*> *getPreviousPossibleMoves();
     std::vector<ChessPieceMovementTransfer*> *getChessPiecesToMove();
+    bool getHasKingMoved();
 
     std::string getState();
 
@@ -42,11 +45,14 @@ public:
 
     ChessMovementResponseTransfer &addChessPieceMovementTransfer(ChessPieceMovementTransfer *chessPieceMovementTransfer);
     ChessMovementResponseTransfer &setCurrentCellCoordinates(std::pair<int, int> currentCellCoordinates);
+    ChessMovementResponseTransfer &setHasKingMoved(bool value);
 
     void setState(std::string state);
 
-    void setPossibleMoves(std::vector<ChessPiecePossibleMoveTransfer*> *possibleMoves);
+    void setPossibleMoves(std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves);
     void setPreviousPossibleMoves(std::vector<ChessPiecePossibleMoveTransfer*> *previousPossibleMoves);
+    void setPossibleMovesCheckValue(bool value);
+
 };
 
 

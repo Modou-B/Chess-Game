@@ -4,8 +4,13 @@
 
 #include "RookPiece.h"
 #include "../../Shared/Chess/Transfer/ChessPiecePossibleMoveTransfer.h"
+#include "../../Shared/Chess/ChessConstants.h"
 
-RookPiece::RookPiece(int player, ChessPieceMovementGenerator *chessPieceMovementGenerator): BaseChessPiece("Rook", player, chessPieceMovementGenerator) {}
+RookPiece::RookPiece(
+    int player,
+    ChessPieceMovementGenerator *chessPieceMovementGenerator,
+    KingPieceMovementChecker *kingPieceMovementChecker
+    ): BaseChessPiece(ChessConstants::ROOK_PIECE_TYPE, player, chessPieceMovementGenerator, kingPieceMovementChecker) {}
 
 std::vector<ChessPiecePossibleMoveTransfer*> RookPiece::determinePossibleMovesForSpecificPiece(
         ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate) {

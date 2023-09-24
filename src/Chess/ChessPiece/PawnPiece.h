@@ -11,6 +11,7 @@
 
 class ChessPieceMovementGenerator;
 class ChessPiecePossibleMoveTransfer;
+class KingPieceMovementChecker;
 
 class PawnPiece: public BaseChessPiece {
 private:
@@ -23,7 +24,7 @@ protected:
             ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate);
 
     std::vector<ChessPiecePossibleMoveTransfer*> checkForDoubleMove(
-        ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate);
+        ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate, bool isDoubleMovePossible);
     std::vector<ChessPiecePossibleMoveTransfer*> checkForDiagonalPieces(
             ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate);
 
@@ -34,7 +35,7 @@ protected:
 
     bool wasDoubleMoveUsed();
 public:
-    PawnPiece(int player, ChessPieceMovementGenerator *chessPieceMovementGenerator);
+    PawnPiece(int player, ChessPieceMovementGenerator *chessPieceMovementGenerator, KingPieceMovementChecker *kingPieceMovementChecker);
 
     std::vector<ChessPiecePossibleMoveTransfer*> determinePossibleMovesForSpecificPiece(
             ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate) override;

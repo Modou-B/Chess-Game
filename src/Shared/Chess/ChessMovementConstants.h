@@ -5,8 +5,6 @@
 #ifndef CHESSAPPLICATION_CHESSMOVEMENTCONSTANTS_H
 #define CHESSAPPLICATION_CHESSMOVEMENTCONSTANTS_H
 
-#endif //CHESSAPPLICATION_CHESSMOVEMENTCONSTANTS_H
-
 #include <string>
 
 namespace ChessMovementConstants
@@ -27,3 +25,6 @@ namespace ChessMovementConstants
     const std::string ACTION_DELETE = "ACTION_DELETE";
     const std::string ACTION_MOVE = "ACTION_MOVE";
 }
+
+#endif //CHESSAPPLICATION_CHESSMOVEMENTCONSTANTS_H
+

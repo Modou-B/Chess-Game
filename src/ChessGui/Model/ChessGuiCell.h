@@ -28,6 +28,9 @@ private:
     std::string chessPieceType;
     std::string chessPieceIconState;
 
+protected:
+    void handlePawnPieceSwitch(ChessMovementResponseTransfer chessMovementResponseTransfer);
+
 public:
     ChessGuiCell(QGridLayout *gridLayout, ChessFacade *chessFacade, std::pair<int, int> coordinates, ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator);
 
