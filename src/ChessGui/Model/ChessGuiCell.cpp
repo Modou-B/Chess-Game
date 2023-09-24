@@ -48,10 +48,10 @@ void ChessGuiCell::handleCellClick() {
 
     if (chessMovementResponseTransfer.getState() == ChessConstants::STATE_MOVED_PIECE_PAWN_SWITCH) {
         this->handlePawnPieceSwitch(chessMovementResponseTransfer);
-        this->addListWidgetItem(this->coordinates);
         this->chessFacade->handlePawnPieceSwitch(chessMovementResponseTransfer, ChessConstants::QUEEN_PIECE_TYPE);
     }
 
+    this->addListWidgetItem(this->coordinates);
     this->chessFacade->endCurrentTurn(chessMovementResponseTransfer);
     this->chessFacade->startNewTurn();
 }
@@ -174,8 +174,11 @@ void ChessGuiCell::addListWidgetItem(std::pair<int, int> currentCellCoordinates)
     // qDebug() << "First: "+QString::number(currentCellCoordinates.first);
     // qDebug() << "Second: "+QString::number(currentCellCoordinates.second);
 
-    QString entryStr = QString::fromStdString(ChessCoordinateConverter::GetConvertedChessMatrixValue(currentCellCoordinates)+" -> "+this->getChessPieceType());
+    QString entryStr = QString::fromStdString(
+            ChessCoordinateConverter::GetConvertedChessMatrixValue(currentCellCoordinates) + " -> " +
+            this->getChessPieceType());
 
 
     auto *rewindListEntry = new QListWidgetItem(entryStr);
-    ChessGuiRenderer::rewindList->insertItem(ChessGuiRenderer::rewindList->count() + 1,rewindListEntry);
+    ChessGuiRenderer::rewindList->insertItem(ChessGuiRenderer::rewindList->count() + 1, rewindListEntry);
+}
