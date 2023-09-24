@@ -19,8 +19,12 @@ class ChessFacade: public AbstractFacade {
 public:
     void initiateChessGame();
     void endCurrentTurn(ChessMovementResponseTransfer chessMovementResponseTransfer);
+    void startNewTurn();
+
+    int getCurrentPlayer();
 
     ChessMovementResponseTransfer handleChessCellClick(std::pair<int, int> currentCellCoordinates);
+    void handlePawnPieceSwitch(ChessMovementResponseTransfer chessMovementResponseTransfer, std::string switchedPieceType);
 
     ChessFactory *getFactory() override;
 };

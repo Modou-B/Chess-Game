@@ -4,8 +4,13 @@
 
 #include "KnightPiece.h"
 #include "../../Shared/Chess/Transfer/ChessPiecePossibleMoveTransfer.h"
+#include "../../Shared/Chess/ChessConstants.h"
 
-KnightPiece::KnightPiece(int player, ChessPieceMovementGenerator *chessPieceMovementGenerator): BaseChessPiece("Knight", player, chessPieceMovementGenerator) {}
+KnightPiece::KnightPiece(
+    int player,
+    ChessPieceMovementGenerator *chessPieceMovementGenerator,
+    KingPieceMovementChecker *kingPieceMovementChecker
+    ): BaseChessPiece(ChessConstants::KNIGHT_PIECE_TYPE, player, chessPieceMovementGenerator, kingPieceMovementChecker) {}
 
 std::vector<ChessPiecePossibleMoveTransfer*> KnightPiece::determinePossibleMovesForSpecificPiece(
         ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate) {

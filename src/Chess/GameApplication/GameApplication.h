@@ -9,10 +9,14 @@
 
 class ChessField;
 class ChessCell;
+class ChessPlayerData;
 
 class GameApplication {
 private:
     static ChessField *chessField;
+    static ChessPlayerData *chessPlayer1Data;
+    static ChessPlayerData *chessPlayer2Data;
+
     static int currentPlayer;
     static int turnCounter;
 
@@ -27,10 +31,15 @@ public:
     static std::pair<int, int> getPreviouslyClickedCellCoordinates();
     static std::pair<int, int> getCoordinatesOfLastTurnClickedCell();
     static int getTurnCounter();
+    static ChessPlayerData *getCurrentChessPlayerData();
+    static ChessPlayerData *getOpponentChessPlayerData();
 
     static bool wasPreviousCellClicked();
 
     static void setChessField(ChessField* chessField);
+    static void setChessPlayer1Data(ChessPlayerData* chessPlayerData);
+    static void setChessPlayer2Data(ChessPlayerData* chessPlayerData);
+
     static void setPreviouslyClickedCellCoordinates(std::pair<int, int> currentCellCoordinates);
     static void setCoordinatesOfLastTurnClickedCell(std::pair<int, int> lastTurnClickedCell);
 

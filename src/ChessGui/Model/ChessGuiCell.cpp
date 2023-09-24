@@ -45,8 +45,15 @@ void ChessGuiCell::handleCellClick() {
     }
 
     this->handleChessPieceMovement(chessMovementResponseTransfer);
-    this->addListWidgetItem(this->coordinates);
+
+    if (chessMovementResponseTransfer.getState() == ChessConstants::STATE_MOVED_PIECE_PAWN_SWITCH) {
+        this->handlePawnPieceSwitch(chessMovementResponseTransfer);
+        this->addListWidgetItem(this->coordinates);
+        this->chessFacade->handlePawnPieceSwitch(chessMovementResponseTransfer, ChessConstants::QUEEN_PIECE_TYPE);
+    }
+
     this->chessFacade->endCurrentTurn(chessMovementResponseTransfer);
+    this->chessFacade->startNewTurn();
 }
 
 Qt::GlobalColor ChessGuiCell::getCellColor() {
@@ -145,6 +152,24 @@ std::string ChessGuiCell::getChessPieceType() {
     return this->chessPieceType;
 }
 
+void ChessGuiCell::handlePawnPieceSwitch(ChessMovementResponseTransfer chessMovementResponseTransfer) {
+    auto currentCellCoordinates = chessMovementResponseTransfer.getCurrentCellCoordinates();
+
+    ChessGuiCell *currentChessGuiCell = static_cast<ChessGuiCell*>(this->gridLayout->itemAtPosition(
+            currentCellCoordinates.first, currentCellCoordinates.second)->widget());
+
+    std::string pieceType = ChessConstants::QUEEN_PIECE_TYPE;
+    if (this->chessFacade->getCurrentPlayer() == 1) {
+          pieceType.append("-white");
+    } else {
+          pieceType.append("-black");
+    }
+
+    currentChessGuiCell->setChessPieceIcon(
+            ChessGuiConstants::STATE_REAL_CHESS_PIECE_ICON, this->chessGuiPieceIconGenerator->generateIconFromFile(pieceType));
+    currentChessGuiCell->setIconSize(QSize(50, 50));
+}
+
 void ChessGuiCell::addListWidgetItem(std::pair<int, int> currentCellCoordinates) {
     // qDebug() << "First: "+QString::number(currentCellCoordinates.first);
     // qDebug() << "Second: "+QString::number(currentCellCoordinates.second);
@@ -154,4 +179,3 @@ void ChessGuiCell::addListWidgetItem(std::pair<int, int> currentCellCoordinates)
 
     auto *rewindListEntry = new QListWidgetItem(entryStr);
     ChessGuiRenderer::rewindList->insertItem(ChessGuiRenderer::rewindList->count() + 1,rewindListEntry);
-}

@@ -4,6 +4,7 @@
 
 #include "ChessPieceMovementManager.h"
 #include "../../GameApplication/GameApplication.h"
+#include "../../GameApplication/Player/ChessPlayerData.h"
 #include "../../Model/ChessCell.h"
 #include "../../ChessPiece/BaseChessPiece.h"
 #include "../../../Shared/Chess/Transfer/ChessMovementResponseTransfer.h"
@@ -13,6 +14,8 @@
 #include "../Generator/ChessPieceMovementGenerator.h"
 #include "../PawnPiece.h"
 #include "../../../ChessGui/Renderer/ChessGuiRenderer.h"
+#include "../../Model/ChessField.h"
+#include "iostream"
 
 // initialize static variables
 std::vector<ChessPiecePossibleMoveTransfer*> ChessPieceMovementManager::possibleMovesForClickedCell;
@@ -22,22 +25,28 @@ ChessPieceMovementManager::ChessPieceMovementManager(ChessPieceMovementGenerator
     this->chessPieceMovementGenerator = chessPieceMovementGenerator;
 }
 
-ChessMovementResponseTransfer ChessPieceMovementManager::handleChessMovement(std::pair<int, int> currentCellCoordinates) {
+ChessMovementResponseTransfer ChessPieceMovementManager::handleChessMovement(std::pair<int, int> currentCellCoordinates, bool isPlayerInCheck, ChessPlayerData *opponentPlayerData) {
     ChessCell *currentChessCell = GameApplication::getChessCell(currentCellCoordinates);
-    ChessMovementResponseTransfer chessMovementResponseTransfer = ChessMovementResponseTransfer();
 
+    ChessMovementResponseTransfer chessMovementResponseTransfer = ChessMovementResponseTransfer();
     if (!GameApplication::wasPreviousCellClicked()) {
-        return this->handleMovementWithoutPreviousClickedCell(currentChessCell, chessMovementResponseTransfer);
+        return this->handleMovementWithoutPreviousClickedCell(currentChessCell, chessMovementResponseTransfer, isPlayerInCheck);
     }
 
-    return this->handleMovementWithPreviousClickedCell(currentChessCell, chessMovementResponseTransfer);
+    return this->handleMovementWithPreviousClickedCell(currentChessCell, chessMovementResponseTransfer, isPlayerInCheck, opponentPlayerData);
 }
 
 
-ChessMovementResponseTransfer ChessPieceMovementManager::handleMovementWithPreviousClickedCell(ChessCell *currentChessCell, ChessMovementResponseTransfer chessMovementResponseTransfer) {
+ChessMovementResponseTransfer ChessPieceMovementManager::handleMovementWithPreviousClickedCell(
+    ChessCell *currentChessCell, ChessMovementResponseTransfer chessMovementResponseTransfer, bool isPlayerInCheck, ChessPlayerData *opponentPlayerData) {
     BaseChessPiece *currentChessPiece = currentChessCell->getChessPiece();
+
     if (currentChessPiece && this->doesChessPieceBelongToCurrentPlayer(currentChessPiece)) {
-        chessMovementResponseTransfer = this->savePossibleMovesForClickedPiece(currentChessPiece, currentChessCell->getCoordinates(), chessMovementResponseTransfer);
+        if (isPlayerInCheck && !currentChessPiece->canPieceBlockCheck() && currentChessPiece->getType() != ChessConstants::KING_PIECE_TYPE) {
+            return chessMovementResponseTransfer;
+        }
+
+        chessMovementResponseTransfer = this->savePossibleMovesForClickedPiece(currentChessPiece, currentChessCell->getCoordinates(), chessMovementResponseTransfer, isPlayerInCheck);
         chessMovementResponseTransfer.setState(ChessConstants::STATE_SWITCHED_PIECE);
 
         return this->saveClickedCellCoordinates(currentChessCell->getCoordinates(), chessMovementResponseTransfer);
@@ -50,7 +59,7 @@ ChessMovementResponseTransfer ChessPieceMovementManager::handleMovementWithPrevi
 
             ChessCell* previousChessCell = GameApplication::getChessCell(GameApplication::getPreviouslyClickedCellCoordinates());
 
-            return this->moveChessPiece(previousChessCell, currentChessCell, chessMovementResponseTransfer, chessPiecePossibleMoveTransfer);
+            return this->moveChessPiece(previousChessCell, currentChessCell, chessMovementResponseTransfer, chessPiecePossibleMoveTransfer, opponentPlayerData);
         }
     }
 
@@ -58,7 +67,7 @@ ChessMovementResponseTransfer ChessPieceMovementManager::handleMovementWithPrevi
 }
 
 ChessMovementResponseTransfer ChessPieceMovementManager::moveChessPiece(
-        ChessCell *previousChessCell, ChessCell *currentChessCell, ChessMovementResponseTransfer chessMovementResponseTransfer, ChessPiecePossibleMoveTransfer *usedMove) {
+        ChessCell *previousChessCell, ChessCell *currentChessCell, ChessMovementResponseTransfer chessMovementResponseTransfer, ChessPiecePossibleMoveTransfer *usedMove, ChessPlayerData *opponentPlayerData) {
 
     ChessPieceMovementManager::previousPossibleMovesForClickedCell = ChessPieceMovementManager::possibleMovesForClickedCell;
     chessMovementResponseTransfer.setPreviousPossibleMoves(&ChessPieceMovementManager::previousPossibleMovesForClickedCell);
@@ -68,13 +77,33 @@ ChessMovementResponseTransfer ChessPieceMovementManager::moveChessPiece(
 
     chessMovementResponseTransfer.togglePieceMovementValue();
     chessMovementResponseTransfer.setState(ChessConstants::STATE_MOVED_PIECE);
+    if (previousChessCell->getChessPiece()->getType() == ChessConstants::KING_PIECE_TYPE) {
+        chessMovementResponseTransfer.setHasKingMoved(true);
+    }
 
     chessMovementResponseTransfer.addChessPieceMovementTransfer(
         this->chessPieceMovementGenerator->generateChessPieceMovementTransfer(
             ChessMovementConstants::ACTION_MOVE, previousChessCell->getCoordinates(), currentChessCell->getCoordinates()));
 
     if (usedMove->getMoveType() == ChessMovementConstants::MOVE_TYPE_EN_PASSANT) {
-        chessMovementResponseTransfer = this->addEnPassantChessPieceMovement(previousChessCell, currentChessCell, chessMovementResponseTransfer);
+        chessMovementResponseTransfer = this->addEnPassantChessPieceMovement(previousChessCell, currentChessCell, chessMovementResponseTransfer, opponentPlayerData);
+    }
+
+    if (usedMove->getMoveType() == ChessMovementConstants::MOVE_TYPE_CASTLING) {
+        chessMovementResponseTransfer = this->addCastlingChessPieceMovement(currentChessCell, chessMovementResponseTransfer);
+    }
+
+    previousChessCell->getChessPiece()->setCurrentCoordinates(currentChessCell->getCoordinates());
+
+    if (currentChessCell->getChessPiece()) {
+        opponentPlayerData->removePiece(currentChessCell->getChessPiece());
+    }
+
+    if (previousChessCell->getChessPiece()->getType() == ChessConstants::PAWN_PIECE_TYPE
+        && (currentChessCell->getCoordinates().first == 7
+            || currentChessCell->getCoordinates().first == 0)
+    ) {
+        chessMovementResponseTransfer.setState(ChessConstants::STATE_MOVED_PIECE_PAWN_SWITCH);
     }
 
     currentChessCell->setChessPiece(previousChessCell->getChessPiece());
@@ -84,7 +113,7 @@ ChessMovementResponseTransfer ChessPieceMovementManager::moveChessPiece(
 }
 
 ChessMovementResponseTransfer ChessPieceMovementManager::addEnPassantChessPieceMovement(
-    ChessCell *previousChessCell, ChessCell *currentChessCell, ChessMovementResponseTransfer chessMovementResponseTransfer) {
+    ChessCell *previousChessCell, ChessCell *currentChessCell, ChessMovementResponseTransfer chessMovementResponseTransfer, ChessPlayerData *opponentPlayerData) {
 
     auto *pawnPiece = static_cast<PawnPiece*>(previousChessCell->getChessPiece());
     auto currentCoordinates = currentChessCell->getCoordinates();
@@ -103,17 +132,53 @@ ChessMovementResponseTransfer ChessPieceMovementManager::addEnPassantChessPieceM
       chessMovementResponseTransfer.addChessPieceMovementTransfer(
           this->chessPieceMovementGenerator->generateChessPieceMovementTransfer(
               ChessMovementConstants::ACTION_DELETE, coordinatesOfOpponentPawnPiece));
-
     }
 
     auto *chessCellWithOpponentPawnPiece = GameApplication::getChessCell(coordinatesOfOpponentPawnPiece);
+
+    opponentPlayerData->removePiece(chessCellWithOpponentPawnPiece->getChessPiece());
     chessCellWithOpponentPawnPiece->setChessPiece(nullptr);
 
     return chessMovementResponseTransfer;
 }
 
+ChessMovementResponseTransfer ChessPieceMovementManager::addCastlingChessPieceMovement(
+    ChessCell *currentChessCell, ChessMovementResponseTransfer chessMovementResponseTransfer) {
 
-ChessMovementResponseTransfer ChessPieceMovementManager::handleMovementWithoutPreviousClickedCell(ChessCell *currentChessCell, ChessMovementResponseTransfer chessMovementResponseTransfer) {
+    auto currentCoordinates = currentChessCell->getCoordinates();
+
+    std::pair<int,int> oldCoordinatesOfRookPiece;
+    std::pair<int,int> newCoordinatesOfRookPiece;
+
+    if (currentCoordinates.second == 6) {
+        oldCoordinatesOfRookPiece = std::make_pair(currentCoordinates.first, 7);
+        newCoordinatesOfRookPiece = std::make_pair(currentCoordinates.first, (currentCoordinates.second-1));
+
+        chessMovementResponseTransfer.addChessPieceMovementTransfer(
+            this->chessPieceMovementGenerator->generateChessPieceMovementTransfer(
+                ChessMovementConstants::ACTION_MOVE, oldCoordinatesOfRookPiece, newCoordinatesOfRookPiece));
+    } else {
+        oldCoordinatesOfRookPiece = std::make_pair(currentCoordinates.first, 0);
+        newCoordinatesOfRookPiece = std::make_pair(currentCoordinates.first, (currentCoordinates.second+1));
+
+        chessMovementResponseTransfer.addChessPieceMovementTransfer(
+            this->chessPieceMovementGenerator->generateChessPieceMovementTransfer(
+                ChessMovementConstants::ACTION_MOVE, oldCoordinatesOfRookPiece, newCoordinatesOfRookPiece));
+    }
+
+    auto *oldChessCellWithRookPiece = GameApplication::getChessCell(oldCoordinatesOfRookPiece);
+    auto *newChessCellWithRookPiece = GameApplication::getChessCell(newCoordinatesOfRookPiece);
+
+    oldChessCellWithRookPiece->getChessPiece()->setCurrentCoordinates(newCoordinatesOfRookPiece);
+    newChessCellWithRookPiece->setChessPiece(oldChessCellWithRookPiece->getChessPiece());
+    oldChessCellWithRookPiece->setChessPiece(nullptr);
+
+    return chessMovementResponseTransfer;
+}
+
+
+ChessMovementResponseTransfer ChessPieceMovementManager::handleMovementWithoutPreviousClickedCell(
+    ChessCell *currentChessCell, ChessMovementResponseTransfer chessMovementResponseTransfer, bool isPlayerInCheck) {
     BaseChessPiece *currentChessPiece = currentChessCell->getChessPiece();
 
     if (!currentChessPiece) {
@@ -121,7 +186,11 @@ ChessMovementResponseTransfer ChessPieceMovementManager::handleMovementWithoutPr
     }
 
     if (this->doesChessPieceBelongToCurrentPlayer(currentChessPiece)) {
-        chessMovementResponseTransfer = this->savePossibleMovesForClickedPiece(currentChessPiece, currentChessCell->getCoordinates(), chessMovementResponseTransfer);
+        if (isPlayerInCheck && !currentChessPiece->canPieceBlockCheck() && currentChessPiece->getType() != ChessConstants::KING_PIECE_TYPE) {
+            return chessMovementResponseTransfer;
+        }
+
+        chessMovementResponseTransfer = this->savePossibleMovesForClickedPiece(currentChessPiece, currentChessCell->getCoordinates(), chessMovementResponseTransfer, isPlayerInCheck);
 
         return this->saveClickedCellCoordinates(currentChessCell->getCoordinates(), chessMovementResponseTransfer);
     }
@@ -145,17 +214,27 @@ bool ChessPieceMovementManager::doesChessPieceBelongToCurrentPlayer(BaseChessPie
     return false;
 }
 
+std::vector<ChessPiecePossibleMoveTransfer *> ChessPieceMovementManager::getPossibleMovesForCheckStatus(BaseChessPiece *clickedChessPiece, bool isPlayerInCheck) {
+    if (isPlayerInCheck && clickedChessPiece->getType() != ChessConstants::KING_PIECE_TYPE) {
+      return clickedChessPiece->getCoordinatesThatBlockCheck();
+    }
+
+    return clickedChessPiece->determinePossibleMoves(GameApplication::getChessField(), clickedChessPiece->getCurrentCoordinates());
+}
+
 ChessMovementResponseTransfer ChessPieceMovementManager::savePossibleMovesForClickedPiece(
-        BaseChessPiece *clickedChessPiece, std::pair<int, int> currentCellCoordinates, ChessMovementResponseTransfer chessMovementResponseTransfer) {
+        BaseChessPiece *clickedChessPiece, std::pair<int, int> currentCellCoordinates, ChessMovementResponseTransfer chessMovementResponseTransfer, bool isPlayerInCheck) {
     if (!ChessPieceMovementManager::possibleMovesForClickedCell.empty()) {
         ChessPieceMovementManager::previousPossibleMovesForClickedCell = ChessPieceMovementManager::possibleMovesForClickedCell;
     }
 
-    ChessPieceMovementManager::possibleMovesForClickedCell = clickedChessPiece->determinePossibleMoves(GameApplication::getChessField(), currentCellCoordinates);
-    if (!ChessPieceMovementManager::possibleMovesForClickedCell.empty()) {
-        chessMovementResponseTransfer.setPossibleMoves(&ChessPieceMovementManager::possibleMovesForClickedCell);
-        chessMovementResponseTransfer.togglePossibleMovesCheckValue();
+    auto possibleMoves = this->getPossibleMovesForCheckStatus(clickedChessPiece, isPlayerInCheck);
+    if (!possibleMoves.empty()) {
+        chessMovementResponseTransfer.setPossibleMoves(possibleMoves);
+        chessMovementResponseTransfer.setPossibleMovesCheckValue(true);
     }
+
+    ChessPieceMovementManager::possibleMovesForClickedCell = possibleMoves;
 
     if (!ChessPieceMovementManager::previousPossibleMovesForClickedCell.empty()) {
         chessMovementResponseTransfer.setPreviousPossibleMoves(&ChessPieceMovementManager::previousPossibleMovesForClickedCell);

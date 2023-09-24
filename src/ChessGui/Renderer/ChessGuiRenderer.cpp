@@ -12,6 +12,8 @@
 #include "QWidget"
 #include <utility>
 #include "QImage"
+#include "QLCDNumber"
+#include "QLabel"
 #include "QPainter"
 #include "QLabel"
 #include "QPushButton"
@@ -19,6 +21,7 @@
 #include "QTimer"
 #include "QTime"
 #include "QListWidget"
+#include "ChessTimer.h"
 
 QListWidget *ChessGuiRenderer::rewindList = nullptr;
 
@@ -138,23 +141,15 @@ void ChessGuiRenderer::createChessField(QWidget *mainWindow) {
 
     auto *gridLayout = this->createChessGridLayout(mainWindow);
 
-    auto *digitalClock = new QLCDNumber();
-
-    auto *timer = new QTimer(mainWindow);
-
+    auto *digitalClock = new ChessTimer();
 
     auto *rewindListLocal = new QListWidget(mainWindow);
     ChessGuiRenderer::rewindList = rewindListLocal;
 
-
-
-
-    QObject::connect(timer,SIGNAL(timeout()), digitalClock, SLOT(TimeSlot()));
     //timer->start(1000);
 
     //auto *time = new QTime(0,1,0);
 
-    digitalClock->display(QString::fromStdString(std::string("1000")));
     //digitalClock->display(time);
 
     //vBoxSideNumbersLayout->addWidget(chessFieldSideNumberEmpty3);
@@ -242,11 +237,6 @@ void ChessGuiRenderer::createChessField(QWidget *mainWindow) {
     this->addBishopsToCells(gridLayout);
     this->addKnightsToCells(gridLayout);
     this->addRooksToCells(gridLayout);
-}
-
-void ChessGuiRenderer::TimeSlot() {
-    //counter ++;
-    qDebug() << QString("Test");
 }
 
 

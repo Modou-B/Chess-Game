@@ -22,6 +22,8 @@ public:
     std::pair<int, int> getCoordinates();
 
     BaseChessPiece *getChessPiece();
+
+    ChessCell *getCopy();
 };
 
 
