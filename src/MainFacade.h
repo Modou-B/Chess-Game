@@ -10,6 +10,7 @@
 #include "typeinfo"
 
 class QWidget;
+class QApplication;
 
 class MainFacade: AbstractFacade {
 public:

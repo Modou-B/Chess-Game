@@ -10,16 +10,19 @@
 #include <string>
 
 class ChessFacade;
-class QGridLayout;
 class ChessMovementResponseTransfer;
 class ChessGuiPieceIconGenerator;
 class QIcon;
+class QHBoxLayout;
+class ChessGridLayout;
 
 class ChessGuiCell: public QPushButton {
 private:
-    QGridLayout *gridLayout;
+    ChessGridLayout *gridLayout;
     ChessFacade *chessFacade;
     ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator;
+    QHBoxLayout *hBoxChessPieceSelectionTop;
+    QHBoxLayout *hBoxChessPieceSelectionBottom;
 
     std::pair<int, int> coordinates;
 
@@ -29,16 +32,23 @@ private:
     std::string chessPieceIconState;
 
 protected:
+    void renderPieceSwitchLayout();
     void handlePawnPieceSwitch(ChessMovementResponseTransfer chessMovementResponseTransfer);
 
 public:
-    ChessGuiCell(QGridLayout *gridLayout, ChessFacade *chessFacade, std::pair<int, int> coordinates, ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator);
+    ChessGuiCell(
+            ChessGridLayout *gridLayout,
+            ChessFacade *chessFacade,
+            std::pair<int, int> coordinates,
+            ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator,
+            QHBoxLayout *hBoxChessPieceSelectionTop,
+            QHBoxLayout *hBoxChessPieceSelectionBottom
+    );
 
     void handleCellClick();
     void handleChessPieceMovement(ChessMovementResponseTransfer chessMovementResponseTransfer);
 
     Qt::GlobalColor getCellColor();
-    QGridLayout *getGridLayout();
     std::string getChessPieceIconState();
     std::string getChessPieceType();
 

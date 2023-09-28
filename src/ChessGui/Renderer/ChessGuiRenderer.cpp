@@ -22,40 +22,111 @@
 #include "QTime"
 #include "QListWidget"
 #include "ChessTimer.h"
+#include "QObject"
+#include "Settings/ChessStartButton.h"
+#include "Settings/ChessSpeedButtons.h"
+#include "../Model/ChessGridLayout.h"
+#include "../Model/ChessSelectionPiece.h"
 
-QListWidget *ChessGuiRenderer::rewindList = nullptr;
+class QGridLayout;
+
+QListWidget *ChessGuiRenderer::timelineList = nullptr;
 
 ChessGuiRenderer::ChessGuiRenderer(ChessFacade *chessFacade, ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator) {
     this->chessFacade = chessFacade;
     this->chessGuiPieceIconGenerator = chessGuiPieceIconGenerator;
 }
 
+void ChessGuiRenderer::createSettingsPage(QWidget *mainWindow) {
+    auto hBoxStartMenuBracketLayout = new QHBoxLayout(mainWindow);
+    auto vBoxStartAndSettingsButtonsLayout = new QVBoxLayout(mainWindow);
+    auto vBoxSpeedButtonsLayout = new QVBoxLayout(mainWindow);
+
+    auto startPushbutton = new ChessStartButton(this, mainWindow);
+    startPushbutton->setText("Start");
+    auto settingsPushbutton = new QPushButton("Settings");
+
+    auto speedPushbuttonClassic = new ChessSpeedButtons(this, 0);
+    speedPushbuttonClassic->setText("Classic");
+    auto speedPushbuttonFast = new ChessSpeedButtons(this, 1800);
+    speedPushbuttonFast->setText("Fast");
+    auto speedPushbuttonBlitz = new ChessSpeedButtons(this, 300);
+    speedPushbuttonBlitz->setText("Blitz");
+    auto speedPushbuttonBullet = new ChessSpeedButtons(this, 180);
+    speedPushbuttonBullet->setText("Bullet");
+
+
+    vBoxStartAndSettingsButtonsLayout->addWidget(startPushbutton);
+    vBoxStartAndSettingsButtonsLayout->addWidget(settingsPushbutton);
+
+    vBoxSpeedButtonsLayout->addWidget(speedPushbuttonClassic);
+    vBoxSpeedButtonsLayout->addWidget(speedPushbuttonFast);
+    vBoxSpeedButtonsLayout->addWidget(speedPushbuttonBlitz);
+    vBoxSpeedButtonsLayout->addWidget(speedPushbuttonBullet);
+
+    hBoxStartMenuBracketLayout->addLayout(vBoxStartAndSettingsButtonsLayout);
+    hBoxStartMenuBracketLayout->addLayout(vBoxSpeedButtonsLayout);
+}
+
 void ChessGuiRenderer::createChessField(QWidget *mainWindow) {
+    // -- Grid und stuff
     auto hBoxMainBracketLayout = new QHBoxLayout(mainWindow);
-    auto vBox1Layout = new QVBoxLayout(mainWindow);
-    auto vBox2Layout = new QVBoxLayout(mainWindow);
+    auto vBoxMainContainer = new QVBoxLayout(mainWindow);
+    auto vBoxSideInformationPanel = new QVBoxLayout(mainWindow);
 
-    auto hBoxGridAndSideLettAndNumLayout = new QHBoxLayout(mainWindow);
-    auto vBoxGridAndSideLettAndNumLayout1 = new QVBoxLayout(mainWindow);
-    auto vBoxGridAndSideLettAndNumLayout2 = new QVBoxLayout(mainWindow);
+    auto hBoxFullGridAndSideInformationPanelLayout = new QHBoxLayout(mainWindow);
+    auto vBoxGridAndLetterContainerLayout = new QVBoxLayout(mainWindow);
+    auto vBoxNumberLayout = new QVBoxLayout(mainWindow);
 
-    auto vBoxSideNumbersLayout = new QVBoxLayout(mainWindow);
-    auto hBoxSideLettersLayout = new QHBoxLayout(mainWindow);
+    auto vBoxNumberListLayout = new QVBoxLayout(mainWindow);
+    auto hBoxLetterListLayout = new QHBoxLayout(mainWindow);
 
-    auto hBoxPlaybuttonsLayout = new QHBoxLayout(mainWindow);
-    auto hBoxCountdownLayout = new QHBoxLayout(mainWindow);
-    auto hBoxRewindLayout = new QHBoxLayout(mainWindow);
+    auto hBoxTimelineButtonsLayout = new QHBoxLayout(mainWindow);
+    auto hBoxCountdownLayoutBlack = new QHBoxLayout(mainWindow);
+    auto hBoxCountdownLayoutWhite = new QHBoxLayout(mainWindow);
+    auto hBoxTimelineLayout = new QHBoxLayout(mainWindow);
 
     auto hboxTopPanelLayout = new QHBoxLayout(mainWindow);
     auto hboxBottomPanelLayout = new QHBoxLayout(mainWindow);
 
     auto player1Label = new QLabel("Player 1");
-    //player1Label->setAlignment(Qt::AlignRight);
-    auto player1ActiveLabel = new QLabel("*Am Zug");
+    auto player1ActiveLabel = new QLabel("*Current players turn");
     auto player2Label = new QLabel("Player 2");
-    auto player2ActiveLabel = new QLabel("*Am Zug");
+    auto player2ActiveLabel = new QLabel("*Current players turn");
+
+    auto *gridLayout = new ChessGridLayout();
+
+    auto hBoxChessPieceSelectionTop = new QHBoxLayout(mainWindow);
+    auto hBoxChessPieceSelectionBottom = new QHBoxLayout(mainWindow);
+
+    // TODO Icon zu Zellen hinzufügen
+    auto rookChessPieceButtonTop = new ChessSelectionPiece(gridLayout, ChessConstants::ROOK_PIECE_TYPE);
+    auto knightChessPieceButtonTop = new ChessSelectionPiece(gridLayout, ChessConstants::KNIGHT_PIECE_TYPE);
+    auto bishopChessPieceButtonTop = new ChessSelectionPiece(gridLayout, ChessConstants::BISHOP_PIECE_TYPE);
+    auto queenChessPieceButtonTop = new ChessSelectionPiece(gridLayout, ChessConstants::QUEEN_PIECE_TYPE);
+
+    auto rookChessPieceButtonBottom = new ChessSelectionPiece(gridLayout, ChessConstants::ROOK_PIECE_TYPE);
+    auto knightChessPieceButtonBottom  = new ChessSelectionPiece(gridLayout, ChessConstants::KNIGHT_PIECE_TYPE);
+    auto bishopChessPieceButtonBottom  = new ChessSelectionPiece(gridLayout, ChessConstants::BISHOP_PIECE_TYPE);
+    auto queenChessPieceButtonBottom  = new ChessSelectionPiece(gridLayout, ChessConstants::QUEEN_PIECE_TYPE);
 
 
+
+    hBoxChessPieceSelectionTop->addWidget(rookChessPieceButtonTop);
+    hBoxChessPieceSelectionTop->addWidget(knightChessPieceButtonTop);
+    hBoxChessPieceSelectionTop->addWidget(bishopChessPieceButtonTop);
+    hBoxChessPieceSelectionTop->addWidget(queenChessPieceButtonTop);
+
+    hBoxChessPieceSelectionBottom->addWidget(rookChessPieceButtonBottom);
+    hBoxChessPieceSelectionBottom->addWidget(knightChessPieceButtonBottom);
+    hBoxChessPieceSelectionBottom->addWidget(bishopChessPieceButtonBottom);
+    hBoxChessPieceSelectionBottom->addWidget(queenChessPieceButtonBottom);
+
+    rookChessPieceButtonTop->hide();
+    knightChessPieceButtonTop->hide();
+    bishopChessPieceButtonTop->hide();
+    queenChessPieceButtonTop->hide();
+    
     // Untere Labels
     auto chessFieldSideLetterA = new QLabel("A");
     chessFieldSideLetterA->setMinimumSize(80, 50);
@@ -125,9 +196,9 @@ void ChessGuiRenderer::createChessField(QWidget *mainWindow) {
     chessFieldSideNumber8->setAlignment(Qt::AlignCenter);
 
     // Empty Labels
-    auto chessFieldSideNumberEmpty1 = new QLabel("");
+    auto spacerNumberList = new QLabel("");
 
-    auto chessFieldSideNumberEmpty2 = new QLabel("");
+    auto spacer2 = new QLabel("");
 
     auto chessFieldSideNumberEmpty3 = new QLabel("");
 
@@ -139,56 +210,45 @@ void ChessGuiRenderer::createChessField(QWidget *mainWindow) {
     auto *buttonPause = new QPushButton(">||");
     auto *buttonSkip = new QPushButton(">>");
 
-    auto *gridLayout = this->createChessGridLayout(mainWindow);
 
-    auto *digitalClock = new ChessTimer();
 
     auto *rewindListLocal = new QListWidget(mainWindow);
-    ChessGuiRenderer::rewindList = rewindListLocal;
+    ChessGuiRenderer::timelineList = rewindListLocal;
 
-    //timer->start(1000);
-
-    //auto *time = new QTime(0,1,0);
-
-    //digitalClock->display(time);
-
-    //vBoxSideNumbersLayout->addWidget(chessFieldSideNumberEmpty3);
-    vBoxSideNumbersLayout->addWidget(chessFieldSideNumber8);
-    vBoxSideNumbersLayout->addWidget(chessFieldSideNumber7);
-    vBoxSideNumbersLayout->addWidget(chessFieldSideNumber6);
-    vBoxSideNumbersLayout->addWidget(chessFieldSideNumber5);
-    vBoxSideNumbersLayout->addWidget(chessFieldSideNumber4);
-    vBoxSideNumbersLayout->addWidget(chessFieldSideNumber3);
-    vBoxSideNumbersLayout->addWidget(chessFieldSideNumber2);
-    vBoxSideNumbersLayout->addWidget(chessFieldSideNumber1);
-    //vBoxSideNumbersLayout->addWidget(chessFieldSideNumberEmpty2);
-    //vBoxSideNumbersLayout->addWidget(chessFieldSideNumberEmpty1);
+    vBoxNumberListLayout->addWidget(chessFieldSideNumber8);
+    vBoxNumberListLayout->addWidget(chessFieldSideNumber7);
+    vBoxNumberListLayout->addWidget(chessFieldSideNumber6);
+    vBoxNumberListLayout->addWidget(chessFieldSideNumber5);
+    vBoxNumberListLayout->addWidget(chessFieldSideNumber4);
+    vBoxNumberListLayout->addWidget(chessFieldSideNumber3);
+    vBoxNumberListLayout->addWidget(chessFieldSideNumber2);
+    vBoxNumberListLayout->addWidget(chessFieldSideNumber1);
 
 
-    hBoxSideLettersLayout->addWidget(chessFieldSideLetterA);
-    hBoxSideLettersLayout->addWidget(chessFieldSideLetterB);
-    hBoxSideLettersLayout->addWidget(chessFieldSideLetterC);
-    hBoxSideLettersLayout->addWidget(chessFieldSideLetterD);
-    hBoxSideLettersLayout->addWidget(chessFieldSideLetterE);
-    hBoxSideLettersLayout->addWidget(chessFieldSideLetterF);
-    hBoxSideLettersLayout->addWidget(chessFieldSideLetterG);
-    hBoxSideLettersLayout->addWidget(chessFieldSideLetterH);
+    hBoxLetterListLayout->addWidget(chessFieldSideLetterA);
+    hBoxLetterListLayout->addWidget(chessFieldSideLetterB);
+    hBoxLetterListLayout->addWidget(chessFieldSideLetterC);
+    hBoxLetterListLayout->addWidget(chessFieldSideLetterD);
+    hBoxLetterListLayout->addWidget(chessFieldSideLetterE);
+    hBoxLetterListLayout->addWidget(chessFieldSideLetterF);
+    hBoxLetterListLayout->addWidget(chessFieldSideLetterG);
+    hBoxLetterListLayout->addWidget(chessFieldSideLetterH);
 
-    vBoxGridAndSideLettAndNumLayout2->addLayout(vBoxSideNumbersLayout);
-    vBoxGridAndSideLettAndNumLayout2->addWidget(chessFieldSideNumberEmpty1);
+    vBoxNumberLayout->addLayout(vBoxNumberListLayout);
+    vBoxNumberLayout->addWidget(spacerNumberList);
 
-    vBoxGridAndSideLettAndNumLayout1->addLayout(gridLayout);
-    vBoxGridAndSideLettAndNumLayout1->addLayout(hBoxSideLettersLayout);
+    vBoxGridAndLetterContainerLayout->addLayout(gridLayout);
+    vBoxGridAndLetterContainerLayout->addLayout(hBoxLetterListLayout);
 
-    hBoxGridAndSideLettAndNumLayout->addLayout(vBoxGridAndSideLettAndNumLayout2);
-    hBoxGridAndSideLettAndNumLayout->addLayout(vBoxGridAndSideLettAndNumLayout1);
+    hBoxFullGridAndSideInformationPanelLayout->addLayout(vBoxNumberLayout);
+    hBoxFullGridAndSideInformationPanelLayout->addLayout(vBoxGridAndLetterContainerLayout);
 
     // MainWindow Player1 -> Grid -> Player2
-    vBox1Layout->addLayout(hboxTopPanelLayout);
-    // vBox1Layout->addLayout(gridLayout);
-    //vBox1Layout->addLayout(hBoxSideLettersLayout);
-    vBox1Layout->addLayout(hBoxGridAndSideLettAndNumLayout);
-    vBox1Layout->addLayout(hboxBottomPanelLayout);
+    vBoxMainContainer->addLayout(hboxTopPanelLayout);
+    vBoxMainContainer->addLayout(hBoxChessPieceSelectionTop);
+    vBoxMainContainer->addLayout(hBoxFullGridAndSideInformationPanelLayout);
+    vBoxMainContainer->addLayout(hBoxChessPieceSelectionBottom);
+    vBoxMainContainer->addLayout(hboxBottomPanelLayout);
 
 
     // Befüllen von Labels
@@ -201,36 +261,41 @@ void ChessGuiRenderer::createChessField(QWidget *mainWindow) {
     hboxBottomPanelLayout->addWidget(player1ActiveLabel);
 
     // Playbuttons
-    hBoxPlaybuttonsLayout->addWidget(buttonRewind);
-    hBoxPlaybuttonsLayout->addWidget(buttonPause);
-    hBoxPlaybuttonsLayout->addWidget(buttonSkip);
-
-
-    //auto *rewindAction = new QAction();
-    // QObject::connect(buttonRewind, SIGNAL(triggered()), rewindAction,SLOT(onRewindButtonPress()));
-
-
-
+    hBoxTimelineButtonsLayout->addWidget(buttonRewind);
+    hBoxTimelineButtonsLayout->addWidget(buttonPause);
+    hBoxTimelineButtonsLayout->addWidget(buttonSkip);
 
     // Countdown
-    hBoxCountdownLayout->addWidget(digitalClock);
+    if (this->speedModeTimerValue > 0) {
+        auto *digitalClockBlack = new ChessTimer(2, this->speedModeTimerValue);
+        auto *digitalClockWhite = new ChessTimer(1,this->speedModeTimerValue);
+
+        hBoxCountdownLayoutBlack->addWidget(digitalClockBlack);
+        hBoxCountdownLayoutWhite->addWidget(digitalClockWhite);
+    }
+
 
     // Rewindlist
-    hBoxRewindLayout->addWidget(rewindList);
+    hBoxTimelineLayout->addWidget(timelineList);
 
-    vBox2Layout->addLayout(hBoxCountdownLayout);
-    vBox2Layout->addLayout(hBoxRewindLayout);
-    vBox2Layout->addLayout(hBoxPlaybuttonsLayout);
+    vBoxSideInformationPanel->addLayout(hBoxCountdownLayoutBlack);
+    vBoxSideInformationPanel->addLayout(hBoxTimelineLayout);
+    vBoxSideInformationPanel->addLayout(hBoxCountdownLayoutWhite);
+    vBoxSideInformationPanel->addLayout(hBoxTimelineButtonsLayout);
+
+
+
 
     // In den horizontalen Rahmen das Grid und die Playerlabel einsetzen
-    hBoxMainBracketLayout->addLayout(vBoxSideNumbersLayout); //Test
-    hBoxMainBracketLayout->addLayout(vBox1Layout);
-    hBoxMainBracketLayout->addLayout(vBox2Layout);
+    hBoxMainBracketLayout->addLayout(vBoxNumberListLayout); //Test
+    hBoxMainBracketLayout->addLayout(vBoxMainContainer);
+    hBoxMainBracketLayout->addLayout(vBoxSideInformationPanel);
 
     // Das rechte Menü samt Countdown und playerbutton einsetzen
-    hBoxMainBracketLayout->addLayout(hBoxCountdownLayout);
+    // Obsolete -> hBoxMainBracketLayout->addLayout(hBoxCountdownLayoutBlack);
+    // Obsolete -> hBoxMainBracketLayout->addLayout(hBoxCountdownLayoutWhite);
 
-    this->fillFieldWithEmptyCells(gridLayout);
+    this->fillFieldWithEmptyCells(gridLayout, hBoxChessPieceSelectionTop, hBoxChessPieceSelectionBottom);
     this->addPawnsToCells(gridLayout);
     this->addQueensToCells(gridLayout);
     this->addKingsToCells(gridLayout);
@@ -240,17 +305,28 @@ void ChessGuiRenderer::createChessField(QWidget *mainWindow) {
 }
 
 
-QGridLayout *ChessGuiRenderer::createChessGridLayout(QWidget *mainWindow) {
-    return new QGridLayout();
+ChessGridLayout *ChessGuiRenderer::createChessGridLayout(QWidget *mainWindow) {
+    return new ChessGridLayout();
 }
 
 
-void ChessGuiRenderer::fillFieldWithEmptyCells(QGridLayout *layout) {
+void ChessGuiRenderer::fillFieldWithEmptyCells(
+        ChessGridLayout *layout,
+        QHBoxLayout *hBoxChessPieceSelectionTop,
+        QHBoxLayout *hBoxChessPieceSelectionBottom
+) {
     int counter = 0;
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
             std::pair<int, int> coordinates = std::make_pair(i, j);
-            ChessGuiCell *chessGuiCell = new ChessGuiCell(layout, this->chessFacade, coordinates, this->chessGuiPieceIconGenerator);
+            ChessGuiCell *chessGuiCell = new ChessGuiCell(
+                    layout,
+                    this->chessFacade,
+                    coordinates,
+                    this->chessGuiPieceIconGenerator,
+                    hBoxChessPieceSelectionTop,
+                    hBoxChessPieceSelectionBottom
+            );
 
             if (j % 2 - counter == 0) {
                 chessGuiCell->setCellColor(ChessGuiConstants::CELL_YELLOW_COLOR);
@@ -271,7 +347,7 @@ void ChessGuiRenderer::fillFieldWithEmptyCells(QGridLayout *layout) {
 
     layout->setSpacing(0);
 }
-void ChessGuiRenderer::addChessPieceToCells(QGridLayout *layout, std::string iconFileName, std::string pieceType, int row, int column) {
+void ChessGuiRenderer::addChessPieceToCells(ChessGridLayout *layout, std::string iconFileName, std::string pieceType, int row, int column) {
     ChessGuiCell *chessGuiCell = static_cast<ChessGuiCell*>(layout->itemAtPosition(row, column)->widget());
 
     auto icon = this->chessGuiPieceIconGenerator->generateIconFromFile(iconFileName);
@@ -282,38 +358,38 @@ void ChessGuiRenderer::addChessPieceToCells(QGridLayout *layout, std::string ico
 }
 
 
-void ChessGuiRenderer::addPawnsToCells(QGridLayout *layout) {
+void ChessGuiRenderer::addPawnsToCells(ChessGridLayout *layout) {
     for (int i = 0; i < 8; i++) {
         this->addChessPieceToCells(layout, ChessConstants::BLACK_PAWN_PIECE_FILENAME, ChessConstants::PAWN_PIECE_TYPE, 1, i);
         this->addChessPieceToCells(layout, ChessConstants::WHITE_PAWN_PIECE_FILENAME, ChessConstants::PAWN_PIECE_TYPE, 6, i);
     }
 }
 
-void ChessGuiRenderer::addQueensToCells(QGridLayout *layout) {
+void ChessGuiRenderer::addQueensToCells(ChessGridLayout *layout) {
     this->addChessPieceToCells(layout, ChessConstants::BLACK_QUEEN_PIECE_FILENAME, ChessConstants::QUEEN_PIECE_TYPE, 0, 3);
     this->addChessPieceToCells(layout, ChessConstants::WHITE_QUEEN_PIECE_FILENAME, ChessConstants::QUEEN_PIECE_TYPE, 7, 3);
 }
 
-void ChessGuiRenderer::addKingsToCells(QGridLayout *layout) {
+void ChessGuiRenderer::addKingsToCells(ChessGridLayout *layout) {
     this->addChessPieceToCells(layout, ChessConstants::BLACK_KING_PIECE_FILENAME, ChessConstants::KING_PIECE_TYPE, 0, 4);
     this->addChessPieceToCells(layout, ChessConstants::WHITE_KING_PIECE_FILENAME, ChessConstants::KING_PIECE_TYPE, 7, 4);
 }
 
-void ChessGuiRenderer::addBishopsToCells(QGridLayout *layout) {
+void ChessGuiRenderer::addBishopsToCells(ChessGridLayout *layout) {
     this->addChessPieceToCells(layout, ChessConstants::BLACK_BISHOP_PIECE_FILENAME, ChessConstants::BISHOP_PIECE_TYPE, 0, 2);
     this->addChessPieceToCells(layout, ChessConstants::BLACK_BISHOP_PIECE_FILENAME, ChessConstants::BISHOP_PIECE_TYPE, 0, 5);
     this->addChessPieceToCells(layout, ChessConstants::WHITE_BISHOP_PIECE_FILENAME, ChessConstants::BISHOP_PIECE_TYPE, 7, 2);
     this->addChessPieceToCells(layout, ChessConstants::WHITE_BISHOP_PIECE_FILENAME, ChessConstants::BISHOP_PIECE_TYPE, 7, 5);
 }
 
-void ChessGuiRenderer::addKnightsToCells(QGridLayout *layout) {
+void ChessGuiRenderer::addKnightsToCells(ChessGridLayout *layout) {
     this->addChessPieceToCells(layout, ChessConstants::BLACK_KNIGHT_PIECE_FILENAME, ChessConstants::KNIGHT_PIECE_TYPE, 0, 1);
     this->addChessPieceToCells(layout, ChessConstants::BLACK_KNIGHT_PIECE_FILENAME, ChessConstants::KNIGHT_PIECE_TYPE, 0, 6);
     this->addChessPieceToCells(layout, ChessConstants::WHITE_KNIGHT_PIECE_FILENAME, ChessConstants::KNIGHT_PIECE_TYPE, 7, 1);
     this->addChessPieceToCells(layout, ChessConstants::WHITE_KNIGHT_PIECE_FILENAME, ChessConstants::KNIGHT_PIECE_TYPE, 7, 6);
 }
 
-void ChessGuiRenderer::addRooksToCells(QGridLayout *layout) {
+void ChessGuiRenderer::addRooksToCells(ChessGridLayout *layout) {
     this->addChessPieceToCells(layout, ChessConstants::BLACK_ROOK_PIECE_FILENAME, ChessConstants::ROOK_PIECE_TYPE, 0, 0);
     this->addChessPieceToCells(layout, ChessConstants::BLACK_ROOK_PIECE_FILENAME, ChessConstants::ROOK_PIECE_TYPE, 0, 7);
     this->addChessPieceToCells(layout, ChessConstants::WHITE_ROOK_PIECE_FILENAME, ChessConstants::ROOK_PIECE_TYPE, 7, 0);
@@ -330,4 +406,20 @@ void ChessGuiRenderer::onPauseButtonPress() {
 
 void ChessGuiRenderer::onRewindButtonPress() {
     qDebug() << "Test";
+}
+
+void ChessGuiRenderer::onPressStartButton(QWidget *mainWindow) {
+    while ( auto* w = mainWindow->findChild<QWidget*>() ) {
+        delete w;
+    }
+
+    auto *mainGridWindow = new QWidget;
+    this->createChessField(mainGridWindow);
+
+    mainGridWindow->show();
+    mainWindow->close();
+}
+
+void ChessGuiRenderer::onPressSpeedButton(int speedModeTimerValue) {
+    this->speedModeTimerValue = speedModeTimerValue;
 }

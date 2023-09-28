@@ -9,9 +9,12 @@
 #include "ChessGuiFactory.h"
 
 class QWidget;
+class QApplication;
 
 class ChessGuiFacade: public AbstractFacade {
 public:
+    void initializeSettingsPage(QWidget *mainWindow);
+
     void initializeChessField(QWidget *mainWindow);
 
     ChessGuiFactory *getFactory() override;

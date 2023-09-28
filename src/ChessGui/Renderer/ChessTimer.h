@@ -10,8 +10,9 @@
 class ChessTimer: public QLCDNumber {
 private:
     int currentTime;
+    int currentPlayer;
 public:
-    ChessTimer();
+    ChessTimer(int player, int speedModeTimerValue);
 
     void showTime();
 };

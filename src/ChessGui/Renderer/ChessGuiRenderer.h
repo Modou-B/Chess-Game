@@ -8,40 +8,50 @@
 #include <string>
 
 class QWidget;
-class QGridLayout;
 class ChessFacade;
 class ChessGuiPieceIconGenerator;
 class QIcon;
 class QListWidget;
+class QApplication;
+class QHBoxLayout;
+class ChessGridLayout;
 
 class ChessGuiRenderer {
 private:
     ChessFacade *chessFacade;
     ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator;
-    static void TimeSlot();
-
+    int speedModeTimerValue;
 
 protected:
-    QGridLayout *createChessGridLayout(QWidget *mainWindow);
 
-    void fillFieldWithEmptyCells(QGridLayout *layout);
+    ChessGridLayout *createChessGridLayout(QWidget *mainWindow);
 
-    void addPawnsToCells(QGridLayout *layout);
-    void addQueensToCells(QGridLayout *layout);
-    void addKingsToCells(QGridLayout *layout);
-    void addBishopsToCells(QGridLayout *layout);
-    void addKnightsToCells(QGridLayout *layout);
-    void addRooksToCells(QGridLayout *layout);
-    void addChessPieceToCells(QGridLayout *layout, std::string iconFileName, std::string pieceType, int column, int row);
+    void fillFieldWithEmptyCells(
+            ChessGridLayout *layout,
+            QHBoxLayout *hBoxChessPieceSelectionTop,
+            QHBoxLayout *hBoxChessPieceSelectionBottom
+    );
+
+    void addPawnsToCells(ChessGridLayout *layout);
+    void addQueensToCells(ChessGridLayout *layout);
+    void addKingsToCells(ChessGridLayout *layout);
+    void addBishopsToCells(ChessGridLayout *layout);
+    void addKnightsToCells(ChessGridLayout *layout);
+    void addRooksToCells(ChessGridLayout *layout);
+    void addChessPieceToCells(ChessGridLayout *layout, std::string iconFileName, std::string pieceType, int column, int row);
 
 public:
     ChessGuiRenderer(ChessFacade *chessFacade, ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator);
 
     void createChessField(QWidget *mainWindow);
+    void createSettingsPage(QWidget *mainWindow);
+
     void onRewindButtonPress();
     void onPauseButtonPress();
     void onSkipButtonPress();
-    static QListWidget *rewindList;
+    static QListWidget *timelineList;
+    void onPressStartButton(QWidget *mainWindow);
+    void onPressSpeedButton(int speedModeTimerValue);
 
 };
 

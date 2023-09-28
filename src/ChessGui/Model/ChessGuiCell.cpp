@@ -18,11 +18,21 @@
 #include "QListWidgetItem"
 #include "../Renderer/ChessGuiRenderer.h"
 #include "../Renderer/ChessCoordinateConverter.h"
+#include "ChessGridLayout.h"
 
-ChessGuiCell::ChessGuiCell(QGridLayout *gridLayout, ChessFacade *chessFacade, std::pair<int, int> coordinates, ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator) {
+ChessGuiCell::ChessGuiCell(
+        ChessGridLayout *gridLayout,
+        ChessFacade *chessFacade,
+        std::pair<int, int> coordinates,
+        ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator,
+        QHBoxLayout *hBoxChessPieceSelectionTop,
+        QHBoxLayout *hBoxChessPieceSelectionBottom
+) {
     this->gridLayout = gridLayout;
     this->chessFacade = chessFacade;
     this->coordinates = coordinates;
+    this->hBoxChessPieceSelectionTop = hBoxChessPieceSelectionTop;
+    this->hBoxChessPieceSelectionBottom = hBoxChessPieceSelectionBottom;
     this->chessGuiPieceIconGenerator = chessGuiPieceIconGenerator;
     this->chessPieceIconState = ChessGuiConstants::STATE_EMPTY_CHESS_PIECE_ICON;
 
@@ -47,7 +57,11 @@ void ChessGuiCell::handleCellClick() {
     this->handleChessPieceMovement(chessMovementResponseTransfer);
 
     if (chessMovementResponseTransfer.getState() == ChessConstants::STATE_MOVED_PIECE_PAWN_SWITCH) {
+        this->renderPieceSwitchLayout();
+        while (!this->gridLayout->isChessPieceSwitchTypeSet()) {}
+        //
         this->handlePawnPieceSwitch(chessMovementResponseTransfer);
+        this->gridLayout->setChessPieceTypeSetCondition(false);
         this->chessFacade->handlePawnPieceSwitch(chessMovementResponseTransfer, ChessConstants::QUEEN_PIECE_TYPE);
     }
 
@@ -58,10 +72,6 @@ void ChessGuiCell::handleCellClick() {
 
 Qt::GlobalColor ChessGuiCell::getCellColor() {
     return this->currentColor;
-}
-
-QGridLayout *ChessGuiCell::getGridLayout() {
-    return this->gridLayout;
 }
 
 void ChessGuiCell::setBaseCellSize() {
@@ -158,7 +168,7 @@ void ChessGuiCell::handlePawnPieceSwitch(ChessMovementResponseTransfer chessMove
     ChessGuiCell *currentChessGuiCell = static_cast<ChessGuiCell*>(this->gridLayout->itemAtPosition(
             currentCellCoordinates.first, currentCellCoordinates.second)->widget());
 
-    std::string pieceType = ChessConstants::QUEEN_PIECE_TYPE;
+    std::string pieceType = this->gridLayout->getChessPieceSwitchType();
     if (this->chessFacade->getCurrentPlayer() == 1) {
           pieceType.append("-white");
     } else {
@@ -180,5 +190,17 @@ void ChessGuiCell::addListWidgetItem(std::pair<int, int> currentCellCoordinates)
 
 
     auto *rewindListEntry = new QListWidgetItem(entryStr);
-    ChessGuiRenderer::rewindList->insertItem(ChessGuiRenderer::rewindList->count() + 1, rewindListEntry);
+    ChessGuiRenderer::timelineList->insertItem(ChessGuiRenderer::timelineList->count() + 1, rewindListEntry);
+}
+
+void ChessGuiCell::renderPieceSwitchLayout() {
+    if (this->chessFacade->getCurrentPlayer() == 1) {
+        while ( auto* w = this->hBoxChessPieceSelectionTop->findChild<QWidget*>() ) {
+            w->show();
+        }
+    }
+
+    while ( auto* w = this->hBoxChessPieceSelectionBottom->findChild<QWidget*>() ) {
+        w->show();
+    }
 }

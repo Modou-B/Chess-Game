@@ -4,6 +4,9 @@
 
 #include "ChessGuiFacade.h"
 
+void ChessGuiFacade::initializeSettingsPage(QWidget *mainWindow) {
+    ChessGuiFacade::getFactory()->createChessGuiRenderer()->createSettingsPage(mainWindow);
+}
 void ChessGuiFacade::initializeChessField(QWidget *mainWindow) {
     ChessGuiFacade::getFactory()->createChessGuiRenderer()->createChessField(mainWindow);
 }
