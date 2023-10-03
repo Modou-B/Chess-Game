@@ -14,9 +14,6 @@
 #include "../../Shared/Chess/Transfer/ChessPiecePossibleMoveTransfer.h"
 #include "iostream"
 
-std::pair<int, int> CheckmateManager::player1KingPieceCoordinates;
-std::pair<int, int> CheckmateManager::player2KingPieceCoordinates;
-
 CheckmateManager::CheckmateManager(
     InCheckStatusChecker *inCheckStatusChecker, InStalemateStatusChecker *inStalemateStatusChecker, BareKingDrawStatusChecker *bareKingDrawStatusChecker) {
 
@@ -27,7 +24,7 @@ CheckmateManager::CheckmateManager(
 
 
 void CheckmateManager::determineCurrentGameState(ChessField *chessField, ChessPlayerData *currentChessPlayerData, ChessPlayerData *opponentChessPlayerData, int player) {
-    auto kingPieceCoordinates = CheckmateManager::getKingPieceCoordinatesForPlayer(player);
+    auto kingPieceCoordinates = currentChessPlayerData->getKingPiece()->getCurrentCoordinates();
 
     auto inCheckResponseTransfer = this->inCheckStatusChecker->getAmountOfPiecesThatCheckKing(
       chessField, kingPieceCoordinates, player);
@@ -44,7 +41,7 @@ void CheckmateManager::determineCurrentGameState(ChessField *chessField, ChessPl
 
     currentChessPlayerData->setInCheckStatus(false);
     if (this->inStalemateStatusChecker->isKingInStalemate(
-          chessField, currentChessPlayerData, CheckmateManager::getKingPieceCoordinatesForPlayer(player))
+          chessField, currentChessPlayerData, kingPieceCoordinates)
     ) {
         std::cout << "Stalemate" << std::endl;
         exit(1);
@@ -54,24 +51,6 @@ void CheckmateManager::determineCurrentGameState(ChessField *chessField, ChessPl
         std::cout << "Bare King" << std::endl;
         exit(1);
     }
-}
-
-void CheckmateManager::setKingPieceCoordinates(std::pair<int, int> kingPieceCoordinates, int player) {
-    if (player == 1) {
-        CheckmateManager::player1KingPieceCoordinates = kingPieceCoordinates;
-
-        return;
-    }
-
-    CheckmateManager::player2KingPieceCoordinates = kingPieceCoordinates;
-}
-
-std::pair<int, int> CheckmateManager::getKingPieceCoordinatesForPlayer(int player) {
-    if (player == 1) {
-        return CheckmateManager::player1KingPieceCoordinates;
-    }
-
-    return CheckmateManager::player2KingPieceCoordinates;
 }
 
 bool CheckmateManager::isPlayerInCheckmate(

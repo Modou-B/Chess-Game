@@ -7,10 +7,10 @@
 #include "../../Shared/Chess/ChessConstants.h"
 
 BishopPiece::BishopPiece(
-    int player, 
-    ChessPieceMovementGenerator *chessPieceMovementGenerator,
+    int player,
+    ChessPieceMovementMapper *chessPieceMovementMapper,
     KingPieceMovementChecker *kingPieceMovementChecker
-    ): BaseChessPiece(ChessConstants::BISHOP_PIECE_TYPE, player, chessPieceMovementGenerator, kingPieceMovementChecker) {}
+    ): BaseChessPiece(ChessConstants::BISHOP_PIECE_TYPE, player, chessPieceMovementMapper, kingPieceMovementChecker) {}
 
 std::vector<ChessPiecePossibleMoveTransfer*> BishopPiece::determinePossibleMovesForSpecificPiece(
         ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate) {

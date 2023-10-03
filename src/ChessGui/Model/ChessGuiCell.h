@@ -9,48 +9,60 @@
 #include <utility>
 #include <string>
 
+using namespace std;
+
 class ChessFacade;
-class QGridLayout;
 class ChessMovementResponseTransfer;
+class ChessPiecePositionTransfer;
 class ChessGuiPieceIconGenerator;
+class ChessPieceSelectionRenderer;
 class QIcon;
+class QHBoxLayout;
+class QGridLayout;
 
 class ChessGuiCell: public QPushButton {
 private:
     QGridLayout *gridLayout;
     ChessFacade *chessFacade;
     ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator;
+    ChessPieceSelectionRenderer *chessPieceSelectionRenderer;
 
-    std::pair<int, int> coordinates;
+    pair<int, int> coordinates;
 
     Qt::GlobalColor currentColor;
 
-    std::string chessPieceType;
-    std::string chessPieceIconState;
+    string chessPieceType;
+    string chessPieceIconState;
 
 protected:
-    void handlePawnPieceSwitch(ChessMovementResponseTransfer chessMovementResponseTransfer);
+    ChessPiecePositionTransfer createCurrentChessPiecePositionTransfer();
 
 public:
-    ChessGuiCell(QGridLayout *gridLayout, ChessFacade *chessFacade, std::pair<int, int> coordinates, ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator);
+    ChessGuiCell(
+            QGridLayout *gridLayout,
+            ChessFacade *chessFacade,
+            ChessPieceSelectionRenderer *chessPieceSelectionRenderer,
+            pair<int, int> coordinates,
+            ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator
+    );
 
     void handleCellClick();
     void handleChessPieceMovement(ChessMovementResponseTransfer chessMovementResponseTransfer);
+    void handlePawnPieceSwitch(string pieceType);
 
     Qt::GlobalColor getCellColor();
-    QGridLayout *getGridLayout();
-    std::string getChessPieceIconState();
-    std::string getChessPieceType();
+    string getChessPieceIconState();
+    string getChessPieceType();
 
     void setBaseCellSize();
     void setCellColor(QColor color);
-    void setChessPieceType(std::string pieceType);
+    void setChessPieceType(string pieceType);
 
     void renderPossibleMovesForPiece(ChessMovementResponseTransfer chessMovementResponseTransfer);
     void clearPossibleMovesForPreviousPieceClick(ChessMovementResponseTransfer chessMovementResponseTransfer);
 
-    void setChessPieceIcon(std::string iconState, QIcon chessPieceIcon);
-    void addListWidgetItem(std::pair<int, int> currentCellCoordinates);
+    void setChessPieceIcon(string iconState, QIcon chessPieceIcon);
+    void addListWidgetItem(pair<int, int> currentCellCoordinates);
 };
 
 

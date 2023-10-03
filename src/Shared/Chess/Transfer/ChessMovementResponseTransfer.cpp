@@ -7,83 +7,76 @@
 #include "ChessPiecePossibleMoveTransfer.h"
 
 ChessMovementResponseTransfer::ChessMovementResponseTransfer() {
-    this->hasPieceMoved = false;
-    this->hasPossibleMoves = false;
-    this->hasKingMoved = false;
     this->state = "";
-    this->chessPiecesToMove = new std::vector<ChessPieceMovementTransfer*>();
+    this->chessPieceStateTransfers = vector<ChessPieceStateTransfer*>();
 }
 
-bool ChessMovementResponseTransfer::wasPieceMoved() {
-    return this->hasPieceMoved;
+ChessMovementResponseTransfer *ChessMovementResponseTransfer::setState(string state) {
+    this->state = state;
+
+    return this;
 }
 
-void ChessMovementResponseTransfer::togglePieceMovementValue() {
-    this->hasPieceMoved = !this->hasPieceMoved;
+ChessMovementResponseTransfer *ChessMovementResponseTransfer::setCurrentPlayer(int player) {
+    this->currentPlayer = player;
+
+    return this;
 }
 
-ChessMovementResponseTransfer &ChessMovementResponseTransfer::addChessPieceMovementTransfer(ChessPieceMovementTransfer *chessPieceMovementTransfer) {
-    this->chessPiecesToMove->push_back(chessPieceMovementTransfer);
+ChessMovementResponseTransfer *ChessMovementResponseTransfer::setCurrentOpponentPlayer(int player) {
+    this->currentOpponentPlayer = player;
 
-    return *this;
+    return this;
 }
 
-ChessMovementResponseTransfer &ChessMovementResponseTransfer::setCurrentCellCoordinates(std::pair<int, int> currentCellCoordinates) {
-    this->currentCellCoordinates = currentCellCoordinates;
+ChessMovementResponseTransfer *ChessMovementResponseTransfer::setPreviousPossibleMoveTransfers(
+    vector<ChessPiecePossibleMoveTransfer *> possibleMoves
+) {
+    this->previousPossibleMoveTransfers = possibleMoves;
 
-    return *this;
+    return this;
 }
 
-ChessMovementResponseTransfer &ChessMovementResponseTransfer::setHasKingMoved(bool value) {
-    this->hasKingMoved = value;
+ChessMovementResponseTransfer *ChessMovementResponseTransfer::setPossibleMoveTransfers(
+    vector<ChessPiecePossibleMoveTransfer *> possibleMoves
+) {
+    this->possibleMoveTransfers = possibleMoves;
 
-    return *this;
+    return this;
 }
 
-std::pair<int, int> ChessMovementResponseTransfer::getCurrentCellCoordinates() {
-    return this->currentCellCoordinates;
+ChessMovementResponseTransfer *ChessMovementResponseTransfer::setChessPieceStateTransfers(
+    vector<ChessPieceStateTransfer *> chessPieceStateTransfers
+) {
+    this->chessPieceStateTransfers = chessPieceStateTransfers;
+
+    return this;
 }
 
-std::vector<ChessPiecePossibleMoveTransfer*> *ChessMovementResponseTransfer::getPossibleMoves() {
-    return &this->possibleMoves;
+void ChessMovementResponseTransfer::addChessPieceStateTransfer(ChessPieceStateTransfer *chessPieceStateTransfer) {
+    this->chessPieceStateTransfers.push_back(chessPieceStateTransfer);
 }
 
-bool ChessMovementResponseTransfer::doesPieceHasPossibleMoves() {
-    return this->hasPossibleMoves;
-}
-
-void ChessMovementResponseTransfer::togglePossibleMovesCheckValue() {
-    this->hasPossibleMoves = !this->hasPossibleMoves;
-}
-
-void ChessMovementResponseTransfer::setPossibleMoves(std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves) {
-    this->possibleMoves = possibleMoves;
-}
-
-std::string ChessMovementResponseTransfer::getState() {
+string ChessMovementResponseTransfer::getState() {
     return this->state;
 }
 
-void ChessMovementResponseTransfer::setState(std::string state) {
-    this->state = state;
+int ChessMovementResponseTransfer::getCurrentPlayer() {
+    return this->currentPlayer;
 }
 
-void ChessMovementResponseTransfer::setPreviousPossibleMoves(std::vector<ChessPiecePossibleMoveTransfer*> *previousPossibleMoves) {
-    this->previousPossibleMoves = previousPossibleMoves;
+int ChessMovementResponseTransfer::getCurrentOpponentPlayer() {
+    return this->currentOpponentPlayer;
 }
 
-void ChessMovementResponseTransfer::setPossibleMovesCheckValue(bool value) {
-    this->hasPossibleMoves = value;
+vector<ChessPiecePossibleMoveTransfer *> ChessMovementResponseTransfer::getPreviousPossibleMoveTransfers() {
+    return this->previousPossibleMoveTransfers;
 }
 
-std::vector<ChessPiecePossibleMoveTransfer*> *ChessMovementResponseTransfer::getPreviousPossibleMoves() {
-    return this->previousPossibleMoves;
+vector<ChessPiecePossibleMoveTransfer *> ChessMovementResponseTransfer::getPossibleMoveTransfers() {
+    return this->possibleMoveTransfers;
 }
 
-std::vector<ChessPieceMovementTransfer *> *ChessMovementResponseTransfer::getChessPiecesToMove() {
-    return this->chessPiecesToMove;
-}
-
-bool ChessMovementResponseTransfer::getHasKingMoved() {
-    return this->hasKingMoved;
+vector<ChessPieceStateTransfer*> ChessMovementResponseTransfer::getChessPieceStateTransfers() {
+    return this->chessPieceStateTransfers;
 }

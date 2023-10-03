@@ -5,25 +5,30 @@
 #include "ChessFacade.h"
 #include "Model/ChessCell.h"
 #include "../Shared/Chess/Transfer/ChessMovementResponseTransfer.h"
-
-ChessFactory *ChessFacade::getFactory() {
-    return static_cast<ChessFactory*>(this->findFactory(typeid(ChessFactory).name()));
-}
+#include "../Shared/Chess/Transfer/ChessPiece/ChessPiecePositionTransfer.h"
 
 void ChessFacade::initiateChessGame() {
     ChessFacade::getFactory()->createGameApplicationManager()->initiateChessApplication();
 }
 
-ChessMovementResponseTransfer ChessFacade::handleChessCellClick(std::pair<int, int> currentCellCoordinates) {
+ChessMovementResponseTransfer ChessFacade::handleChessCellClick(pair<int, int> currentCellCoordinates) {
     return ChessFacade::getFactory()->createGameApplicationManager()->handleChessCellClick(currentCellCoordinates);
 }
 
-void ChessFacade::handlePawnPieceSwitch(ChessMovementResponseTransfer chessMovementResponseTransfer, std::string switchedPieceType) {
-    ChessFacade::getFactory()->createGameApplicationManager()->handlePawnPieceSwitch(chessMovementResponseTransfer, switchedPieceType);
+void ChessFacade::handlePawnPieceSwitch(string switchedPieceType) {
+    ChessFacade::getFactory()->createGameApplicationManager()->handlePawnPieceSwitch(switchedPieceType);
 }
 
-void ChessFacade::endCurrentTurn(ChessMovementResponseTransfer chessMovementResponseTransfer) {
-    ChessFacade::getFactory()->createGameApplicationManager()->endCurrentTurn(chessMovementResponseTransfer);
+void ChessFacade::endCurrentTurn(
+    ChessMovementResponseTransfer chessMovementResponseTransfer,
+    ChessPiecePositionTransfer chessPiecePositionTransfer
+) {
+    ChessFacade::getFactory()
+      ->createGameApplicationManager()
+      ->endCurrentTurn(
+          chessMovementResponseTransfer,
+          chessPiecePositionTransfer
+      );
 }
 
 void ChessFacade::startNewTurn() {
@@ -32,4 +37,12 @@ void ChessFacade::startNewTurn() {
 
 int ChessFacade::getCurrentPlayer() {
     return ChessFacade::getFactory()->createGameApplicationManager()->getCurrentPlayer();
+}
+
+void ChessFacade::updateCurrentGameState(string gameState) {
+    ChessFacade::getFactory()->createGameApplicationDataWriter()->updateGameApplicationCurrentGameState(gameState);
+}
+
+ChessFactory *ChessFacade::getFactory() {
+    return static_cast<ChessFactory*>(this->findFactory(typeid(ChessFactory).name()));
 }

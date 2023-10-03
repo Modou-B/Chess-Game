@@ -9,7 +9,7 @@
 #include <vector>
 #include <utility>
 
-class ChessPieceMovementGenerator;
+class ChessPieceMovementMapper;
 class ChessPiecePossibleMoveTransfer;
 class KingPieceMovementChecker;
 
@@ -35,7 +35,7 @@ protected:
 
     bool wasDoubleMoveUsed();
 public:
-    PawnPiece(int player, ChessPieceMovementGenerator *chessPieceMovementGenerator, KingPieceMovementChecker *kingPieceMovementChecker);
+    PawnPiece(int player, ChessPieceMovementMapper *chessPieceMovementMapper, KingPieceMovementChecker *kingPieceMovementChecker);
 
     std::vector<ChessPiecePossibleMoveTransfer*> determinePossibleMovesForSpecificPiece(
             ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate) override;

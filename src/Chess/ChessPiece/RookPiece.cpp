@@ -8,9 +8,9 @@
 
 RookPiece::RookPiece(
     int player,
-    ChessPieceMovementGenerator *chessPieceMovementGenerator,
+    ChessPieceMovementMapper *chessPieceMovementMapper,
     KingPieceMovementChecker *kingPieceMovementChecker
-    ): BaseChessPiece(ChessConstants::ROOK_PIECE_TYPE, player, chessPieceMovementGenerator, kingPieceMovementChecker) {}
+    ): BaseChessPiece(ChessConstants::ROOK_PIECE_TYPE, player, chessPieceMovementMapper, kingPieceMovementChecker) {}
 
 std::vector<ChessPiecePossibleMoveTransfer*> RookPiece::determinePossibleMovesForSpecificPiece(
         ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate) {

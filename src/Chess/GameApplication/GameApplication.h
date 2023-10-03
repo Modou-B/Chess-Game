@@ -6,10 +6,14 @@
 #define CHESSAPPLICATION_GAMEAPPLICATION_H
 
 #include <utility>
+#include <string>
+
+using namespace std;
 
 class ChessField;
 class ChessCell;
 class ChessPlayerData;
+class ChessMovementResponseTransfer;
 
 class GameApplication {
 private:
@@ -17,35 +21,54 @@ private:
     static ChessPlayerData *chessPlayer1Data;
     static ChessPlayerData *chessPlayer2Data;
 
+    static ChessMovementResponseTransfer savedChessMovementResponseTransfer;
+    static string currentGameState;
+    
     static int currentPlayer;
+    static int currentOpponentPlayer;
+
     static int turnCounter;
 
-    static std::pair<int, int> previouslyClickedCell;
+    static pair<int, int> previouslyClickedCell;
     static bool hasPreviousClickedCell;
 
-    static std::pair<int, int> coordinatesOfLastTurnClickedCell;
+    static pair<int, int> coordinatesOfLastTurnClickedCell;
 public:
-    static int getCurrentPlayer();
-    static ChessCell* getChessCell(std::pair<int, int> cellCoordinates);
+    static ChessCell* getChessCell(pair<int, int> cellCoordinates);
     static ChessField* getChessField();
-    static std::pair<int, int> getPreviouslyClickedCellCoordinates();
-    static std::pair<int, int> getCoordinatesOfLastTurnClickedCell();
-    static int getTurnCounter();
+    static pair<int, int> getPreviouslyClickedCellCoordinates();
+    static pair<int, int> getCoordinatesOfLastTurnClickedCell();
     static ChessPlayerData *getCurrentChessPlayerData();
     static ChessPlayerData *getOpponentChessPlayerData();
+    static ChessPlayerData *getChessPlayerDataForPlayer(int player);
 
     static bool wasPreviousCellClicked();
 
     static void setChessField(ChessField* chessField);
     static void setChessPlayer1Data(ChessPlayerData* chessPlayerData);
     static void setChessPlayer2Data(ChessPlayerData* chessPlayerData);
-
-    static void setPreviouslyClickedCellCoordinates(std::pair<int, int> currentCellCoordinates);
-    static void setCoordinatesOfLastTurnClickedCell(std::pair<int, int> lastTurnClickedCell);
+    static void setCurrentPlayer(int currentPlayer);
+    static void setCurrentOpponentPlayer(int currentOpponentPlayer);
+    static void setTurnCounter(int turnCounter);
+    static void setCurrentGameState(string gameState);
+    static void saveChessMovementResponseTransfer(
+        ChessMovementResponseTransfer chessMovementResponseTransfer
+    );
+    
+    static void setPreviouslyClickedCellCoordinates(pair<int, int> currentCellCoordinates);
+    static void setCoordinatesOfLastTurnClickedCell(pair<int, int> lastTurnClickedCell);
 
     static void togglePreviousClickedCellValue();
     static void toggleCurrentPlayer();
+    static void switchPlayers();
+
     static void increaseTurnCounter();
+
+    static string getCurrentGameState();
+    static ChessMovementResponseTransfer getSavedChessMovementResponseTransfer();
+    static int getCurrentPlayer();
+    static int getCurrentOpponentPlayer();
+    static int getTurnCounter();
 };
 
 

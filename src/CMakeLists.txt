@@ -2,6 +2,7 @@ add_subdirectory(Application)
 add_subdirectory(Chess)
 add_subdirectory(ChessGui)
 add_subdirectory(Shared)
+add_subdirectory(ChessTimeline)
 
 add_library(MainLib
         MainFacade.cpp
@@ -18,6 +19,7 @@ target_link_libraries(ChessApplication
         Qt::Widgets
         ChessLib
         ChessGuiLib
+        ChessTimelineLib
         MainLib
         ApplicationLib
         SharedLib

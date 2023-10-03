@@ -4,16 +4,21 @@
 
 #include "GameApplication.h"
 #include "../Model/ChessField.h"
+#include "../../Shared/Chess/Transfer/ChessMovementResponseTransfer.h"
 
 ChessField *GameApplication::chessField = nullptr;
 ChessPlayerData *GameApplication::chessPlayer1Data = nullptr;
 ChessPlayerData *GameApplication::chessPlayer2Data = nullptr;
 
+ChessMovementResponseTransfer GameApplication::savedChessMovementResponseTransfer = {};
+string GameApplication::currentGameState = "";
+
 int GameApplication::currentPlayer = 1;
+int GameApplication::currentOpponentPlayer = 2;
 int GameApplication::turnCounter = 0;
 
-std::pair<int, int> GameApplication::previouslyClickedCell;
-std::pair<int, int> GameApplication::coordinatesOfLastTurnClickedCell;
+pair<int, int> GameApplication::previouslyClickedCell;
+pair<int, int> GameApplication::coordinatesOfLastTurnClickedCell;
 
 bool GameApplication::hasPreviousClickedCell = false;
 
@@ -21,15 +26,15 @@ int GameApplication::getCurrentPlayer() {
     return GameApplication::currentPlayer;
 }
 
-ChessCell *GameApplication::getChessCell(std::pair<int, int> cellCoordinates) {
+ChessCell *GameApplication::getChessCell(pair<int, int> cellCoordinates) {
     return GameApplication::chessField->getChessCell(cellCoordinates);
 }
 
-std::pair<int, int> GameApplication::getPreviouslyClickedCellCoordinates() {
+pair<int, int> GameApplication::getPreviouslyClickedCellCoordinates() {
     return GameApplication::previouslyClickedCell;
 }
 
-std::pair<int, int> GameApplication::getCoordinatesOfLastTurnClickedCell() {
+pair<int, int> GameApplication::getCoordinatesOfLastTurnClickedCell() {
     return GameApplication::coordinatesOfLastTurnClickedCell;
 }
 
@@ -45,13 +50,35 @@ void GameApplication::setChessPlayer2Data(ChessPlayerData *chessPlayerData) {
     GameApplication::chessPlayer2Data = chessPlayerData;
 }
 
-void GameApplication::setPreviouslyClickedCellCoordinates(std::pair<int, int> currentCellCoordinates) {
+void GameApplication::setCurrentPlayer(int currentPlayer) {
+    GameApplication::currentPlayer = currentPlayer;
+}
+
+void GameApplication::setCurrentOpponentPlayer(int currentOpponentPlayer) {
+    GameApplication::currentOpponentPlayer = currentOpponentPlayer;
+}
+
+void GameApplication::setTurnCounter(int turnCounter) {
+    GameApplication::turnCounter = turnCounter;
+}
+
+void GameApplication::setCurrentGameState(string gameState) {
+    GameApplication::currentGameState = gameState;
+}
+
+void GameApplication::saveChessMovementResponseTransfer(
+    ChessMovementResponseTransfer chessMovementResponseTransfer
+) {
+    GameApplication::savedChessMovementResponseTransfer = chessMovementResponseTransfer;
+}
+
+void GameApplication::setPreviouslyClickedCellCoordinates(pair<int, int> currentCellCoordinates) {
     GameApplication::previouslyClickedCell = currentCellCoordinates;
 
     GameApplication::hasPreviousClickedCell = true;
 }
 
-void GameApplication::setCoordinatesOfLastTurnClickedCell(std::pair<int, int> lastTurnClickedCell) {
+void GameApplication::setCoordinatesOfLastTurnClickedCell(pair<int, int> lastTurnClickedCell) {
     GameApplication::coordinatesOfLastTurnClickedCell = lastTurnClickedCell;
 }
 
@@ -67,6 +94,7 @@ ChessField *GameApplication::getChessField() {
     return GameApplication::chessField;
 }
 
+// deprecated
 void GameApplication::toggleCurrentPlayer() {
     if (GameApplication::currentPlayer == 1) {
         GameApplication::currentPlayer = 2;
@@ -97,6 +125,34 @@ ChessPlayerData *GameApplication::getOpponentChessPlayerData() {
     return GameApplication::chessPlayer1Data;
 }
 
+ChessPlayerData *GameApplication::getChessPlayerDataForPlayer(int player)
+{
+    if (player == 1) {
+      return GameApplication::chessPlayer1Data;
+    }
+
+    return GameApplication::chessPlayer2Data;
+}
+
+int GameApplication::getCurrentOpponentPlayer() {
+    return GameApplication::currentOpponentPlayer;
+}
+
+string GameApplication::getCurrentGameState() {
+    return GameApplication::currentGameState;
+}
+
+ChessMovementResponseTransfer GameApplication::getSavedChessMovementResponseTransfer() {
+    return GameApplication::savedChessMovementResponseTransfer;
+}
+
 void GameApplication::increaseTurnCounter() {
     GameApplication::turnCounter++;
+}
+
+void GameApplication::switchPlayers() {
+    int currentPlayer = GameApplication::currentPlayer;
+
+    GameApplication::currentPlayer = GameApplication::currentOpponentPlayer;
+    GameApplication::currentOpponentPlayer = currentPlayer;
 }
