@@ -28,6 +28,9 @@
 #include "../Model/ChessSelectionPiece.h"
 #include "../Model/ChessGuiCellManager.h"
 #include "ChessPieceSelection/ChessPieceSelectionRenderer.h"
+#include "../ChessGui/Renderer/Timeline/RewindTimelineButton.h"
+#include "../ChessGui/Renderer/Timeline/PauseGameTimerButton.h"
+#include "../ChessGui/Renderer/Timeline/FastForwardTimelineButton.h"
 
 class QGridLayout;
 
@@ -190,9 +193,12 @@ void ChessGuiRenderer::createChessField(QWidget *mainWindow) {
 
     auto chessFieldSideNumberEmpty5 = new QLabel("");
 
-    auto *buttonRewind = new QPushButton("<<");
-    auto *buttonPause = new QPushButton(">||");
-    auto *buttonSkip = new QPushButton(">>");
+    auto *buttonRewind = new RewindTimelineButton(this);
+    buttonRewind->setText("<<");
+    auto *buttonPause = new PauseGameTimerButton(this);
+    buttonPause->setText(">||");
+    auto *buttonSkip = new FastForwardTimelineButton(this);
+    buttonSkip->setText(">>");
 
 
 

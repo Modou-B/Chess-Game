@@ -201,6 +201,7 @@ void ChessGuiCell::addListWidgetItem(pair<int, int> currentCellCoordinates) {
 
     auto *rewindListEntry = new QListWidgetItem(entryStr);
     ChessGuiRenderer::timelineList->insertItem(ChessGuiRenderer::timelineList->count() + 1, rewindListEntry);
+    ChessGuiRenderer::timelineList->setCurrentRow(ChessGuiRenderer::timelineList->count() - 1);
 }
 
 ChessPiecePositionTransfer ChessGuiCell::createCurrentChessPiecePositionTransfer()
