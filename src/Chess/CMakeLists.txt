@@ -1,6 +1,6 @@
 file(GLOB_RECURSE SOURCES
-        ChessPiece/Movement/ChessPieceMovementManager.h
-        ChessPiece/Movement/ChessPieceMovementManager.cpp
+        Movement/ChessPieceMovementManager.h
+        Movement/ChessPieceMovementManager.cpp
         *.h
         *.cpp
         )

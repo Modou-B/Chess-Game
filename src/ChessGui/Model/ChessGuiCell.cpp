@@ -5,7 +5,8 @@
 #include "ChessGuiCell.h"
 #include "../../Shared/Chess/Transfer/ChessMovementResponseTransfer.h"
 #include "../../Shared/Chess/Transfer/ChessPiecePossibleMoveTransfer.h"
-#include "../../Shared/Chess/Transfer/ChessPieceMovementTransfer.h"
+#include "../../Shared/Chess/Transfer/ChessPiece/ChessPiecePositionTransfer.h"
+#include "../../Shared/Chess/Transfer/ChessPiece/ChessPieceStateTransfer.h"
 #include "../../Shared/Chess/ChessConstants.h"
 #include "../../Shared/Chess/ChessMovementConstants.h"
 #include "../../Shared/ChessGui/ChessGuiConstants.h"
@@ -32,27 +33,32 @@ ChessGuiCell::ChessGuiCell(QGridLayout *gridLayout, ChessFacade *chessFacade, st
 void ChessGuiCell::handleCellClick() {
     ChessMovementResponseTransfer chessMovementResponseTransfer = this->chessFacade->handleChessCellClick(this->coordinates);
 
-    if (chessMovementResponseTransfer.getState() == ChessConstants::STATE_SWITCHED_PIECE) {
+    if (chessMovementResponseTransfer.getState() == ChessMovementConstants::MOVEMENT_STATE_SWITCHED_TO_OWN_PIECE) {
         this->clearPossibleMovesForPreviousPieceClick(chessMovementResponseTransfer);
     }
 
-    if (chessMovementResponseTransfer.doesPieceHasPossibleMoves()) {
+    if (!chessMovementResponseTransfer.getPossibleMoveTransfers().empty()) {
         this->renderPossibleMovesForPiece(chessMovementResponseTransfer);
     }
 
-    if (!chessMovementResponseTransfer.wasPieceMoved()) {
+    if (chessMovementResponseTransfer.getState() == ChessMovementConstants::MOVEMENT_STATE_NOT_MOVED
+        || (chessMovementResponseTransfer.getState() != ChessMovementConstants::MOVEMENT_STATE_MOVED
+            && chessMovementResponseTransfer.getState() != ChessMovementConstants::MOVEMENT_STATE_PAWN_SWITCH)) {
         return;
     }
 
     this->handleChessPieceMovement(chessMovementResponseTransfer);
 
-    if (chessMovementResponseTransfer.getState() == ChessConstants::STATE_MOVED_PIECE_PAWN_SWITCH) {
-        this->handlePawnPieceSwitch(chessMovementResponseTransfer);
-        this->chessFacade->handlePawnPieceSwitch(chessMovementResponseTransfer, ChessConstants::QUEEN_PIECE_TYPE);
+    if (chessMovementResponseTransfer.getState() == ChessMovementConstants::MOVEMENT_STATE_PAWN_SWITCH) {
+        this->handlePawnPieceSwitch();
+        this->chessFacade->handlePawnPieceSwitch(
+            this->createCurrentChessPiecePositionTransfer(),
+            ChessConstants::QUEEN_PIECE_TYPE
+        );
     }
 
     this->addListWidgetItem(this->coordinates);
-    this->chessFacade->endCurrentTurn(chessMovementResponseTransfer);
+    this->chessFacade->endCurrentTurn(chessMovementResponseTransfer, this->createCurrentChessPiecePositionTransfer());
     this->chessFacade->startNewTurn();
 }
 
@@ -82,14 +88,18 @@ void ChessGuiCell::setCellColor(QColor color) {
 void ChessGuiCell::handleChessPieceMovement(ChessMovementResponseTransfer chessMovementResponseTransfer) {
     this->clearPossibleMovesForPreviousPieceClick(chessMovementResponseTransfer);
 
-    for (auto &chessPieceMovementTransfer : *chessMovementResponseTransfer.getChessPiecesToMove())
+    for (auto &chessPieceStateTransfer : chessMovementResponseTransfer.getChessPieceStateTransfers())
     {
-        ChessGuiCell *oldChessGuiCell = static_cast<ChessGuiCell*>(this->gridLayout->itemAtPosition(
-                chessPieceMovementTransfer->getOldCoordinates().first, chessPieceMovementTransfer->getOldCoordinates().second)->widget());
+        if (chessPieceStateTransfer->getState() == ChessMovementConstants::CHESS_PIECE_STATE_DELETED) {
+            continue;
+        }
 
-        if (chessPieceMovementTransfer->getAction() == ChessMovementConstants::ACTION_MOVE) {
+        ChessGuiCell *oldChessGuiCell = static_cast<ChessGuiCell*>(this->gridLayout->itemAtPosition(
+                chessPieceStateTransfer->getStartCoordinate().first, chessPieceStateTransfer->getStartCoordinate().second)->widget());
+
+        if (chessPieceStateTransfer->getState() == ChessMovementConstants::CHESS_PIECE_STATE_MOVED) {
             ChessGuiCell *newChessGuiCell = static_cast<ChessGuiCell*>(this->gridLayout->itemAtPosition(
-                    chessPieceMovementTransfer->getNewCoordinates().first, chessPieceMovementTransfer->getNewCoordinates().second)->widget());
+                    chessPieceStateTransfer->getEndCoordinate().first, chessPieceStateTransfer->getEndCoordinate().second)->widget());
 
             newChessGuiCell->setChessPieceIcon(
                 ChessGuiConstants::STATE_REAL_CHESS_PIECE_ICON, oldChessGuiCell->icon());
@@ -104,7 +114,7 @@ void ChessGuiCell::handleChessPieceMovement(ChessMovementResponseTransfer chessM
 }
 
 void ChessGuiCell::renderPossibleMovesForPiece(ChessMovementResponseTransfer chessMovementResponseTransfer) {
-    for (auto &possibleCoordinates : *chessMovementResponseTransfer.getPossibleMoves())
+    for (auto &possibleCoordinates : chessMovementResponseTransfer.getPossibleMoveTransfers())
     {
         ChessGuiCell *possibleChessCellToMove = static_cast<ChessGuiCell*>(this->gridLayout->itemAtPosition(
                 possibleCoordinates->getYCoordinate(), possibleCoordinates->getXCoordinate())->widget());
@@ -121,7 +131,7 @@ void ChessGuiCell::renderPossibleMovesForPiece(ChessMovementResponseTransfer che
 }
 
 void ChessGuiCell::clearPossibleMovesForPreviousPieceClick(ChessMovementResponseTransfer chessMovementResponseTransfer) {
-    for (auto &possibleCoordinates : *chessMovementResponseTransfer.getPreviousPossibleMoves())
+    for (auto &possibleCoordinates : chessMovementResponseTransfer.getPreviousPossibleMoveTransfers())
     {
         ChessGuiCell *possibleChessCellToMove = static_cast<ChessGuiCell*>(this->gridLayout->itemAtPosition(
                 possibleCoordinates->getYCoordinate(), possibleCoordinates->getXCoordinate())->widget());
@@ -152,8 +162,8 @@ std::string ChessGuiCell::getChessPieceType() {
     return this->chessPieceType;
 }
 
-void ChessGuiCell::handlePawnPieceSwitch(ChessMovementResponseTransfer chessMovementResponseTransfer) {
-    auto currentCellCoordinates = chessMovementResponseTransfer.getCurrentCellCoordinates();
+void ChessGuiCell::handlePawnPieceSwitch() {
+    auto currentCellCoordinates = this->coordinates;
 
     ChessGuiCell *currentChessGuiCell = static_cast<ChessGuiCell*>(this->gridLayout->itemAtPosition(
             currentCellCoordinates.first, currentCellCoordinates.second)->widget());
@@ -171,14 +181,18 @@ void ChessGuiCell::handlePawnPieceSwitch(ChessMovementResponseTransfer chessMove
 }
 
 void ChessGuiCell::addListWidgetItem(std::pair<int, int> currentCellCoordinates) {
-    // qDebug() << "First: "+QString::number(currentCellCoordinates.first);
-    // qDebug() << "Second: "+QString::number(currentCellCoordinates.second);
-
     QString entryStr = QString::fromStdString(
             ChessCoordinateConverter::GetConvertedChessMatrixValue(currentCellCoordinates) + " -> " +
             this->getChessPieceType());
 
-
     auto *rewindListEntry = new QListWidgetItem(entryStr);
     ChessGuiRenderer::rewindList->insertItem(ChessGuiRenderer::rewindList->count() + 1, rewindListEntry);
+}
+
+ChessPiecePositionTransfer ChessGuiCell::createCurrentChessPiecePositionTransfer()
+{
+    ChessPiecePositionTransfer chessPiecePositionTransfer = {};
+    chessPiecePositionTransfer.setCurrentChessPieceCoordinates(this->coordinates);
+
+    return chessPiecePositionTransfer;
 }

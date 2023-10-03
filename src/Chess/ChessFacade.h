@@ -14,17 +14,22 @@ class ChessCell;
 class ChessField;
 class BaseChessPiece;
 class ChessMovementResponseTransfer;
+class ChessPiecePositionTransfer;
 
 class ChessFacade: public AbstractFacade {
 public:
     void initiateChessGame();
-    void endCurrentTurn(ChessMovementResponseTransfer chessMovementResponseTransfer);
+    void endCurrentTurn(
+        ChessMovementResponseTransfer chessMovementResponseTransfer,
+        ChessPiecePositionTransfer chessPiecePositionTransfer
+    );
+
     void startNewTurn();
 
     int getCurrentPlayer();
 
     ChessMovementResponseTransfer handleChessCellClick(std::pair<int, int> currentCellCoordinates);
-    void handlePawnPieceSwitch(ChessMovementResponseTransfer chessMovementResponseTransfer, std::string switchedPieceType);
+    void handlePawnPieceSwitch(ChessPiecePositionTransfer chessPiecePositionTransfer, std::string switchedPieceType);
 
     ChessFactory *getFactory() override;
 };

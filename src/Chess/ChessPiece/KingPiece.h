@@ -7,7 +7,7 @@
 
 #include "BaseChessPiece.h"
 
-class ChessPieceMovementGenerator;
+class ChessPieceMovementMapper;
 class ChessPiecePossibleMoveTransfer;
 class KingPieceMovementChecker;
 
@@ -24,7 +24,7 @@ protected:
     bool doesOpponentChessPieceBlockCoordinates(ChessField *chessField, int xCoordinate, int yCoordinate);
     std::vector<ChessPiecePossibleMoveTransfer*> tryToAddPossibleKingCoordinates(ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate);
 public:
-    KingPiece(int player, ChessPieceMovementGenerator *chessPieceMovementGenerator, KingPieceMovementChecker *kingPieceMovementChecker);
+    KingPiece(int player, ChessPieceMovementMapper *chessPieceMovementMapper, KingPieceMovementChecker *kingPieceMovementChecker);
 
     std::vector<ChessPiecePossibleMoveTransfer*> determinePossibleMovesForSpecificPiece(
             ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate) override;

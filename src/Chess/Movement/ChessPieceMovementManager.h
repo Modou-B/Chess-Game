@@ -6,6 +6,10 @@
 #define CHESSAPPLICATION_CHESSPIECEMOVEMENTMANAGER_H
 
 #include <utility>
+#include <string>
+#include <vector>
+
+using namespace std;
 
 class ChessField;
 class ChessCreator;
@@ -13,15 +17,16 @@ class ChessCell;
 class ChessPlayerData;
 class ChessMovementResponseTransfer;
 class ChessPiecePossibleMoveTransfer;
-class ChessPieceMovementGenerator;
+class ChessPieceMovementMapper;
+class ChessPieceMovementReader;
+class ChessPieceMovementWriter;
 class BaseChessPiece;
 
 class ChessPieceMovementManager {
 private:
-    static std::vector<ChessPiecePossibleMoveTransfer*> previousPossibleMovesForClickedCell;
-    static std::vector<ChessPiecePossibleMoveTransfer*> possibleMovesForClickedCell;
-
-    ChessPieceMovementGenerator *chessPieceMovementGenerator;
+    ChessPieceMovementMapper *chessPieceMovementMapper;
+    ChessPieceMovementWriter *chessPieceMovementWriter;
+    ChessPieceMovementReader *chessPieceMovementReader;
 
 protected:
     ChessMovementResponseTransfer handleMovementWithoutPreviousClickedCell(
@@ -38,18 +43,32 @@ protected:
     ChessMovementResponseTransfer addCastlingChessPieceMovement(
         ChessCell *currentChessCell, ChessMovementResponseTransfer chessMovementResponseTransfer);
 
-    ChessMovementResponseTransfer saveClickedCellCoordinates(std::pair<int, int> currentCellCoordinates, ChessMovementResponseTransfer chessMovementResponseTransfer);
-    ChessMovementResponseTransfer savePossibleMovesForClickedPiece(
-        BaseChessPiece *clickedChessPiece, std::pair<int, int> currentCellCoordinates, ChessMovementResponseTransfer chessMovementResponseTransfer, bool isPlayerInCheck);
+    void saveClickedCellCoordinates(pair<int, int> currentCellCoordinates);
+    void savePossibleMovesForClickedPiece(
+        BaseChessPiece *clickedChessPiece,
+        bool isPlayerInCheck
+    );
 
     bool doesChessPieceBelongToCurrentPlayer(BaseChessPiece *currentChessPiece);
 
-    std::vector<ChessPiecePossibleMoveTransfer*> getPossibleMovesForCheckStatus(BaseChessPiece *clickedChessPiece, bool isPlayerInCheck);
+    vector<ChessPiecePossibleMoveTransfer*> getPossibleMovesForCheckStatus(BaseChessPiece *clickedChessPiece, bool isPlayerInCheck);
 
+    ChessMovementResponseTransfer finalizeChessMovementResponse(ChessMovementResponseTransfer chessMovementResponseTransfer);
+
+    void expandResponseWithPossibleMoves(ChessMovementResponseTransfer &chessMovementResponseTransfer);
 public:
-    ChessPieceMovementManager(ChessPieceMovementGenerator *chessPieceMovementGenerator);
+    ChessPieceMovementManager(
+      ChessPieceMovementMapper *chessPieceMovementMapper,
+      ChessPieceMovementWriter *chessPieceMovementWriter,
+      ChessPieceMovementReader *chessPieceMovementReader
+    );
 
-    ChessMovementResponseTransfer handleChessMovement(std::pair<int, int> currentCellCoordinates, bool isPlayerInCheck, ChessPlayerData *opponentPlayerData);
+    ChessMovementResponseTransfer handleChessMovement(
+        pair<int, int> currentCellCoordinates,
+        ChessMovementResponseTransfer chessMovementResponseTransfer,
+        bool isPlayerInCheck,
+        ChessPlayerData *opponentPlayerData
+    );
 
     void clearPossibleMoveCollections();
 };

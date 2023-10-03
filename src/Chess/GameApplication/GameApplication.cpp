@@ -97,6 +97,15 @@ ChessPlayerData *GameApplication::getOpponentChessPlayerData() {
     return GameApplication::chessPlayer1Data;
 }
 
+ChessPlayerData *GameApplication::getChessPlayerDataForPlayer(int player)
+{
+    if (player == 1) {
+      return GameApplication::chessPlayer1Data;
+    }
+
+    return GameApplication::chessPlayer2Data;
+}
+
 void GameApplication::increaseTurnCounter() {
     GameApplication::turnCounter++;
 }

@@ -3,15 +3,21 @@
 //
 
 #include "KingPieceMovementChecker.h"
-#include "../../../ChessPiece/Movement/ChessPieceMovementTrait.h"
-#include "../../../Model/ChessField.h"
-#include "../../../Model/ChessCell.h"
-#include "../../../ChessPiece/BaseChessPiece.h"
-#include "../../../../Shared/Chess/ChessConstants.h"
-#include "../../../../Shared/Chess/CheckmateConstants.h"
-#include "../../../../Shared/Chess/Transfer/Checkmate/InCheckBlockedCoordinatesTransfer.h"
-#include "../../../../Shared/Chess/Transfer/Checkmate/InCheckVerifierTransfer.h"
-#include "../../../../Shared/Chess/Transfer/Checkmate/InCheckResponseTransfer.h"
+#include "../../../Shared/Chess/CheckmateConstants.h"
+#include "../../../Shared/Chess/ChessConstants.h"
+#include "../../../Shared/Chess/Transfer/Checkmate/InCheckBlockedCoordinatesTransfer.h"
+#include "../../../Shared/Chess/Transfer/Checkmate/InCheckResponseTransfer.h"
+#include "../../../Shared/Chess/Transfer/Checkmate/InCheckVerifierTransfer.h"
+#include "../../../Shared/Chess/Transfer/ChessPiece/ChessPiecePositionTransfer.h"
+#include "ChessPiece/BaseChessPiece.h"
+#include "GameApplication/Reader/GameApplicationDataReader.h"
+#include "Model/ChessCell.h"
+#include "Model/ChessField.h"
+#include "Movement/ChessPieceMovementTrait.h"
+
+KingPieceMovementChecker::KingPieceMovementChecker(GameApplicationDataReader *gameApplicationDataReader) {
+    this->gameApplicationDataReader = gameApplicationDataReader;
+}
 
 InCheckResponseTransfer KingPieceMovementChecker::getVerticalCheckAmountForGivenChessCell(
       ChessField *chessField, int xCoordinate, int yCoordinate, int currentPlayer) {
@@ -77,7 +83,8 @@ InCheckResponseTransfer KingPieceMovementChecker::getHorizontalCheckAmountForGiv
 }
 
 InCheckResponseTransfer KingPieceMovementChecker::getDiagonalCheckAmountForGivenChessCell(
-    ChessField *chessField, int xCoordinate, int yCoordinate, int currentPlayer) {
+    ChessField *chessField, int xCoordinate, int yCoordinate, int currentPlayer)
+{
     int baseYCoordinate = yCoordinate;
     int baseXCoordinate = xCoordinate;
 
@@ -138,7 +145,8 @@ InCheckResponseTransfer KingPieceMovementChecker::getDiagonalCheckAmountForGiven
 }
 
 InCheckResponseTransfer KingPieceMovementChecker::getKnightCheckAmountForGivenChessCell(
-    ChessField *chessField, int xCoordinate, int yCoordinate, int currentPlayer) {
+    ChessField *chessField, int xCoordinate, int yCoordinate, int currentPlayer)
+{
     auto inCheckResponseTransfer = InCheckResponseTransfer();
 
     this->checkForKnightsHorizontally(chessField, xCoordinate, (yCoordinate+1), currentPlayer, &inCheckResponseTransfer);
@@ -148,6 +156,12 @@ InCheckResponseTransfer KingPieceMovementChecker::getKnightCheckAmountForGivenCh
     this->checkForKnightsVertically(chessField, (xCoordinate-1), yCoordinate, currentPlayer, &inCheckResponseTransfer);
 
     return inCheckResponseTransfer;
+}
+
+pair<int, int> KingPieceMovementChecker::getKingPieceCoordinatesForPlayer(int player) {
+    auto chessPiecePositionTransfer = this->gameApplicationDataReader->getKingPiecePositionByPlayer(player);
+
+    return chessPiecePositionTransfer.getCurrentChessPieceCoordinates();
 }
 
 void KingPieceMovementChecker::checkForKnightsHorizontally(
@@ -190,12 +204,12 @@ bool KingPieceMovementChecker::continueToVerifyCoordinates(
         return false;
     }
 
-    std::string pieceTypeToCheck = inCheckVerifierTransfer->getPieceTypeToCheck();
+    string pieceTypeToCheck = inCheckVerifierTransfer->getPieceTypeToCheck();
     if (pieceTypeToCheck == CheckmateConstants::IN_CHECK_TYPE_HORIZONTAL
         || pieceTypeToCheck == CheckmateConstants::IN_CHECK_TYPE_VERTICALLY) {
+        if (inCheckVerifierTransfer->getMoveCounter() == 1
+            && potentialChessPieceOnCell->getType() == ChessConstants::KING_PIECE_TYPE) {
 
-        if (potentialChessPieceOnCell->getType() == ChessConstants::QUEEN_PIECE_TYPE
-            || potentialChessPieceOnCell->getType() == ChessConstants::ROOK_PIECE_TYPE) {
             this->mapToInCheckResponseTransfer(
               potentialChessPieceOnCell->getType(),
               inCheckVerifierTransfer->getLastInCheckBlockedCoordinatesTransfer(),
@@ -205,11 +219,18 @@ bool KingPieceMovementChecker::continueToVerifyCoordinates(
             return false;
         }
 
-        if (potentialChessPieceOnCell->getMoveCounter() == 1
-            && potentialChessPieceOnCell->getType() == ChessConstants::KING_PIECE_TYPE) {
+        if (potentialChessPieceOnCell->getType() == ChessConstants::QUEEN_PIECE_TYPE
+            || potentialChessPieceOnCell->getType() == ChessConstants::ROOK_PIECE_TYPE
+        ) {
+            this->mapToInCheckResponseTransfer(
+              potentialChessPieceOnCell->getType(),
+              inCheckVerifierTransfer->getLastInCheckBlockedCoordinatesTransfer(),
+              inCheckResponseTransfer
+            );
 
             return false;
         }
+
 
         return false;
     }
@@ -230,18 +251,7 @@ bool KingPieceMovementChecker::continueToVerifyCoordinates(
     }
 
     if (pieceTypeToCheck == CheckmateConstants::IN_CHECK_TYPE_DIAGONALLY) {
-        if (potentialChessPieceOnCell->getType() == ChessConstants::QUEEN_PIECE_TYPE
-            || potentialChessPieceOnCell->getType() == ChessConstants::BISHOP_PIECE_TYPE) {
-            this->mapToInCheckResponseTransfer(
-              potentialChessPieceOnCell->getType(),
-              inCheckVerifierTransfer->getLastInCheckBlockedCoordinatesTransfer(),
-              inCheckResponseTransfer
-            );
-
-            return false;
-        }
-
-        if (inCheckVerifierTransfer->getMoveCounter() == 1) {
+          if (inCheckVerifierTransfer->getMoveCounter() == 1) {
             if (potentialChessPieceOnCell->getType() == ChessConstants::KING_PIECE_TYPE) {
                 this->mapToInCheckResponseTransfer(
           potentialChessPieceOnCell->getType(),
@@ -264,13 +274,24 @@ bool KingPieceMovementChecker::continueToVerifyCoordinates(
                 return false;
             }
         }
+        if (potentialChessPieceOnCell->getType() == ChessConstants::QUEEN_PIECE_TYPE
+            || potentialChessPieceOnCell->getType() == ChessConstants::BISHOP_PIECE_TYPE
+        ) {
+            this->mapToInCheckResponseTransfer(
+              potentialChessPieceOnCell->getType(),
+              inCheckVerifierTransfer->getLastInCheckBlockedCoordinatesTransfer(),
+              inCheckResponseTransfer
+            );
+
+            return false;
+        }
     }
 
     return false;
 }
 
 InCheckVerifierTransfer KingPieceMovementChecker::createInCheckVerifierTransfer(
-    int xCoordinate, int yCoordinate, int currentPlayer, std::string pieceTypeToCheck) {
+    int xCoordinate, int yCoordinate, int currentPlayer, string pieceTypeToCheck) {
 
     auto inCheckVerifierTransfer = InCheckVerifierTransfer();
 
@@ -306,7 +327,7 @@ void KingPieceMovementChecker::resetVerifyData(
 }
 
 void KingPieceMovementChecker::mapToInCheckResponseTransfer(
-    std::string pieceType, std::vector<InCheckBlockedCoordinatesTransfer*> checkedCoordinates, InCheckResponseTransfer *inCheckResponseTransfer) {
+    string pieceType, vector<InCheckBlockedCoordinatesTransfer*> checkedCoordinates, InCheckResponseTransfer *inCheckResponseTransfer) {
     checkedCoordinates.back()->setHasCoordinateOpponentPiece(true);
 
     inCheckResponseTransfer->setLatestCoordinatesFromCellToOpponentPiece(checkedCoordinates);
@@ -314,7 +335,7 @@ void KingPieceMovementChecker::mapToInCheckResponseTransfer(
     inCheckResponseTransfer->setAmountOfPiecesThatCheckCell(inCheckResponseTransfer->getAmountOfPiecesThatCheckCell() + 1);
 }
 
-bool KingPieceMovementChecker::isPawnViable(std::string diagonalDirection, int pawnPiecePlayer) {
+bool KingPieceMovementChecker::isPawnViable(string diagonalDirection, int pawnPiecePlayer) {
     if (pawnPiecePlayer == 2
         && (diagonalDirection == CheckmateConstants::DIAGONAL_DIRECTION_TOP_LEFT
             || diagonalDirection == CheckmateConstants::DIAGONAL_DIRECTION_TOP_RIGHT)

@@ -7,13 +7,13 @@
 
 #include "BaseChessPiece.h"
 
-class ChessPieceMovementGenerator;
+class ChessPieceMovementMapper;
 class ChessPiecePossibleMoveTransfer;
 class KingPieceMovementChecker;
 
 class RookPiece: public BaseChessPiece {
 public:
-    RookPiece(int player, ChessPieceMovementGenerator *chessPieceMovementGenerator, KingPieceMovementChecker *kingPieceMovementChecker);
+    RookPiece(int player, ChessPieceMovementMapper *chessPieceMovementMapper, KingPieceMovementChecker *kingPieceMovementChecker);
 
     std::vector<ChessPiecePossibleMoveTransfer*> determinePossibleMovesForSpecificPiece(
             ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate) override;

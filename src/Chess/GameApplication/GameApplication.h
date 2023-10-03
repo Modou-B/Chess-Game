@@ -33,6 +33,7 @@ public:
     static int getTurnCounter();
     static ChessPlayerData *getCurrentChessPlayerData();
     static ChessPlayerData *getOpponentChessPlayerData();
+    static ChessPlayerData *getChessPlayerDataForPlayer(int player);
 
     static bool wasPreviousCellClicked();
 
