@@ -9,49 +9,41 @@
 #include <string>
 #include <vector>
 
+using namespace std;
+
 class ChessPieceMovementTransfer;
 class ChessPiecePossibleMoveTransfer;
+class ChessPieceStateTransfer;
 
 class ChessMovementResponseTransfer {
 private:
-    std::string state;
+    string state;
+    int currentPlayer;
+    int currentOpponentPlayer;
 
-    bool hasKingMoved;
-    bool hasPieceMoved;
-    bool hasPossibleMoves;
+    vector<ChessPiecePossibleMoveTransfer *> previousPossibleMoveTransfers;
+    vector<ChessPiecePossibleMoveTransfer *> possibleMoveTransfers;
 
-    std::pair<int, int> currentCellCoordinates;
-
-    std::vector<ChessPiecePossibleMoveTransfer*> *previousPossibleMoves;
-    std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves;
-    std::vector<ChessPieceMovementTransfer*> *chessPiecesToMove;
+    vector<ChessPieceStateTransfer *> chessPieceStateTransfers;
 
 public:
     ChessMovementResponseTransfer();
 
-    bool wasPieceMoved();
-    bool doesPieceHasPossibleMoves();
+    ChessMovementResponseTransfer *setState(string state);
+    ChessMovementResponseTransfer *setCurrentPlayer(int player);
+    ChessMovementResponseTransfer *setCurrentOpponentPlayer(int player);
+    ChessMovementResponseTransfer *setPreviousPossibleMoveTransfers(vector<ChessPiecePossibleMoveTransfer *> possibleMoves);
+    ChessMovementResponseTransfer *setPossibleMoveTransfers(vector<ChessPiecePossibleMoveTransfer *> possibleMoves);
+    ChessMovementResponseTransfer *setChessPieceStateTransfers(vector<ChessPieceStateTransfer *> chessPieceStateTransfers);
 
-    std::pair<int, int> getCurrentCellCoordinates();
-    std::vector<ChessPiecePossibleMoveTransfer*> *getPossibleMoves();
-    std::vector<ChessPiecePossibleMoveTransfer*> *getPreviousPossibleMoves();
-    std::vector<ChessPieceMovementTransfer*> *getChessPiecesToMove();
-    bool getHasKingMoved();
+    void addChessPieceStateTransfer(ChessPieceStateTransfer *chessPieceStateTransfer);
 
-    std::string getState();
-
-    void togglePieceMovementValue();
-    void togglePossibleMovesCheckValue();
-
-    ChessMovementResponseTransfer &addChessPieceMovementTransfer(ChessPieceMovementTransfer *chessPieceMovementTransfer);
-    ChessMovementResponseTransfer &setCurrentCellCoordinates(std::pair<int, int> currentCellCoordinates);
-    ChessMovementResponseTransfer &setHasKingMoved(bool value);
-
-    void setState(std::string state);
-
-    void setPossibleMoves(std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves);
-    void setPreviousPossibleMoves(std::vector<ChessPiecePossibleMoveTransfer*> *previousPossibleMoves);
-    void setPossibleMovesCheckValue(bool value);
+    string getState();
+    int getCurrentPlayer();
+    int getCurrentOpponentPlayer();
+    vector<ChessPiecePossibleMoveTransfer *> getPreviousPossibleMoveTransfers();
+    vector<ChessPiecePossibleMoveTransfer *> getPossibleMoveTransfers();
+    vector<ChessPieceStateTransfer *> getChessPieceStateTransfers();
 
 };
 

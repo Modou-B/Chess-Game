@@ -12,6 +12,7 @@
 class ChessFacade;
 class QGridLayout;
 class ChessMovementResponseTransfer;
+class ChessPiecePositionTransfer;
 class ChessGuiPieceIconGenerator;
 class QIcon;
 
@@ -29,7 +30,9 @@ private:
     std::string chessPieceIconState;
 
 protected:
-    void handlePawnPieceSwitch(ChessMovementResponseTransfer chessMovementResponseTransfer);
+    void handlePawnPieceSwitch();
+
+    ChessPiecePositionTransfer createCurrentChessPiecePositionTransfer();
 
 public:
     ChessGuiCell(QGridLayout *gridLayout, ChessFacade *chessFacade, std::pair<int, int> coordinates, ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator);

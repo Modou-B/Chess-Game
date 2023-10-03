@@ -8,9 +8,9 @@
 
 QueenPiece::QueenPiece(
     int player,
-    ChessPieceMovementGenerator *chessPieceMovementGenerator,
+    ChessPieceMovementMapper *chessPieceMovementMapper,
     KingPieceMovementChecker *kingPieceMovementChecker
-    ): BaseChessPiece(ChessConstants::QUEEN_PIECE_TYPE, player, chessPieceMovementGenerator, kingPieceMovementChecker) {}
+    ): BaseChessPiece(ChessConstants::QUEEN_PIECE_TYPE, player, chessPieceMovementMapper, kingPieceMovementChecker) {}
 
 std::vector<ChessPiecePossibleMoveTransfer*> QueenPiece::determinePossibleMovesForSpecificPiece(
         ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate) {

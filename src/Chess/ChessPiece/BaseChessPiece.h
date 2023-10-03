@@ -10,9 +10,9 @@
 #include <utility>
 
 class ChessField;
-class ChessPiecePossibleMoveCollectionTransfer;
+class PossibleMoveVerifierDataHelper;
 class ChessPiecePossibleMoveTransfer;
-class ChessPieceMovementGenerator;
+class ChessPieceMovementMapper;
 class CheckmateManager;
 class KingPieceMovementChecker;
 
@@ -26,7 +26,7 @@ private:
     std::pair<int, int> currentCoordinates;
     std::vector<ChessPiecePossibleMoveTransfer*> coordinatesThatBlockCheck;
 protected:
-    ChessPieceMovementGenerator *chessPieceMovementGenerator;
+    ChessPieceMovementMapper *chessPieceMovementMapper;
     KingPieceMovementChecker *kingPieceMovementChecker;
     int moveCounter;
 
@@ -45,8 +45,8 @@ protected:
     std::vector<ChessPiecePossibleMoveTransfer*> tryToAddCoordinatesForDiagonalMovement(
             ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate);
 
-    ChessPiecePossibleMoveCollectionTransfer checkOneLineMovement(
-            ChessField *chessField, ChessPiecePossibleMoveCollectionTransfer *chessPiecePossibleMoveTransfer, int xCoordinate, int yCoordinate);
+    PossibleMoveVerifierDataHelper checkOneLineMovement(
+            ChessField *chessField, PossibleMoveVerifierDataHelper *chessPiecePossibleMoveTransfer, int xCoordinate, int yCoordinate);
 
     bool hasCellOpponentChessPiece(ChessField *chessField, std::pair<int, int> coordinates);
     bool hasCellChessPiece(ChessField *chessField, std::pair<int, int> coordinates);
@@ -56,7 +56,8 @@ protected:
     BaseChessPiece *getChessPiece(ChessField *chessField, int xCoordinate, int yCoordinate);
 public:
     BaseChessPiece(
-      std::string type, int player, ChessPieceMovementGenerator *chessPieceMovementGenerator, KingPieceMovementChecker *kingPieceMovementChecker);
+      std::string type, int player,
+      ChessPieceMovementMapper *chessPieceMovementMapper, KingPieceMovementChecker *kingPieceMovementChecker);
 
     std::string getType();
     int getPlayer();

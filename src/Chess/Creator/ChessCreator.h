@@ -6,19 +6,22 @@
 #define CHESSAPPLICATION_CHESSCREATOR_H
 
 #include <string>
+#include <utility>
 
 class ChessField;
 class ChessPlayerData;
 class ChessCell;
 class BaseChessPiece;
-class ChessPieceMovementGenerator;
+class ChessPieceMovementMapper;
 class KingPieceMovementChecker;
+class ChessFactory;
 
 class ChessCreator {
 protected:
-    ChessPieceMovementGenerator *createChessPieceMovementGenerator();
-    KingPieceMovementChecker *createKingPieceMovementChecker();
+    ChessPieceMovementMapper *getChessPieceMovementMapper();
+    KingPieceMovementChecker *getKingPieceMovementChecker();
 
+    ChessFactory *getFactory();
 public:
     BaseChessPiece *createChessPiece(std::string type, int player);
 

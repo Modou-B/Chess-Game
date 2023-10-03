@@ -3,12 +3,12 @@
 //
 
 #include "InCheckStatusChecker.h"
-#include "../../ChessPiece/Movement/ChessPieceMovementTrait.h"
+#include "../../Movement/ChessPieceMovementTrait.h"
 #include "../../Model/ChessField.h"
 #include "../../Model/ChessCell.h"
 #include "../../GameApplication/Player/ChessPlayerData.h"
 #include "../../ChessPiece/BaseChessPiece.h"
-#include "../../ChessPiece/Movement/KingPiece/KingPieceMovementChecker.h"
+#include "../../Movement/KingPiece/KingPieceMovementChecker.h"
 #include "../../../Shared/Chess/Transfer/Checkmate/InCheckResponseTransfer.h"
 #include "../../../Shared/Chess/Transfer/Checkmate/InCheckBlockedCoordinatesTransfer.h"
 #include "../../../Shared/Chess/Transfer/ChessPiecePossibleMoveTransfer.h"

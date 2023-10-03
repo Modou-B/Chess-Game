@@ -3,24 +3,24 @@
 //
 
 #include "BaseChessPiece.h"
-#include "../Model/ChessField.h"
-#include "../Model/ChessCell.h"
-#include "../Checkmate/CheckmateManager.h"
-#include "Movement/KingPiece/KingPieceMovementChecker.h"
-#include "../../Shared/Chess/Transfer/ChessPiecePossibleMoveCollectionTransfer.h"
-#include "../../Shared/Chess/Transfer/ChessPiecePossibleMoveTransfer.h"
-#include "../../Shared/Chess/Transfer/Checkmate/InCheckResponseTransfer.h"
 #include "../../Shared/Chess/ChessConstants.h"
 #include "../../Shared/Chess/ChessMovementConstants.h"
-#include "Generator/ChessPieceMovementGenerator.h"
+#include "../../Shared/Chess/Transfer/Checkmate/InCheckResponseTransfer.h"
+#include "../../Shared/Chess/Transfer/ChessPiecePossibleMoveTransfer.h"
+#include "../Model/ChessCell.h"
+#include "../Model/ChessField.h"
+#include "../Movement/Mapper/ChessPieceMovementMapper.h"
+#include "Movement/KingPiece/KingPieceMovementChecker.h"
+#include "PossibleMoves/PossibleMoveVerifierDataHelper.h"
 #include "iostream"
 
 BaseChessPiece::BaseChessPiece(
-    std::string type, int player, ChessPieceMovementGenerator *chessPieceMovementGenerator, KingPieceMovementChecker *kingPieceMovementChecker) {
+    std::string type, int player,
+    ChessPieceMovementMapper *chessPieceMovementMapper, KingPieceMovementChecker *kingPieceMovementChecker) {
     this->type = type;
     this->player = player;
     this->kingPieceMovementChecker = kingPieceMovementChecker;
-    this->chessPieceMovementGenerator = chessPieceMovementGenerator;
+    this->chessPieceMovementMapper = chessPieceMovementMapper;
     this->moveCounter = 0;
     this->wasMovedLastTurn = false;
     this->canBlockCheck = false;
@@ -56,7 +56,7 @@ bool BaseChessPiece::verifyIfPieceMoveResultsInCheck(ChessField *chessField, std
         return false;
     }
 
-    auto kingPieceCoordinates = CheckmateManager::getKingPieceCoordinatesForPlayer(this->player);
+    auto kingPieceCoordinates = this->kingPieceMovementChecker->getKingPieceCoordinatesForPlayer(this->player);
     int yCoordinate = kingPieceCoordinates.first;
     int xCoordinate = kingPieceCoordinates.second;
 
@@ -98,16 +98,17 @@ std::vector<ChessPiecePossibleMoveTransfer*> BaseChessPiece::tryToAddCoordinates
         return possibleMoves;
     }
 
-    possibleMoves.push_back(this->chessPieceMovementGenerator->generateChessPiecePossibleMoveTransfer(
+    possibleMoves.push_back(this->chessPieceMovementMapper->generateChessPiecePossibleMoveTransfer(
             ChessMovementConstants::MOVE_TYPE_NORMAL, xCoordinate, yCoordinate));
 
     return possibleMoves;
 }
 
 std::vector<ChessPiecePossibleMoveTransfer*> BaseChessPiece::tryToAddCoordinatesForDiagonalMovement(
-        ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate) {
-    ChessPiecePossibleMoveCollectionTransfer chessPiecePossibleMoveTransfer = ChessPiecePossibleMoveCollectionTransfer();
-    chessPiecePossibleMoveTransfer.setPossibleMoveVector(&possibleMoves);
+        ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate)
+{
+    auto possibleMoveVerifierDataHelper = PossibleMoveVerifierDataHelper();
+    possibleMoveVerifierDataHelper.setPossibleMoveVector(&possibleMoves);
 
     int originalYCoordinate = yCoordinate;
     int originalXCoordinate = xCoordinate;
@@ -116,18 +117,17 @@ std::vector<ChessPiecePossibleMoveTransfer*> BaseChessPiece::tryToAddCoordinates
     yCoordinate--;
     xCoordinate++;
     while (!this->areCoordinatesOutOfBounds(xCoordinate, yCoordinate)) {
-        if (chessPiecePossibleMoveTransfer.getHasOpponentPieceAsPossibleMove() || chessPiecePossibleMoveTransfer.getIsOwnChessPieceIsInFront()) {
+        if (possibleMoveVerifierDataHelper.getHasOpponentPieceAsPossibleMove() || possibleMoveVerifierDataHelper.getIsOwnChessPieceIsInFront()) {
             break;
         }
 
-        chessPiecePossibleMoveTransfer = this->checkOneLineMovement(chessField, &chessPiecePossibleMoveTransfer, xCoordinate, yCoordinate);
+        possibleMoveVerifierDataHelper = this->checkOneLineMovement(chessField, &possibleMoveVerifierDataHelper, xCoordinate, yCoordinate);
 
         yCoordinate--;
         xCoordinate++;
     }
 
-    chessPiecePossibleMoveTransfer.setHasOpponentPieceAsPossibleMove(false);
-    chessPiecePossibleMoveTransfer.setIsOwnChessPieceIsInFront(false);
+    possibleMoveVerifierDataHelper.resetVerifierProperties();
 
     yCoordinate = originalYCoordinate;
     xCoordinate = originalXCoordinate;
@@ -136,18 +136,17 @@ std::vector<ChessPiecePossibleMoveTransfer*> BaseChessPiece::tryToAddCoordinates
     yCoordinate--;
     xCoordinate--;
     while (!this->areCoordinatesOutOfBounds(xCoordinate, yCoordinate)) {
-        if (chessPiecePossibleMoveTransfer.getHasOpponentPieceAsPossibleMove() || chessPiecePossibleMoveTransfer.getIsOwnChessPieceIsInFront()) {
+        if (possibleMoveVerifierDataHelper.getHasOpponentPieceAsPossibleMove() || possibleMoveVerifierDataHelper.getIsOwnChessPieceIsInFront()) {
             break;
         }
 
-        chessPiecePossibleMoveTransfer = this->checkOneLineMovement(chessField, &chessPiecePossibleMoveTransfer, xCoordinate, yCoordinate);
+        possibleMoveVerifierDataHelper = this->checkOneLineMovement(chessField, &possibleMoveVerifierDataHelper, xCoordinate, yCoordinate);
 
         yCoordinate--;
         xCoordinate--;
     }
 
-    chessPiecePossibleMoveTransfer.setHasOpponentPieceAsPossibleMove(false);
-    chessPiecePossibleMoveTransfer.setIsOwnChessPieceIsInFront(false);
+    possibleMoveVerifierDataHelper.resetVerifierProperties();
 
     yCoordinate = originalYCoordinate;
     xCoordinate = originalXCoordinate;
@@ -156,18 +155,17 @@ std::vector<ChessPiecePossibleMoveTransfer*> BaseChessPiece::tryToAddCoordinates
     yCoordinate++;
     xCoordinate++;
     while (!this->areCoordinatesOutOfBounds(xCoordinate, yCoordinate)) {
-        if (chessPiecePossibleMoveTransfer.getHasOpponentPieceAsPossibleMove() || chessPiecePossibleMoveTransfer.getIsOwnChessPieceIsInFront()) {
+        if (possibleMoveVerifierDataHelper.getHasOpponentPieceAsPossibleMove() || possibleMoveVerifierDataHelper.getIsOwnChessPieceIsInFront()) {
             break;
         }
 
-        chessPiecePossibleMoveTransfer = this->checkOneLineMovement(chessField, &chessPiecePossibleMoveTransfer, xCoordinate, yCoordinate);
+        possibleMoveVerifierDataHelper = this->checkOneLineMovement(chessField, &possibleMoveVerifierDataHelper, xCoordinate, yCoordinate);
 
         yCoordinate++;
         xCoordinate++;
     }
 
-    chessPiecePossibleMoveTransfer.setHasOpponentPieceAsPossibleMove(false);
-    chessPiecePossibleMoveTransfer.setIsOwnChessPieceIsInFront(false);
+    possibleMoveVerifierDataHelper.resetVerifierProperties();
 
     yCoordinate = originalYCoordinate;
     xCoordinate = originalXCoordinate;
@@ -176,108 +174,108 @@ std::vector<ChessPiecePossibleMoveTransfer*> BaseChessPiece::tryToAddCoordinates
     yCoordinate++;
     xCoordinate--;
     while (!this->areCoordinatesOutOfBounds(xCoordinate, yCoordinate)) {
-        if (chessPiecePossibleMoveTransfer.getHasOpponentPieceAsPossibleMove() || chessPiecePossibleMoveTransfer.getIsOwnChessPieceIsInFront()) {
+        if (possibleMoveVerifierDataHelper.getHasOpponentPieceAsPossibleMove() || possibleMoveVerifierDataHelper.getIsOwnChessPieceIsInFront()) {
             break;
         }
 
-        chessPiecePossibleMoveTransfer = this->checkOneLineMovement(chessField, &chessPiecePossibleMoveTransfer, xCoordinate, yCoordinate);
+        possibleMoveVerifierDataHelper = this->checkOneLineMovement(chessField, &possibleMoveVerifierDataHelper, xCoordinate, yCoordinate);
 
         yCoordinate++;
         xCoordinate--;
     }
 
-    return *chessPiecePossibleMoveTransfer.getPossibleMoveVector();
+    return *possibleMoveVerifierDataHelper.getPossibleMoveVector();
 }
 
 std::vector<ChessPiecePossibleMoveTransfer*> BaseChessPiece::tryToAddCoordinatesForVerticalMovement(
-        ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate) {
-    ChessPiecePossibleMoveCollectionTransfer chessPiecePossibleMoveTransfer = ChessPiecePossibleMoveCollectionTransfer();
-    chessPiecePossibleMoveTransfer.setPossibleMoveVector(&possibleMoves);
+        ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate)
+{
+    auto possibleMoveVerifierDataHelper = PossibleMoveVerifierDataHelper();
+    possibleMoveVerifierDataHelper.setPossibleMoveVector(&possibleMoves);
 
     int originalYCoordinate = yCoordinate;
     yCoordinate++;
     while (!this->areCoordinatesOutOfBounds(xCoordinate, yCoordinate)) {
-        if (chessPiecePossibleMoveTransfer.getHasOpponentPieceAsPossibleMove() || chessPiecePossibleMoveTransfer.getIsOwnChessPieceIsInFront()) {
+        if (possibleMoveVerifierDataHelper.getHasOpponentPieceAsPossibleMove() || possibleMoveVerifierDataHelper.getIsOwnChessPieceIsInFront()) {
             break;
         }
 
-        chessPiecePossibleMoveTransfer = this->checkOneLineMovement(chessField, &chessPiecePossibleMoveTransfer, xCoordinate, yCoordinate);
+        possibleMoveVerifierDataHelper = this->checkOneLineMovement(chessField, &possibleMoveVerifierDataHelper, xCoordinate, yCoordinate);
 
         yCoordinate++;
     }
 
-    chessPiecePossibleMoveTransfer.setHasOpponentPieceAsPossibleMove(false);
-    chessPiecePossibleMoveTransfer.setIsOwnChessPieceIsInFront(false);
+    possibleMoveVerifierDataHelper.resetVerifierProperties();
 
     yCoordinate = originalYCoordinate;
     yCoordinate--;
     while (!this->areCoordinatesOutOfBounds(xCoordinate, yCoordinate)) {
-        if (chessPiecePossibleMoveTransfer.getHasOpponentPieceAsPossibleMove() || chessPiecePossibleMoveTransfer.getIsOwnChessPieceIsInFront()) {
+        if (possibleMoveVerifierDataHelper.getHasOpponentPieceAsPossibleMove() || possibleMoveVerifierDataHelper.getIsOwnChessPieceIsInFront()) {
             break;
         }
 
-        chessPiecePossibleMoveTransfer = this->checkOneLineMovement(chessField, &chessPiecePossibleMoveTransfer, xCoordinate, yCoordinate);
+        possibleMoveVerifierDataHelper = this->checkOneLineMovement(chessField, &possibleMoveVerifierDataHelper, xCoordinate, yCoordinate);
 
         yCoordinate--;
     }
 
-    return *chessPiecePossibleMoveTransfer.getPossibleMoveVector();
+    return *possibleMoveVerifierDataHelper.getPossibleMoveVector();
 }
 
 std::vector<ChessPiecePossibleMoveTransfer*> BaseChessPiece::tryToAddCoordinatesForHorizontalMovement(
-        ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate) {
-    ChessPiecePossibleMoveCollectionTransfer chessPiecePossibleMoveTransfer = ChessPiecePossibleMoveCollectionTransfer();
-    chessPiecePossibleMoveTransfer.setPossibleMoveVector(&possibleMoves);
+        ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate)
+{
+    auto possibleMoveVerifierDataHelper = PossibleMoveVerifierDataHelper();
+    possibleMoveVerifierDataHelper.setPossibleMoveVector(&possibleMoves);
 
     int originalXCoordinate = xCoordinate;
     xCoordinate++;
     while (!this->areCoordinatesOutOfBounds(xCoordinate, yCoordinate)) {
-        if (chessPiecePossibleMoveTransfer.getHasOpponentPieceAsPossibleMove() || chessPiecePossibleMoveTransfer.getIsOwnChessPieceIsInFront()) {
+        if (possibleMoveVerifierDataHelper.getHasOpponentPieceAsPossibleMove() || possibleMoveVerifierDataHelper.getIsOwnChessPieceIsInFront()) {
             break;
         }
 
-        chessPiecePossibleMoveTransfer = this->checkOneLineMovement(chessField, &chessPiecePossibleMoveTransfer, xCoordinate, yCoordinate);
+        possibleMoveVerifierDataHelper = this->checkOneLineMovement(chessField, &possibleMoveVerifierDataHelper, xCoordinate, yCoordinate);
 
         xCoordinate++;
     }
 
-    chessPiecePossibleMoveTransfer.setHasOpponentPieceAsPossibleMove(false);
-    chessPiecePossibleMoveTransfer.setIsOwnChessPieceIsInFront(false);
+    possibleMoveVerifierDataHelper.resetVerifierProperties();
 
     xCoordinate = originalXCoordinate;
     xCoordinate--;
     while (!this->areCoordinatesOutOfBounds(xCoordinate, yCoordinate)) {
-        if (chessPiecePossibleMoveTransfer.getHasOpponentPieceAsPossibleMove() || chessPiecePossibleMoveTransfer.getIsOwnChessPieceIsInFront()) {
+        if (possibleMoveVerifierDataHelper.getHasOpponentPieceAsPossibleMove() || possibleMoveVerifierDataHelper.getIsOwnChessPieceIsInFront()) {
             break;
         }
 
-        chessPiecePossibleMoveTransfer = this->checkOneLineMovement(chessField, &chessPiecePossibleMoveTransfer, xCoordinate, yCoordinate);
+        possibleMoveVerifierDataHelper = this->checkOneLineMovement(chessField, &possibleMoveVerifierDataHelper, xCoordinate, yCoordinate);
 
         xCoordinate--;
     }
 
-    return *chessPiecePossibleMoveTransfer.getPossibleMoveVector();
+    return *possibleMoveVerifierDataHelper.getPossibleMoveVector();
 }
 
-ChessPiecePossibleMoveCollectionTransfer BaseChessPiece::checkOneLineMovement(
-        ChessField *chessField, ChessPiecePossibleMoveCollectionTransfer *chessPiecePossibleMoveTransfer, int xCoordinate, int yCoordinate) {
+PossibleMoveVerifierDataHelper BaseChessPiece::checkOneLineMovement(
+        ChessField *chessField, PossibleMoveVerifierDataHelper *possibleMoveVerifierDataHelper, int xCoordinate, int yCoordinate) {
     std::pair<int, int> coordinates = this->generateCoordinates(yCoordinate, xCoordinate);
     BaseChessPiece *chessPieceOnCell = chessField->getChessCell(coordinates)->getChessPiece();
 
     if (chessPieceOnCell) {
         if (chessPieceOnCell->player == this->player) {
-            chessPiecePossibleMoveTransfer->setIsOwnChessPieceIsInFront(true);
+            possibleMoveVerifierDataHelper->setIsOwnChessPieceIsInFront(true);
 
-            return *chessPiecePossibleMoveTransfer;
+            return *possibleMoveVerifierDataHelper;
         }
 
-        chessPiecePossibleMoveTransfer->setHasOpponentPieceAsPossibleMove(true);
+        possibleMoveVerifierDataHelper->setHasOpponentPieceAsPossibleMove(true);
     }
 
-    chessPiecePossibleMoveTransfer->getPossibleMoveVector()->push_back(
-            this->chessPieceMovementGenerator->generateChessPiecePossibleMoveTransfer(ChessMovementConstants::MOVE_TYPE_NORMAL, xCoordinate, yCoordinate));
+    possibleMoveVerifierDataHelper->getPossibleMoveVector()->push_back(
+            this->chessPieceMovementMapper->generateChessPiecePossibleMoveTransfer(ChessMovementConstants::MOVE_TYPE_NORMAL, xCoordinate, yCoordinate));
 
-    return *chessPiecePossibleMoveTransfer;
+    return *possibleMoveVerifierDataHelper;
 }
 
 void BaseChessPiece::handleMovement(ChessPiecePossibleMoveTransfer *usedMove) {

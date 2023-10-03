@@ -3,38 +3,41 @@
 //
 
 #include "ChessCreator.h"
+#include "../../Application/Resolver/FactoryResolverTrait.h"
+#include "../ChessFactory.h"
+#include "../ChessPiece/BishopPiece.h"
+#include "../Movement/Mapper/ChessPieceMovementMapper.h"
+#include "../ChessPiece/KingPiece.h"
+#include "../ChessPiece/KnightPiece.h"
+#include "../Movement/KingPiece/KingPieceMovementChecker.h"
+#include "../ChessPiece/PawnPiece.h"
+#include "../ChessPiece/QueenPiece.h"
+#include "../ChessPiece/RookPiece.h"
+#include "../GameApplication/Player/ChessPlayerData.h"
+#include "../GameApplication/Reader/GameApplicationDataReader.h"
 #include "../Model/ChessCell.h"
 #include "../Model/ChessField.h"
-#include <utility>
 #include "../Shared/Chess/ChessConstants.h"
-#include "../ChessPiece/PawnPiece.h"
-#include "../ChessPiece/KnightPiece.h"
-#include "../ChessPiece/BishopPiece.h"
-#include "../ChessPiece/RookPiece.h"
-#include "../ChessPiece/QueenPiece.h"
-#include "../ChessPiece/KingPiece.h"
-#include "../ChessPiece/Generator/ChessPieceMovementGenerator.h"
-#include "../ChessPiece/Movement/KingPiece/KingPieceMovementChecker.h"
-#include "../GameApplication/Player/ChessPlayerData.h"
+#include <utility>
 
 BaseChessPiece *ChessCreator::createChessPiece(std::string type, int player) {
     if (type == ChessConstants::PAWN_PIECE_TYPE) {
-        return new PawnPiece(player, this->createChessPieceMovementGenerator(), this->createKingPieceMovementChecker());
+        return new PawnPiece(player, this->getChessPieceMovementMapper(), this->getKingPieceMovementChecker());
     }
     if (type == ChessConstants::KNIGHT_PIECE_TYPE) {
-        return new KnightPiece(player, this->createChessPieceMovementGenerator(), this->createKingPieceMovementChecker());
+        return new KnightPiece(player, this->getChessPieceMovementMapper(), this->getKingPieceMovementChecker());
     }
     if (type == ChessConstants::KING_PIECE_TYPE) {
-        return new KingPiece(player, this->createChessPieceMovementGenerator(), this->createKingPieceMovementChecker());
+        return new KingPiece(player, this->getChessPieceMovementMapper(), this->getKingPieceMovementChecker());
     }
     if (type == ChessConstants::ROOK_PIECE_TYPE) {
-        return new RookPiece(player, this->createChessPieceMovementGenerator(), this->createKingPieceMovementChecker());
+        return new RookPiece(player, this->getChessPieceMovementMapper(), this->getKingPieceMovementChecker());
     }
     if (type == ChessConstants::QUEEN_PIECE_TYPE) {
-        return new QueenPiece(player, this->createChessPieceMovementGenerator(), this->createKingPieceMovementChecker());
+        return new QueenPiece(player, this->getChessPieceMovementMapper(), this->getKingPieceMovementChecker());
     }
     if (type == ChessConstants::BISHOP_PIECE_TYPE) {
-        return new BishopPiece(player, this->createChessPieceMovementGenerator(), this->createKingPieceMovementChecker());
+        return new BishopPiece(player, this->getChessPieceMovementMapper(), this->getKingPieceMovementChecker());
     }
 
     return nullptr;
@@ -149,10 +152,14 @@ void ChessCreator::fillFieldAndPlayerDataWithRooks(ChessField *chessField, Chess
     chessPlayerData1->addRookPiece(rookPiece);
 }
 
-ChessPieceMovementGenerator *ChessCreator::createChessPieceMovementGenerator() {
-    return new ChessPieceMovementGenerator;
+ChessPieceMovementMapper *ChessCreator::getChessPieceMovementMapper() {
+    return this->getFactory()->createChessPieceMovementMapper();
 }
 
-KingPieceMovementChecker *ChessCreator::createKingPieceMovementChecker() {
-    return new KingPieceMovementChecker;
+KingPieceMovementChecker *ChessCreator::getKingPieceMovementChecker() {
+    return this->getFactory()->createKingPieceMovementChecker();
+}
+
+ChessFactory *ChessCreator::getFactory() {
+    return static_cast<ChessFactory*>(FactoryResolverTrait::findFactory(typeid(ChessFactory).name()));
 }

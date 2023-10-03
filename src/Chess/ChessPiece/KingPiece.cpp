@@ -3,18 +3,19 @@
 //
 
 #include "KingPiece.h"
-#include "Generator/ChessPieceMovementGenerator.h"
-#include "../../Shared/Chess/Transfer/ChessPiecePossibleMoveTransfer.h"
-#include "../../Shared/Chess/Transfer/Checkmate/InCheckResponseTransfer.h"
 #include "../../Shared/Chess/ChessConstants.h"
 #include "../../Shared/Chess/ChessMovementConstants.h"
+#include "../../Shared/Chess/Transfer/Checkmate/InCheckResponseTransfer.h"
+#include "../../Shared/Chess/Transfer/ChessPiecePossibleMoveTransfer.h"
+#include "../Movement/Mapper/ChessPieceMovementMapper.h"
 #include "Movement/KingPiece/KingPieceMovementChecker.h"
+#include "iostream"
 
 KingPiece::KingPiece(
     int player,
-    ChessPieceMovementGenerator *chessPieceMovementGenerator,
+    ChessPieceMovementMapper *chessPieceMovementMapper,
     KingPieceMovementChecker *kingPieceMovementChecker
-    ): BaseChessPiece(ChessConstants::KING_PIECE_TYPE, player, chessPieceMovementGenerator, kingPieceMovementChecker) {
+    ): BaseChessPiece(ChessConstants::KING_PIECE_TYPE, player, chessPieceMovementMapper, kingPieceMovementChecker) {
 }
 
 std::vector<ChessPiecePossibleMoveTransfer*> KingPiece::determinePossibleMovesForSpecificPiece(
@@ -63,7 +64,6 @@ std::vector<ChessPiecePossibleMoveTransfer *> KingPiece::checkForCastling(
                 break;
             }
         }
-
     }
 
     if (isRightSidePossibleForCastling) {
@@ -71,7 +71,7 @@ std::vector<ChessPiecePossibleMoveTransfer *> KingPiece::checkForCastling(
             && !this->doesOpponentChessPieceBlockCoordinates(chessField, (xCoordinate+2), yCoordinate)
           ) {
             possibleMoves.push_back(
-                  this->chessPieceMovementGenerator->generateChessPiecePossibleMoveTransfer(
+                  this->chessPieceMovementMapper->generateChessPiecePossibleMoveTransfer(
                           ChessMovementConstants::MOVE_TYPE_CASTLING, (xCoordinate+2), yCoordinate));
         }
     }
@@ -95,7 +95,7 @@ std::vector<ChessPiecePossibleMoveTransfer *> KingPiece::checkForCastling(
             && !this->doesOpponentChessPieceBlockCoordinates(chessField, (xCoordinate-2), yCoordinate)
           ) {
             possibleMoves.push_back(
-                  this->chessPieceMovementGenerator->generateChessPiecePossibleMoveTransfer(
+                  this->chessPieceMovementMapper->generateChessPiecePossibleMoveTransfer(
                           ChessMovementConstants::MOVE_TYPE_CASTLING, (xCoordinate-2), yCoordinate));
         }
 
@@ -120,6 +120,7 @@ bool KingPiece::isRookEligibleForCastling(ChessField *chessField, int xCoordinat
 
 bool KingPiece::doesOpponentChessPieceBlockCoordinates(
     ChessField *chessField, int xCoordinate, int yCoordinate) {
+
     if (this->kingPieceMovementChecker->getVerticalCheckAmountForGivenChessCell(chessField, xCoordinate, yCoordinate, this->getPlayer()).getAmountOfPiecesThatCheckCell() > 0
         || this->kingPieceMovementChecker->getHorizontalCheckAmountForGivenChessCell(chessField, xCoordinate, yCoordinate, this->getPlayer()).getAmountOfPiecesThatCheckCell() > 0
         || this->kingPieceMovementChecker->getDiagonalCheckAmountForGivenChessCell(chessField, xCoordinate, yCoordinate, this->getPlayer()).getAmountOfPiecesThatCheckCell() > 0
