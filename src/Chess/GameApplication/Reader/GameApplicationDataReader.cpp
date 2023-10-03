@@ -6,6 +6,7 @@
 #include "../GameApplication.h"
 #include "../Mapper/GameApplicationDataMapper.h"
 #include "../Player/ChessPlayerData.h"
+#include "../../../Shared/Chess/Transfer/ChessMovementResponseTransfer.h"
 #include "../../../Shared/Chess/Transfer/GameState/ChessGameStateTransfer.h"
 #include "../../../Shared/Chess/Transfer/ChessPiece/ChessPiecePositionTransfer.h"
 
@@ -33,6 +34,10 @@ ChessPiecePositionTransfer GameApplicationDataReader::getKingPiecePositionByPlay
             );
 }
 
+ChessMovementResponseTransfer GameApplicationDataReader::getSavedChessMovementResponseTransfer() {
+    return GameApplication::getSavedChessMovementResponseTransfer();
+}
+
 int GameApplicationDataReader::getCurrentPlayer() {
     return GameApplication::getCurrentPlayer();
 }
@@ -47,4 +52,8 @@ int GameApplicationDataReader::getCurrentOpponentPlayer() {
 
 int GameApplicationDataReader::getTurnCounter() {
     return GameApplication::getTurnCounter();
+}
+
+string GameApplicationDataReader::getCurrentGameState() {
+    return GameApplication::getCurrentGameState();
 }

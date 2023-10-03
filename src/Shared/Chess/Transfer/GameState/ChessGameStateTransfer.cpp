@@ -4,6 +4,12 @@
 
 #include "ChessGameStateTransfer.h"
 
+ChessGameStateTransfer *ChessGameStateTransfer::setCurrentGameState(string gameState) {
+    this->currentGameState = gameState;
+
+    return this;
+}
+
 ChessGameStateTransfer *ChessGameStateTransfer::setCurrentPlayer(int player) {
     this->currentPlayer = player;
 
@@ -20,6 +26,10 @@ ChessGameStateTransfer *ChessGameStateTransfer::setTurnCounter(int turnCounter) 
     this->turnCounter = turnCounter;
 
     return this;
+}
+
+string ChessGameStateTransfer::getCurrentGameState() {
+    return this->currentGameState;
 }
 
 int ChessGameStateTransfer::getCurrentPlayer() {

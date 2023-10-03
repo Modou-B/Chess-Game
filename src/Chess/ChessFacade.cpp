@@ -7,20 +7,16 @@
 #include "../Shared/Chess/Transfer/ChessMovementResponseTransfer.h"
 #include "../Shared/Chess/Transfer/ChessPiece/ChessPiecePositionTransfer.h"
 
-ChessFactory *ChessFacade::getFactory() {
-    return static_cast<ChessFactory*>(this->findFactory(typeid(ChessFactory).name()));
-}
-
 void ChessFacade::initiateChessGame() {
     ChessFacade::getFactory()->createGameApplicationManager()->initiateChessApplication();
 }
 
-ChessMovementResponseTransfer ChessFacade::handleChessCellClick(std::pair<int, int> currentCellCoordinates) {
+ChessMovementResponseTransfer ChessFacade::handleChessCellClick(pair<int, int> currentCellCoordinates) {
     return ChessFacade::getFactory()->createGameApplicationManager()->handleChessCellClick(currentCellCoordinates);
 }
 
-void ChessFacade::handlePawnPieceSwitch(ChessPiecePositionTransfer chessPiecePositionTransfer, std::string switchedPieceType) {
-    ChessFacade::getFactory()->createGameApplicationManager()->handlePawnPieceSwitch(chessPiecePositionTransfer, switchedPieceType);
+void ChessFacade::handlePawnPieceSwitch(string switchedPieceType) {
+    ChessFacade::getFactory()->createGameApplicationManager()->handlePawnPieceSwitch(switchedPieceType);
 }
 
 void ChessFacade::endCurrentTurn(
@@ -41,4 +37,12 @@ void ChessFacade::startNewTurn() {
 
 int ChessFacade::getCurrentPlayer() {
     return ChessFacade::getFactory()->createGameApplicationManager()->getCurrentPlayer();
+}
+
+void ChessFacade::updateCurrentGameState(string gameState) {
+    ChessFacade::getFactory()->createGameApplicationDataWriter()->updateGameApplicationCurrentGameState(gameState);
+}
+
+ChessFactory *ChessFacade::getFactory() {
+    return static_cast<ChessFactory*>(this->findFactory(typeid(ChessFactory).name()));
 }

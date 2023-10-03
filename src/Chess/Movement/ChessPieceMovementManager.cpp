@@ -116,7 +116,7 @@ ChessMovementResponseTransfer ChessPieceMovementManager::moveChessPiece(
         && (currentChessCell->getCoordinates().first == 7
             || currentChessCell->getCoordinates().first == 0)
     ) {
-        chessMovementResponseTransfer.setState(ChessMovementConstants::MOVEMENT_STATE_PAWN_SWITCH);
+        chessMovementResponseTransfer.setState(ChessMovementConstants::MOVEMENT_STATE_PAWN_SWITCH_SELECTION_START);
     }
 
     if (currentChessCell->getChessPiece() != nullptr) {
@@ -129,6 +129,8 @@ ChessMovementResponseTransfer ChessPieceMovementManager::moveChessPiece(
         )
       );
     }
+
+    this->saveClickedCellCoordinates(currentChessCell->getCoordinates());
 
     currentChessCell->setChessPiece(previousChessCell->getChessPiece());
     previousChessCell->setChessPiece(nullptr);

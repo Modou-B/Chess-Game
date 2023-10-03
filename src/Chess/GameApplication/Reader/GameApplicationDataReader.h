@@ -13,6 +13,7 @@ using namespace std;
 class ChessGameStateTransfer;
 class ChessPiecePositionTransfer;
 class GameApplicationDataMapper;
+class ChessMovementResponseTransfer;
 
 class GameApplicationDataReader {
 private:
@@ -23,10 +24,12 @@ public:
 
     ChessGameStateTransfer getCurrentGameStateData();
     ChessPiecePositionTransfer getKingPiecePositionByPlayer(int player);
+    ChessMovementResponseTransfer getSavedChessMovementResponseTransfer();
 
     int getCurrentPlayer();
     int getCurrentOpponentPlayer();
     int getTurnCounter();
+    string getCurrentGameState();
 };
 
 #endif // CHESSAPPLICATION_GAMEAPPLICATIONDATAREADER_H

@@ -3,6 +3,7 @@
 //
 
 #include "ChessFactory.h"
+#include "../ChessGui/ChessGuiFacade.h"
 
 ChessCreator *ChessFactory::createChessCreator() {
     return new ChessCreator();
@@ -57,8 +58,16 @@ GameApplicationManager *ChessFactory::createGameApplicationManager() {
       this->createChessCreator(),
       this->createChessPieceMovementManager(),
       this->createCheckmateManager(),
+      this->createGameApplicationDataWriter(),
       this->createGameApplicationDataReader(),
-      this->getChessTimelineFacade()
+      this->getChessTimelineFacade(),
+      this->getChessGuiFacade()
+    );
+}
+
+GameApplicationDataWriter *ChessFactory::createGameApplicationDataWriter() {
+    return new GameApplicationDataWriter(
+        this->createGameApplicationDataMapper()
     );
 }
 
@@ -72,4 +81,8 @@ GameApplicationDataMapper *ChessFactory::createGameApplicationDataMapper() {
 
 ChessTimelineFacade *ChessFactory::getChessTimelineFacade() {
     return static_cast<ChessTimelineFacade*>(this->findFacade(typeid(ChessTimelineFacade).name()));
+}
+
+ChessGuiFacade *ChessFactory::getChessGuiFacade() {
+    return static_cast<ChessGuiFacade*>(this->findFacade(typeid(ChessGuiFacade).name()));
 }

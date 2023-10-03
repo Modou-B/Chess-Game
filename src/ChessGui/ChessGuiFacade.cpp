@@ -4,8 +4,21 @@
 
 #include "ChessGuiFacade.h"
 
+void ChessGuiFacade::initializeSettingsPage(QWidget *mainWindow) {
+    ChessGuiFacade::getFactory()->createChessGuiRenderer()->createSettingsPage(mainWindow);
+}
 void ChessGuiFacade::initializeChessField(QWidget *mainWindow) {
     ChessGuiFacade::getFactory()->createChessGuiRenderer()->createChessField(mainWindow);
+}
+
+void ChessGuiFacade::handlePawnPieceSwitch(
+    pair<int, int> chessGuiCellCoordinate,
+    string pieceTypeToSwitch
+) {
+    ChessGuiFacade::getFactory()->createChessGuiCellManager()->handlePawnPieceSwitch(
+        chessGuiCellCoordinate,
+        pieceTypeToSwitch
+    );
 }
 
 ChessGuiFactory *ChessGuiFacade::getFactory() {

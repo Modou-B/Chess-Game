@@ -9,11 +9,15 @@
 #include "Renderer/ChessGuiRenderer.h"
 #include "../Chess/ChessFacade.h"
 #include "Model/Generator/ChessGuiPieceIconGenerator.h"
+#include "Renderer/ChessPieceSelection/ChessPieceSelectionRenderer.h"
+#include "Model/ChessGuiCellManager.h"
 
 class ChessGuiFactory: public AbstractFactory {
 public:
     ChessGuiRenderer *createChessGuiRenderer();
+    ChessPieceSelectionRenderer *createChessPieceSelectionRenderer();
     ChessGuiPieceIconGenerator *createChessGuiPieceIconGenerator();
+    ChessGuiCellManager *createChessGuiCellManager();
 
     ChessFacade *getChessFacade();
 };

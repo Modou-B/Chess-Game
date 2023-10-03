@@ -8,22 +8,25 @@
 #include <string>
 
 class QWidget;
-class QGridLayout;
 class ChessFacade;
 class ChessGuiPieceIconGenerator;
 class QIcon;
 class QListWidget;
+class QApplication;
+class QHBoxLayout;
+class QGridLayout;
+class ChessPieceSelectionRenderer;
+class ChessGuiCellManager;
 
 class ChessGuiRenderer {
 private:
     ChessFacade *chessFacade;
+    ChessGuiCellManager *chessGuiCellManager;
+    ChessPieceSelectionRenderer *chessPieceSelectionRenderer;
     ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator;
-    static void TimeSlot();
-
+    int speedModeTimerValue;
 
 protected:
-    QGridLayout *createChessGridLayout(QWidget *mainWindow);
-
     void fillFieldWithEmptyCells(QGridLayout *layout);
 
     void addPawnsToCells(QGridLayout *layout);
@@ -34,14 +37,24 @@ protected:
     void addRooksToCells(QGridLayout *layout);
     void addChessPieceToCells(QGridLayout *layout, std::string iconFileName, std::string pieceType, int column, int row);
 
+    void createChessPieceSelectionHBoxes();
 public:
-    ChessGuiRenderer(ChessFacade *chessFacade, ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator);
+    ChessGuiRenderer(
+      ChessFacade *chessFacade,
+      ChessGuiCellManager *chessGuiCellManager,
+      ChessPieceSelectionRenderer *chessPieceSelectionRenderer,
+      ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator
+    );
 
     void createChessField(QWidget *mainWindow);
+    void createSettingsPage(QWidget *mainWindow);
+
     void onRewindButtonPress();
     void onPauseButtonPress();
     void onSkipButtonPress();
-    static QListWidget *rewindList;
+    static QListWidget *timelineList;
+    void onPressStartButton(QWidget *mainWindow);
+    void onPressSpeedButton(int speedModeTimerValue);
 
 };
 
