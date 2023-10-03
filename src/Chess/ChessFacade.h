@@ -10,6 +10,8 @@
 #include "../Application/Facade/AbstractFacade.h"
 #include "ChessFactory.h"
 
+using namespace std;
+
 class ChessCell;
 class ChessField;
 class BaseChessPiece;
@@ -25,11 +27,12 @@ public:
     );
 
     void startNewTurn();
-
     int getCurrentPlayer();
 
-    ChessMovementResponseTransfer handleChessCellClick(std::pair<int, int> currentCellCoordinates);
-    void handlePawnPieceSwitch(ChessPiecePositionTransfer chessPiecePositionTransfer, std::string switchedPieceType);
+    ChessMovementResponseTransfer handleChessCellClick(pair<int, int> currentCellCoordinates);
+    void handlePawnPieceSwitch(string switchedPieceType);
+
+    void updateCurrentGameState(string gameState);
 
     ChessFactory *getFactory() override;
 };

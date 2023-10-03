@@ -18,8 +18,11 @@
 #include "Creator/ChessCreator.h"
 #include "GameApplication/GameApplicationManager.h"
 #include "GameApplication/Mapper/GameApplicationDataMapper.h"
+#include "GameApplication/Writer/GameApplicationDataWriter.h"
 #include "GameApplication/Reader/GameApplicationDataReader.h"
 #include "../ChessTimeline/ChessTimelineFacade.h"
+
+class ChessGuiFacade;
 
 class ChessFactory: public AbstractFactory {
 public:
@@ -37,10 +40,12 @@ public:
     KingPieceMovementChecker *createKingPieceMovementChecker();
 
     GameApplicationManager *createGameApplicationManager();
+    GameApplicationDataWriter *createGameApplicationDataWriter();
     GameApplicationDataReader *createGameApplicationDataReader();
     GameApplicationDataMapper *createGameApplicationDataMapper();
 
     ChessTimelineFacade *getChessTimelineFacade();
+    ChessGuiFacade *getChessGuiFacade();
 };
 
 

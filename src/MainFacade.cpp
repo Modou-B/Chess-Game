@@ -5,7 +5,7 @@
 #include "MainFacade.h"
 
 void MainFacade::initializeGui(QWidget *mainWindow) {
-    this->getFactory()->getChessGuiFacade()->initializeChessField(mainWindow);
+    this->getFactory()->getChessGuiFacade()->initializeSettingsPage(mainWindow);
 }
 
 MainFactory* MainFacade::getFactory() {

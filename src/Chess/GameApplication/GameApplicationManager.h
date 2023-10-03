@@ -16,19 +16,30 @@ class ChessPieceMovementManager;
 class CheckmateManager;
 class ChessMovementResponseTransfer;
 class ChessPiecePositionTransfer;
+class GameApplicationDataWriter;
 class GameApplicationDataReader;
 class ChessTimelineFacade;
+class ChessGuiFacade;
 
 class GameApplicationManager {
 private:
     ChessCreator *chessCreator;
     ChessPieceMovementManager *chessPieceMovementManager;
     CheckmateManager *checkmateManager;
+    GameApplicationDataWriter *gameApplicationDataWriter;
     GameApplicationDataReader *gameApplicationDataReader;
     ChessTimelineFacade *chessTimelineFacade;
+    ChessGuiFacade *chessGuiFacade;
 
 protected:
     void updateStateLastTurnChessPieces();
+    void expandChessMovementResponseTransfer(
+        ChessMovementResponseTransfer &chessMovementResponseTransfer
+    );
+
+    void expandChessMovementResponseTransferWithCurrentGameState(
+        ChessMovementResponseTransfer &chessMovementResponseTransfer
+    );
     void expandChessMovementResponseTransferWithPlayers(
         ChessMovementResponseTransfer &chessMovementResponseTransfer
     );
@@ -40,14 +51,16 @@ public:
       ChessCreator *chessCreator,
       ChessPieceMovementManager* chessPieceMovementManager,
       CheckmateManager *checkmateManager,
+      GameApplicationDataWriter *gameApplicationDataWriter,
       GameApplicationDataReader *gameApplicationDataReader,
-      ChessTimelineFacade *chessTimelineFacade
+      ChessTimelineFacade *chessTimelineFacade,
+      ChessGuiFacade *chessGuiFacade
     );
 
     void initiateChessApplication();
 
     ChessMovementResponseTransfer handleChessCellClick(pair<int, int> currentCellCoordinates);
-    void handlePawnPieceSwitch(ChessPiecePositionTransfer chessPiecePositionTransfer, string switchedPieceType);
+    void handlePawnPieceSwitch(string switchedPieceType);
 
     void endCurrentTurn(
         ChessMovementResponseTransfer chessMovementResponseTransfer,

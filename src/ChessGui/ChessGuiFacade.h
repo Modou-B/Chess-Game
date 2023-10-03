@@ -9,10 +9,18 @@
 #include "ChessGuiFactory.h"
 
 class QWidget;
+class QApplication;
 
 class ChessGuiFacade: public AbstractFacade {
 public:
+    void initializeSettingsPage(QWidget *mainWindow);
+
     void initializeChessField(QWidget *mainWindow);
+
+    void handlePawnPieceSwitch(
+      pair<int, int> chessGuiCellCoordinate,
+      string pieceTypeToSwitch
+    );
 
     ChessGuiFactory *getFactory() override;
 };

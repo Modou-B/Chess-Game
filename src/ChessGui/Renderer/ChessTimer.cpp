@@ -5,9 +5,11 @@
 #include "ChessTimer.h"
 #include "QTimer"
 #include "string"
+#include "../../Chess/GameApplication/GameApplication.h"
 
-ChessTimer::ChessTimer(): QLCDNumber() {
-    this->currentTime = 1000;
+ChessTimer::ChessTimer(int player, int speedModeTimerValue): QLCDNumber() {
+    this->currentTime = speedModeTimerValue;
+    this->currentPlayer = player;
 
     auto *timer = new QTimer(this);
 
@@ -18,6 +20,7 @@ ChessTimer::ChessTimer(): QLCDNumber() {
 
 void ChessTimer::showTime() {
     this->display(QString::fromStdString(std::to_string(this->currentTime)));
-
-    this->currentTime--;
+    if (this->currentPlayer == GameApplication::getCurrentPlayer()) {
+        this->currentTime--;
+    }
 }

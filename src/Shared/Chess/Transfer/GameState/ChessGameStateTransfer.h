@@ -6,19 +6,23 @@
 #define CHESSAPPLICATION_CHESSGAMESTATETRANSFER_H
 
 #include <string>
-#include <utility>
+
+using namespace std;
 
 class ChessGameStateTransfer {
 private:
+    string currentGameState;
     int currentPlayer;
     int currentOpponentPlayer;
     int turnCounter;
 
 public:
+    ChessGameStateTransfer *setCurrentGameState(string gameState);
     ChessGameStateTransfer *setCurrentPlayer(int player);
     ChessGameStateTransfer *setCurrentOpponentPlayer(int player);
     ChessGameStateTransfer *setTurnCounter(int turnCounter);
 
+    string getCurrentGameState();
     int getCurrentPlayer();
     int getCurrentOpponentPlayer();
     int getTurnCounter();
