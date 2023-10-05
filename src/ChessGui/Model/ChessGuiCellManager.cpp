@@ -21,11 +21,15 @@ void ChessGuiCellManager::setChessGuiCellGrid(QGridLayout *chessGuiCellGrid) {
 void ChessGuiCellManager::handlePawnPieceSwitch(pair<int, int> chessGuiCellCoordinate, string pieceTypeToSwitch) {
     ChessGuiCell *currentChessGuiCell = this->getChessGuiCell(chessGuiCellCoordinate);
 
-    std::cout << "Here "<< std::endl;
-    std::cout << chessGuiCellCoordinate.first << " " << chessGuiCellCoordinate.second << std::endl;
-    std::cout << currentChessGuiCell->getChessPieceType() << std::endl;
-
     currentChessGuiCell->handlePawnPieceSwitch(pieceTypeToSwitch);
+}
+
+void ChessGuiCellManager::forwardChessGridToLatestTurn(
+    vector<ChessTurnLogTransfer *> chessTurnLogTransfers
+) {
+    for (auto &chessTurnLogTransfer: chessTurnLogTransfers) {
+        this->updateChessGrid(chessTurnLogTransfer, ChessTimelineConstants::MODE_FORWARD);
+    }
 }
 
 void ChessGuiCellManager::updateChessGrid(
@@ -61,8 +65,6 @@ void ChessGuiCellManager::handleChessPieceStates(
             chessPieceStateTransfer->getChessPieceType(),
             chessPieceInformationTransfer->getChessPieceColor()
         );
-
-        std::cout << chessPieceStateTransfer->getState()<< std::endl;
 
         if (chessPieceStateTransfer->getState() == ChessMovementConstants::CHESS_PIECE_STATE_MOVED) {
             auto *movedChessGuiCell = this->getChessGuiCell(chessPieceStateTransfer->getEndCoordinate());

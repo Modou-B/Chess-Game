@@ -28,6 +28,14 @@ ChessGameStateTransfer *ChessGameStateTransfer::setTurnCounter(int turnCounter) 
     return this;
 }
 
+ChessGameStateTransfer *ChessGameStateTransfer::setLastTurnClickedCellCoordinate(
+    pair<int, int> lastTurnClickedCellCoordinate
+) {
+    this->lastTurnClickedCellCoordinate = lastTurnClickedCellCoordinate;
+
+    return this;
+}
+
 string ChessGameStateTransfer::getCurrentGameState() {
     return this->currentGameState;
 }
@@ -42,4 +50,8 @@ int ChessGameStateTransfer::getCurrentOpponentPlayer() {
 
 int ChessGameStateTransfer::getTurnCounter() {
     return this->turnCounter;
+}
+
+pair<int, int> ChessGameStateTransfer::getLastTurnClickedCellCoordinate() {
+    return this->lastTurnClickedCellCoordinate;
 }

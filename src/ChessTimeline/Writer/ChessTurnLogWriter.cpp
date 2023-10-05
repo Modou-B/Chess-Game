@@ -24,3 +24,10 @@ void ChessTurnLogWriter::logChessPieceStateTransfers(
 
     ChessTimelineData::insertNewTurnLog(chessTurnLog);
 }
+
+void ChessTurnLogWriter::removeLastTurnLog()
+{
+    ChessTimelineData::getChessTurnLogs()->erase(
+        ChessTimelineData::getChessTurnLogs()->begin() + (ChessTimelineData::getChessTurnLogs()->size()-1)
+    );
+}

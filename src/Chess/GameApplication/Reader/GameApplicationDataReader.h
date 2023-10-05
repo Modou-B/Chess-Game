@@ -22,7 +22,7 @@ private:
 public:
     GameApplicationDataReader(GameApplicationDataMapper *gameApplicationDataMapper);
 
-    ChessGameStateTransfer getCurrentGameStateData();
+    ChessGameStateTransfer *getCurrentGameStateData();
     ChessPiecePositionTransfer getKingPiecePositionByPlayer(int player);
     ChessMovementResponseTransfer getSavedChessMovementResponseTransfer();
 

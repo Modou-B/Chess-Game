@@ -7,6 +7,7 @@
 #include "../../../Shared/Chess/Transfer/ChessMovementResponseTransfer.h"
 #include "../GameApplication.h"
 #include "../Mapper/GameApplicationDataMapper.h"
+#include "../Player/ChessPlayerData.h"
 
 GameApplicationDataWriter::GameApplicationDataWriter(
     GameApplicationDataMapper *gameApplicationDataMapper
@@ -21,6 +22,12 @@ void GameApplicationDataWriter::updateGameApplicationData(
     GameApplication::setCurrentPlayer(chessGameStateTransfer->getCurrentPlayer());
     GameApplication::setCurrentOpponentPlayer(chessGameStateTransfer->getCurrentOpponentPlayer());
     GameApplication::setTurnCounter(chessGameStateTransfer->getTurnCounter());
+
+    if (chessGameStateTransfer->getTurnCounter() > 0) {
+        GameApplication::setCoordinatesOfLastTurnClickedCell(
+            chessGameStateTransfer->getLastTurnClickedCellCoordinate()
+        );
+    }
 }
 
 void GameApplicationDataWriter::updateGameApplicationCurrentGameState(string gameState) {
@@ -31,4 +38,14 @@ void GameApplicationDataWriter::saveChessMovementResponseTransfer(
     ChessMovementResponseTransfer chessMovementResponseTransfer
 ) {
     GameApplication::saveChessMovementResponseTransfer(chessMovementResponseTransfer);
+}
+
+void GameApplicationDataWriter::saveChessPieceForChessPlayerData(
+    BaseChessPiece *chessPiece,
+    string type,
+    int player
+) {
+    auto *chessPlayerData = GameApplication::getChessPlayerDataForPlayer(player);
+
+    chessPlayerData->addPieceByType(chessPiece, type);
 }

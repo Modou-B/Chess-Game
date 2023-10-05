@@ -29,6 +29,8 @@ public:
         int player,
         string pieceType,
         string state,
+        int moveCounter,
+        bool usedDoubleMove,
         pair<int, int> startCoordinates,
         pair<int, int> endCoordinates
     );
@@ -37,6 +39,8 @@ public:
         int player,
         string pieceType,
         string state,
+        int moveCounter,
+        bool usedDoubleMove,
         pair<int, int> startCoordinates
     );
 };

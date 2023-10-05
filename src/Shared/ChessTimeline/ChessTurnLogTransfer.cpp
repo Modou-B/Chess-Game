@@ -9,14 +9,10 @@ ChessTurnLogTransfer::ChessTurnLogTransfer() {
     this->chessPieceInformationTransfers = {};
 }
 
-ChessTurnLogTransfer *ChessTurnLogTransfer::setCurrentPlayer(int currentPlayer) {
-    this->currentPlayer = currentPlayer;
-
-    return this;
-}
-
-ChessTurnLogTransfer *ChessTurnLogTransfer::setTurnCounter(int turnCounter) {
-    this->turnCounter = turnCounter;
+ChessTurnLogTransfer *ChessTurnLogTransfer::setChessGameStateTransfer(
+    ChessGameStateTransfer *chessGameStateTransfer
+) {
+    this->chessGameStateTransfer = chessGameStateTransfer;
 
     return this;
 }
@@ -33,12 +29,8 @@ void ChessTurnLogTransfer::addChessPieceInformationTransfer(ChessPieceInformatio
     this->chessPieceInformationTransfers.push_back(chessPieceInformationTransfer);
 }
 
-int ChessTurnLogTransfer::getCurrentPlayer() {
-    return this->currentPlayer;
-}
-
-int ChessTurnLogTransfer::getTurnCounter() {
-    return this->turnCounter;
+ChessGameStateTransfer *ChessTurnLogTransfer::getChessGameStateTransfer() {
+    return this->chessGameStateTransfer;
 }
 
 std::vector<ChessPieceInformationTransfer*> ChessTurnLogTransfer::getChessPieceInformationTransfers() {

@@ -54,6 +54,7 @@ public:
     static void saveChessMovementResponseTransfer(
         ChessMovementResponseTransfer chessMovementResponseTransfer
     );
+    static void setHasPreviousClickedCell(bool value);
     
     static void setPreviouslyClickedCellCoordinates(pair<int, int> currentCellCoordinates);
     static void setCoordinatesOfLastTurnClickedCell(pair<int, int> lastTurnClickedCell);

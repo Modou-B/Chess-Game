@@ -21,6 +21,7 @@
 #include "GameApplication/Writer/GameApplicationDataWriter.h"
 #include "GameApplication/Reader/GameApplicationDataReader.h"
 #include "../ChessTimeline/ChessTimelineFacade.h"
+#include "ChessPiece/Creator/ChessPieceCreator.h"
 
 class ChessGuiFacade;
 
@@ -43,6 +44,8 @@ public:
     GameApplicationDataWriter *createGameApplicationDataWriter();
     GameApplicationDataReader *createGameApplicationDataReader();
     GameApplicationDataMapper *createGameApplicationDataMapper();
+
+    ChessPieceCreator *createChessPieceCreator();
 
     ChessTimelineFacade *getChessTimelineFacade();
     ChessGuiFacade *getChessGuiFacade();

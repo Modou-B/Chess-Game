@@ -23,6 +23,11 @@ private:
 protected:
     ChessGuiCell *getChessGuiCell(pair<int, int> chessCellCoordinate);
 
+    void handleChessPieceStates(
+        ChessPieceInformationTransfer *chessPieceInformationTransfer,
+        string mode
+    );
+
 public:
     void setChessGuiCellGrid(QGridLayout *chessGuiCellGrid);
 
@@ -31,13 +36,9 @@ public:
         string pieceTypeToSwitch
     );
 
+    void forwardChessGridToLatestTurn(vector<ChessTurnLogTransfer *> chessTurnLogTransfers);
     void updateChessGrid(
         ChessTurnLogTransfer *chessTurnLogTransfer,
-        string mode
-    );
-
-    void handleChessPieceStates(
-        ChessPieceInformationTransfer *chessPieceInformationTransfer,
         string mode
     );
 };

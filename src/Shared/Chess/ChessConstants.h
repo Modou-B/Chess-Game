@@ -38,7 +38,6 @@ namespace ChessConstants
     const std::string STATE_SWITCHED_PIECE = "STATE_SWITCHED_PIECE";
     const std::string STATE_MOVED_PIECE = "STATE_MOVED_PIECE";
     const std::string STATE_MOVED_PIECE_PAWN_SWITCH = "STATE_MOVED_PIECE_PAWN_SWITCH";
-
 }
 
 

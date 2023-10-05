@@ -244,7 +244,8 @@ void ChessGuiRenderer::createChessField(QWidget *mainWindow) {
     auto hBoxTimelineLayout = this->chessTimelineRenderer->createHBoxChessTimelineLayout();
     auto hBoxTimelineButtonsLayout = this->chessTimelineRenderer->createHBoxTimelineButtonsLayout(
         this->chessTimelineFacade,
-        this->chessGuiCellManager
+        this->chessGuiCellManager,
+        this->chessFacade
     );
 
     vBoxSideInformationPanel->addLayout(hBoxCountdownLayoutBlack);

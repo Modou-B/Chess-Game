@@ -38,6 +38,8 @@ ChessPieceStateTransfer *ChessPieceMovementMapper::mapDataToChessPieceStateTrans
     int player,
     string pieceType,
     string state,
+    int moveCounter,
+    bool usedDoubleMove,
     pair<int, int> startCoordinates,
     pair<int, int> endCoordinates
 ) {
@@ -45,6 +47,8 @@ ChessPieceStateTransfer *ChessPieceMovementMapper::mapDataToChessPieceStateTrans
       player,
       pieceType,
       state,
+      moveCounter,
+      usedDoubleMove,
       startCoordinates
     )->setEndCoordinate(endCoordinates);
 
@@ -55,6 +59,8 @@ ChessPieceStateTransfer *ChessPieceMovementMapper::mapDataToChessPieceStateTrans
     int player,
     string pieceType,
     string state,
+    int moveCounter,
+    bool usedDoubleMove,
     pair<int, int> startCoordinates
 ) {
     auto *chessPieceStateTransfer = new ChessPieceStateTransfer;
@@ -62,6 +68,8 @@ ChessPieceStateTransfer *ChessPieceMovementMapper::mapDataToChessPieceStateTrans
     chessPieceStateTransfer->setPlayerOfChessPiece(player)
         ->setChessPieceType(pieceType)
         ->setState(state)
+        ->setMoveCounter(moveCounter)
+        ->setUsedDoubleMove(usedDoubleMove)
         ->setStartCoordinate(startCoordinates);
 
     return chessPieceStateTransfer;

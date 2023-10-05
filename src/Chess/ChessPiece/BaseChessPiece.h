@@ -67,6 +67,7 @@ public:
 
     bool canPieceBlockCheck();
     bool wasChessPieceMovedLastTurn();
+    void setMoveCounter(int moveCounter);
     void setCheckBlockAbility(bool value);
     void setCurrentCoordinates(std::pair<int, int> currentCoordinates);
     void setCoordinatesThatBlockCheck(std::vector<ChessPiecePossibleMoveTransfer*> coordinatesThatBlockCheck);
