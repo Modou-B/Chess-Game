@@ -192,7 +192,7 @@ ChessMovementResponseTransfer ChessPieceMovementManager::addCastlingChessPieceMo
 
       chessMovementResponseTransfer.addChessPieceStateTransfer(
           this->chessPieceMovementMapper->mapDataToChessPieceStateTransfer(
-              chessMovementResponseTransfer.getCurrentOpponentPlayer(),
+              chessMovementResponseTransfer.getCurrentPlayer(),
               ChessConstants::ROOK_PIECE_TYPE,
               ChessMovementConstants::CHESS_PIECE_STATE_MOVED,
               oldCoordinatesOfRookPiece,
@@ -205,7 +205,7 @@ ChessMovementResponseTransfer ChessPieceMovementManager::addCastlingChessPieceMo
 
       chessMovementResponseTransfer.addChessPieceStateTransfer(
           this->chessPieceMovementMapper->mapDataToChessPieceStateTransfer(
-              chessMovementResponseTransfer.getCurrentOpponentPlayer(),
+              chessMovementResponseTransfer.getCurrentPlayer(),
               ChessConstants::ROOK_PIECE_TYPE,
               ChessMovementConstants::CHESS_PIECE_STATE_MOVED,
               oldCoordinatesOfRookPiece,

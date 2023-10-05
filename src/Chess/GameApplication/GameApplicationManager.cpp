@@ -113,6 +113,9 @@ void GameApplicationManager::endCurrentTurn(
     ChessPiecePositionTransfer chessPiecePositionTransfer
 ) {
     this->logCurrentTurn(chessMovementResponseTransfer);
+    this->chessGuiFacade->updateTimelineTurnProperties(
+        this->gameApplicationDataReader->getTurnCounter()
+    );
 
     GameApplication::switchPlayers();
     GameApplication::togglePreviousClickedCellValue();
