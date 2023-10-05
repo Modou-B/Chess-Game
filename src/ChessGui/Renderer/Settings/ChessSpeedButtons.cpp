@@ -13,4 +13,9 @@ ChessSpeedButtons::ChessSpeedButtons(ChessGuiRenderer *chessGuiRenderer, int spe
 
 void ChessSpeedButtons::setPlayMode() {
     this->chessGuiRenderer->onPressSpeedButton(this->speedModeTimerValue);
+
+    QPalette pal = this->palette();
+    pal.setColor(QPalette::Button, Qt::red);
+    this->setAutoFillBackground(true);
+    this->setPalette(pal);
 }

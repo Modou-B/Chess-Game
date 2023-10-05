@@ -28,3 +28,8 @@ void ChessGuiFacade::updateTimelineTurnProperties(int currentTurn) {
 ChessGuiFactory *ChessGuiFacade::getFactory() {
     return static_cast<ChessGuiFactory*>(this->findFactory(typeid(ChessGuiFactory).name()));
 }
+
+
+void ChessGuiFacade::updatePlayerColor(int player) {
+    ChessGuiFacade::getFactory()->createChessPlayerLabelRenderer()->updatePlayerColor(player);
+}

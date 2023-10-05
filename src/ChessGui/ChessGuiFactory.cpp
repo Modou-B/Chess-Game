@@ -11,7 +11,9 @@ ChessGuiRenderer *ChessGuiFactory::createChessGuiRenderer() {
         this->createChessGuiCellManager(),
         this->createChessPieceSelectionRenderer(),
         this->createChessTimelineRenderer(),
-        this->createChessGuiPieceIconGenerator()
+        this->createChessGuiPieceIconGenerator(),
+        this->createChessPlayerLabelRenderer(),
+        this->createChessSettingsRenderer()
     );
 }
 
@@ -39,4 +41,12 @@ ChessFacade *ChessGuiFactory::getChessFacade() {
 
 ChessTimelineFacade *ChessGuiFactory::getChessTimelineFacade() {
     return static_cast<ChessTimelineFacade*>(this->findFacade(typeid(ChessTimelineFacade).name()));
+}
+
+PlayerLabelRenderer *ChessGuiFactory::createChessPlayerLabelRenderer() {
+    return new PlayerLabelRenderer;
+}
+
+ChessSettingsRenderer *ChessGuiFactory::createChessSettingsRenderer() {
+    return new ChessSettingsRenderer();
 }

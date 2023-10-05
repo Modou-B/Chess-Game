@@ -22,9 +22,15 @@
 #include "QWidget"
 #include "Settings/ChessSpeedButtons.h"
 #include "Settings/ChessStartButton.h"
+#include "Settings/ChessSettingsButton.h"
 #include "Timeline/ChessTimelineRenderer.h"
 #include <QGridLayout>
 #include <utility>
+#include "QPalette"
+#include "QColor"
+#include "../ChessGui/Renderer/PlayerLabel/PlayerLabelRenderer.h"
+#include "../ChessGui/Renderer/PlayerLabel/PlayerLabel.h"
+#include "Settings/ChessSettingsRenderer.h"
 
 class QGridLayout;
 
@@ -34,7 +40,9 @@ ChessGuiRenderer::ChessGuiRenderer(
     ChessGuiCellManager *chessGuiCellManager,
     ChessPieceSelectionRenderer *chessPieceSelectionRenderer,
     ChessTimelineRenderer *chessTimelineRenderer,
-    ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator
+    ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator,
+    PlayerLabelRenderer *playerLabelRenderer,
+    ChessSettingsRenderer *chessSettingsRenderer
 ) {
     this->chessFacade = chessFacade;
     this->chessTimelineFacade = chessTimelineFacade;
@@ -42,6 +50,8 @@ ChessGuiRenderer::ChessGuiRenderer(
     this->chessPieceSelectionRenderer = chessPieceSelectionRenderer;
     this->chessTimelineRenderer = chessTimelineRenderer;
     this->chessGuiPieceIconGenerator = chessGuiPieceIconGenerator;
+    this->playerLabelRenderer = playerLabelRenderer;
+    this->chessSettingsRenderer = chessSettingsRenderer;
 }
 
 void ChessGuiRenderer::createSettingsPage(QWidget *mainWindow) {
@@ -51,7 +61,10 @@ void ChessGuiRenderer::createSettingsPage(QWidget *mainWindow) {
 
     auto startPushbutton = new ChessStartButton(this, mainWindow);
     startPushbutton->setText("Start");
-    auto settingsPushbutton = new QPushButton("Settings");
+
+
+    auto settingsPushbutton = new ChessSettingsButton();
+    settingsPushbutton->setText("Settings");
 
     auto speedPushbuttonClassic = new ChessSpeedButtons(this, 0);
     speedPushbuttonClassic->setText("Classic");
@@ -94,10 +107,13 @@ void ChessGuiRenderer::createChessField(QWidget *mainWindow) {
     auto hboxTopPanelLayout = new QHBoxLayout(mainWindow);
     auto hboxBottomPanelLayout = new QHBoxLayout(mainWindow);
 
-    auto player1Label = new QLabel("Player 1");
-    auto player1ActiveLabel = new QLabel("*Current players turn");
-    auto player2Label = new QLabel("Player 2");
-    auto player2ActiveLabel = new QLabel("*Current players turn");
+    this->playerLabelRenderer->createPlayerLabels();
+
+
+    PlayerLabel *p1 = this->playerLabelRenderer->getPlayerLabel(1);
+    p1->setCurrentPlayerColor();
+    PlayerLabel *p2 = this->playerLabelRenderer->getPlayerLabel(2);
+
 
     // ChessGrid
     auto *gridLayout = new QGridLayout();
@@ -224,12 +240,12 @@ void ChessGuiRenderer::createChessField(QWidget *mainWindow) {
 
     // Befüllen von Labels
     hboxTopPanelLayout->addWidget(chessFieldSideNumberEmpty3);
-    hboxTopPanelLayout->addWidget(player2Label);
-    hboxTopPanelLayout->addWidget(player2ActiveLabel );
+    hboxTopPanelLayout->addWidget(p2);
+    //hboxTopPanelLayout->addWidget(player2ActiveLabel );
 
     hboxBottomPanelLayout->addWidget(chessFieldSideNumberEmpty4);
-    hboxBottomPanelLayout->addWidget(player1Label);
-    hboxBottomPanelLayout->addWidget(player1ActiveLabel);
+    hboxBottomPanelLayout->addWidget(p1);
+    //hboxBottomPanelLayout->addWidget(player1ActiveLabel);
 
     // Countdown
     if (this->speedModeTimerValue > 0) {
@@ -287,9 +303,9 @@ void ChessGuiRenderer::fillFieldWithEmptyCells(QGridLayout *layout) {
             );
 
             if (j % 2 - counter == 0) {
-                chessGuiCell->setCellColor(ChessGuiConstants::CELL_YELLOW_COLOR);
+                chessGuiCell->setCellColor(this->chessSettingsRenderer->getColorForPlayer(1));
             } else {
-                chessGuiCell->setCellColor(ChessGuiConstants::CELL_GREEN_COLOR);
+                chessGuiCell->setCellColor(this->chessSettingsRenderer->getColorForPlayer(2));
             }
 
             chessGuiCell->setBaseCellSize();
@@ -365,6 +381,8 @@ void ChessGuiRenderer::onPressStartButton(QWidget *mainWindow) {
     mainGridWindow->show();
     mainWindow->close();
 }
+
+
 
 void ChessGuiRenderer::onPressSpeedButton(int speedModeTimerValue) {
     this->speedModeTimerValue = speedModeTimerValue;

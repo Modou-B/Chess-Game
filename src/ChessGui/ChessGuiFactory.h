@@ -13,6 +13,8 @@
 #include "Renderer/ChessPieceSelection/ChessPieceSelectionRenderer.h"
 #include "Model/ChessGuiCellManager.h"
 #include "Renderer/Timeline/ChessTimelineRenderer.h"
+#include "Renderer/PlayerLabel/PlayerLabelRenderer.h"
+#include "Renderer/Settings/ChessSettingsRenderer.h"
 
 class ChessGuiFactory: public AbstractFactory {
 public:
@@ -24,6 +26,8 @@ public:
 
     ChessFacade *getChessFacade();
     ChessTimelineFacade *getChessTimelineFacade();
+    PlayerLabelRenderer *createChessPlayerLabelRenderer();
+    ChessSettingsRenderer *createChessSettingsRenderer();
 };
 
 

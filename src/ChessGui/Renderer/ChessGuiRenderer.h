@@ -19,6 +19,8 @@ class QGridLayout;
 class ChessPieceSelectionRenderer;
 class ChessTimelineRenderer;
 class ChessGuiCellManager;
+class PlayerLabelRenderer;
+class ChessSettingsRenderer;
 
 class ChessGuiRenderer {
 private:
@@ -28,6 +30,9 @@ private:
     ChessPieceSelectionRenderer *chessPieceSelectionRenderer;
     ChessTimelineRenderer *chessTimelineRenderer;
     ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator;
+    PlayerLabelRenderer *playerLabelRenderer;
+    ChessSettingsRenderer *chessSettingsRenderer;
+
     int speedModeTimerValue;
 
 protected:
@@ -50,7 +55,9 @@ public:
       ChessGuiCellManager *chessGuiCellManager,
       ChessPieceSelectionRenderer *chessPieceSelectionRenderer,
       ChessTimelineRenderer *chessTimelineRenderer,
-      ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator
+      ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator,
+      PlayerLabelRenderer *playerLabelRenderer,
+      ChessSettingsRenderer *chessSettingsRenderer
     );
 
     void createChessField(QWidget *mainWindow);
