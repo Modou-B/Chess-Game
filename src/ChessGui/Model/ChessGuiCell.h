@@ -16,6 +16,7 @@ class ChessMovementResponseTransfer;
 class ChessPiecePositionTransfer;
 class ChessGuiPieceIconGenerator;
 class ChessPieceSelectionRenderer;
+class ChessTimelineRenderer;
 class QIcon;
 class QHBoxLayout;
 class QGridLayout;
@@ -26,6 +27,7 @@ private:
     ChessFacade *chessFacade;
     ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator;
     ChessPieceSelectionRenderer *chessPieceSelectionRenderer;
+    ChessTimelineRenderer *chessTimelineRenderer;
 
     pair<int, int> coordinates;
 
@@ -42,6 +44,7 @@ public:
             QGridLayout *gridLayout,
             ChessFacade *chessFacade,
             ChessPieceSelectionRenderer *chessPieceSelectionRenderer,
+            ChessTimelineRenderer *chessTimelineRenderer,
             pair<int, int> coordinates,
             ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator
     );
@@ -62,7 +65,10 @@ public:
     void clearPossibleMovesForPreviousPieceClick(ChessMovementResponseTransfer chessMovementResponseTransfer);
 
     void setChessPieceIcon(string iconState, QIcon chessPieceIcon);
-    void addListWidgetItem(pair<int, int> currentCellCoordinates);
+    void addListWidgetItem();
+
+    void clearCurrentChessPiece();
+    void addChessPiece(string pieceType, string color);
 };
 
 

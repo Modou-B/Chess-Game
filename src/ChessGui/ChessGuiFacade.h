@@ -22,6 +22,8 @@ public:
       string pieceTypeToSwitch
     );
 
+    void updateTimelineTurnProperties(int currentTurn);
+
     ChessGuiFactory *getFactory() override;
 };
 

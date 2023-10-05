@@ -9,6 +9,7 @@
 
 class QWidget;
 class ChessFacade;
+class ChessTimelineFacade;
 class ChessGuiPieceIconGenerator;
 class QIcon;
 class QListWidget;
@@ -16,13 +17,16 @@ class QApplication;
 class QHBoxLayout;
 class QGridLayout;
 class ChessPieceSelectionRenderer;
+class ChessTimelineRenderer;
 class ChessGuiCellManager;
 
 class ChessGuiRenderer {
 private:
     ChessFacade *chessFacade;
+    ChessTimelineFacade *chessTimelineFacade;
     ChessGuiCellManager *chessGuiCellManager;
     ChessPieceSelectionRenderer *chessPieceSelectionRenderer;
+    ChessTimelineRenderer *chessTimelineRenderer;
     ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator;
     int speedModeTimerValue;
 
@@ -38,21 +42,20 @@ protected:
     void addChessPieceToCells(QGridLayout *layout, std::string iconFileName, std::string pieceType, int column, int row);
 
     void createChessPieceSelectionHBoxes();
+    void createChessTimelineLayout();
 public:
     ChessGuiRenderer(
       ChessFacade *chessFacade,
+      ChessTimelineFacade *chessTimelineFacade,
       ChessGuiCellManager *chessGuiCellManager,
       ChessPieceSelectionRenderer *chessPieceSelectionRenderer,
+      ChessTimelineRenderer *chessTimelineRenderer,
       ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator
     );
 
     void createChessField(QWidget *mainWindow);
     void createSettingsPage(QWidget *mainWindow);
 
-    void onRewindButtonPress();
-    void onPauseButtonPress();
-    void onSkipButtonPress();
-    static QListWidget *timelineList;
     void onPressStartButton(QWidget *mainWindow);
     void onPressSpeedButton(int speedModeTimerValue);
 

@@ -22,6 +22,9 @@ class ChessPieceMovementReader;
 class ChessPieceMovementWriter;
 class BaseChessPiece;
 
+class ChessTurnLogTransfer;
+class ChessPieceInformationTransfer;
+
 class ChessPieceMovementManager {
 private:
     ChessPieceMovementMapper *chessPieceMovementMapper;
@@ -68,6 +71,16 @@ public:
         ChessMovementResponseTransfer chessMovementResponseTransfer,
         bool isPlayerInCheck,
         ChessPlayerData *opponentPlayerData
+    );
+
+    void updateChessGrid(
+        ChessTurnLogTransfer *chessTurnLogTransfer,
+        string mode
+    );
+
+    void handleChessPieceStates(
+        ChessPieceInformationTransfer *chessPieceInformationTransfer,
+        string mode
     );
 
     void clearPossibleMoveCollections();

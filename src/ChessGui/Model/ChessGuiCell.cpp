@@ -18,21 +18,22 @@
 #include "iostream"
 #include "QGraphicsOpacityEffect"
 #include "QListWidgetItem"
-#include "../Renderer/ChessGuiRenderer.h"
-#include "../Renderer/ChessCoordinateConverter.h"
+#include "../Renderer/Timeline/ChessTimelineRenderer.h"
 
 ChessGuiCell::ChessGuiCell(
-        QGridLayout *gridLayout,
-        ChessFacade *chessFacade,
-        ChessPieceSelectionRenderer *chessPieceSelectionRenderer,
-        pair<int, int> coordinates,
-        ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator
+    QGridLayout *gridLayout,
+    ChessFacade *chessFacade,
+    ChessPieceSelectionRenderer *chessPieceSelectionRenderer,
+    ChessTimelineRenderer *chessTimelineRenderer,
+    pair<int, int> coordinates,
+    ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator
 ) {
     this->gridLayout = gridLayout;
     this->chessFacade = chessFacade;
     this->coordinates = coordinates;
     this->chessGuiPieceIconGenerator = chessGuiPieceIconGenerator;
     this->chessPieceSelectionRenderer = chessPieceSelectionRenderer;
+    this->chessTimelineRenderer = chessTimelineRenderer;
     this->chessPieceIconState = ChessGuiConstants::STATE_EMPTY_CHESS_PIECE_ICON;
 
     connect(this, &QPushButton::released, this, &ChessGuiCell::handleCellClick);
@@ -47,7 +48,7 @@ void ChessGuiCell::handleCellClick() {
 
     if (chessMovementResponseTransfer.getState() == ChessMovementConstants::MOVEMENT_STATE_PAWN_SWITCH_SELECTION_START) {
         this->handleChessPieceMovement(chessMovementResponseTransfer);
-        this->addListWidgetItem(this->coordinates);
+        this->addListWidgetItem();
 
         this->chessPieceSelectionRenderer->renderChessPieceSelectionHBoxForPlayer(
             chessMovementResponseTransfer.getCurrentPlayer()
@@ -73,7 +74,7 @@ void ChessGuiCell::handleCellClick() {
     }
 
     this->handleChessPieceMovement(chessMovementResponseTransfer);
-    this->addListWidgetItem(this->coordinates);
+    this->addListWidgetItem();
     this->chessFacade->endCurrentTurn(chessMovementResponseTransfer, this->createCurrentChessPiecePositionTransfer());
     this->chessFacade->startNewTurn();
 }
@@ -119,9 +120,7 @@ void ChessGuiCell::handleChessPieceMovement(ChessMovementResponseTransfer chessM
             newChessGuiCell->setChessPieceType(oldChessGuiCell->getChessPieceType());
         }
 
-        oldChessGuiCell->setChessPieceIcon(
-            ChessGuiConstants::STATE_EMPTY_CHESS_PIECE_ICON, this->chessGuiPieceIconGenerator->generateEmptyIcon());
-        oldChessGuiCell->setChessPieceType(ChessConstants::EMPTY_PIECE_TYPE);
+        oldChessGuiCell->clearCurrentChessPiece();
     }
 }
 
@@ -176,32 +175,19 @@ string ChessGuiCell::getChessPieceType() {
 
 void ChessGuiCell::handlePawnPieceSwitch(string pieceType) {
     string pieceTypeFilename = pieceType;
-    int currentPlayer = this->chessFacade->getCurrentPlayer();
+    string color = "-black";
 
+    int currentPlayer = this->chessFacade->getCurrentPlayer();
     if (currentPlayer == 1) {
-          pieceTypeFilename.append("-white");
-    } else {
-          pieceTypeFilename.append("-black");
+          color = "-white";
     }
 
-    this->setChessPieceIcon(
-        ChessGuiConstants::STATE_REAL_CHESS_PIECE_ICON,
-        this->chessGuiPieceIconGenerator->generateIconFromFile(pieceTypeFilename)
-    );
-    this->setIconSize(QSize(50, 50));
-    this->setChessPieceType(pieceType);
-    
+    this->addChessPiece(pieceType, color);
     this->chessPieceSelectionRenderer->hideChessPieceSelectionHBoxForPlayer(currentPlayer);
 }
 
-void ChessGuiCell::addListWidgetItem(pair<int, int> currentCellCoordinates) {
-    QString entryStr = QString::fromStdString(
-            ChessCoordinateConverter::GetConvertedChessMatrixValue(currentCellCoordinates) + " -> " +
-            this->getChessPieceType());
-
-    auto *rewindListEntry = new QListWidgetItem(entryStr);
-    ChessGuiRenderer::timelineList->insertItem(ChessGuiRenderer::timelineList->count() + 1, rewindListEntry);
-    ChessGuiRenderer::timelineList->setCurrentRow(ChessGuiRenderer::timelineList->count() - 1);
+void ChessGuiCell::addListWidgetItem() {
+    this->chessTimelineRenderer->addListWidgetItem(this->coordinates, this->getChessPieceType());
 }
 
 ChessPiecePositionTransfer ChessGuiCell::createCurrentChessPiecePositionTransfer()
@@ -210,4 +196,24 @@ ChessPiecePositionTransfer ChessGuiCell::createCurrentChessPiecePositionTransfer
     chessPiecePositionTransfer.setCurrentChessPieceCoordinates(this->coordinates);
 
     return chessPiecePositionTransfer;
+}
+
+void ChessGuiCell::clearCurrentChessPiece()
+{
+    this->setChessPieceIcon(
+          ChessGuiConstants::STATE_EMPTY_CHESS_PIECE_ICON, this->chessGuiPieceIconGenerator->generateEmptyIcon());
+    this->setChessPieceType(ChessConstants::EMPTY_PIECE_TYPE);
+}
+
+void ChessGuiCell::addChessPiece(string pieceType, string color) {
+    auto pieceTypeFilename = pieceType;
+    pieceTypeFilename.append(color);
+
+        std::cout << pieceTypeFilename<< std::endl;
+    this->setChessPieceIcon(
+        ChessGuiConstants::STATE_REAL_CHESS_PIECE_ICON,
+        this->chessGuiPieceIconGenerator->generateIconFromFile(pieceTypeFilename)
+    );
+    this->setIconSize(QSize(50, 50));
+    this->setChessPieceType(pieceType);
 }

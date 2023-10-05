@@ -12,12 +12,17 @@
 using namespace std;
 
 class EndTurnInformationTransfer;
+class ChessTurnLogTransfer;
 
 class ChessTimelineFacade: public AbstractFacade {
 public:
     void logCurrentTurnData(
         EndTurnInformationTransfer endTurnInformationTransfer
     );
+
+    ChessTurnLogTransfer *findChessTurnLogForTurn(int turn);
+
+    void handleChessGridUpdateForGivenTurn(int turn);
 
     ChessTimelineFactory *getFactory() override;
 };

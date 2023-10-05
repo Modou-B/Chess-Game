@@ -7,14 +7,21 @@
 
 #include <utility>
 #include <string>
+#include <vector>
 
 using namespace std;
 
 class QGridLayout;
+class ChessTurnLogTransfer;
+class ChessPieceInformationTransfer;
+class ChessGuiCell;
 
 class ChessGuiCellManager {
 private:
     static QGridLayout *chessGuiCellGrid;
+
+protected:
+    ChessGuiCell *getChessGuiCell(pair<int, int> chessCellCoordinate);
 
 public:
     void setChessGuiCellGrid(QGridLayout *chessGuiCellGrid);
@@ -22,6 +29,16 @@ public:
     void handlePawnPieceSwitch(
         pair<int, int> chessGuiCellCoordinate,
         string pieceTypeToSwitch
+    );
+
+    void updateChessGrid(
+        ChessTurnLogTransfer *chessTurnLogTransfer,
+        string mode
+    );
+
+    void handleChessPieceStates(
+        ChessPieceInformationTransfer *chessPieceInformationTransfer,
+        string mode
     );
 };
 

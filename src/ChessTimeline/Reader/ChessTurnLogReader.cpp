@@ -5,12 +5,19 @@
 #include "ChessTurnLogReader.h"
 #include "../Model/ChessTimelineData.h"
 #include "../Mapper/ChessTimelineMapper.h"
+#include "../../Shared/ChessTimeline/ChessTurnLogTransfer.h"
+#include "iostream"
 
 ChessTurnLogReader::ChessTurnLogReader(ChessTimelineMapper *chessTimelineMapper) {
     this->chessTimelineMapper = chessTimelineMapper;
 }
 
-ChessTurnLogTransfer *ChessTurnLogReader::getChessTurnLogForSpecificTurn(int turn) {
+ChessTurnLogTransfer *ChessTurnLogReader::getChessTurnLogForSpecificTurn(int turn)
+{
+    if (ChessTimelineData::getChessTurnLogs()->empty()) {
+        return new ChessTurnLogTransfer();
+    }
+
     return this->chessTimelineMapper->mapChessTurnLogToChessTurnLogTransfer(
              ChessTimelineData::getChessTurnLogs()->at(turn)
     );
