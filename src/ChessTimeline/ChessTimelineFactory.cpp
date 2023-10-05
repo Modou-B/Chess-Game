@@ -4,18 +4,26 @@
 
 #include "ChessTimelineFactory.h"
 
-ChessTurnLogWriter *ChessTimelineFactory::createChessTurnLogWriter() {
+ChessTurnLogWriter *ChessTimelineFactory::createChessTurnLogWriter()
+{
     return new ChessTurnLogWriter(
       this->createChessTimelineMapper()
     );
 }
 
-ChessTurnLogReader *ChessTimelineFactory::createChessTurnLogReader() {
+ChessTurnLogReader *ChessTimelineFactory::createChessTurnLogReader()
+{
     return new ChessTurnLogReader(
       this->createChessTimelineMapper()
     );
 }
 
-ChessTimelineMapper *ChessTimelineFactory::createChessTimelineMapper() {
+ChessTimelineMapper *ChessTimelineFactory::createChessTimelineMapper()
+{
     return new ChessTimelineMapper();
+}
+
+ChessGridUpdater *ChessTimelineFactory::createChessGridUpdater()
+{
+    return new ChessGridUpdater();
 }

@@ -3,48 +3,44 @@
 //
 
 #include "ChessGuiRenderer.h"
-#include <QGridLayout>
 #include "../Chess/ChessFacade.h"
+#include "../Model/ChessGuiCell.h"
+#include "../Model/ChessGuiCellManager.h"
+#include "../Model/ChessSelectionPiece.h"
+#include "../Model/Generator/ChessGuiPieceIconGenerator.h"
 #include "../Shared/Chess/ChessConstants.h"
 #include "../Shared/ChessGui/ChessGuiConstants.h"
-#include "../Model/Generator/ChessGuiPieceIconGenerator.h"
-#include "../Model/ChessGuiCell.h"
-#include "QWidget"
-#include <utility>
-#include "QImage"
-#include "QLCDNumber"
-#include "QLabel"
-#include "QPainter"
-#include "QLabel"
-#include "QPushButton"
-#include "QLCDNumber"
-#include "QTimer"
-#include "QTime"
-#include "QListWidget"
-#include "ChessTimer.h"
-#include "QObject"
-#include "Settings/ChessStartButton.h"
-#include "Settings/ChessSpeedButtons.h"
-#include "../Model/ChessSelectionPiece.h"
-#include "../Model/ChessGuiCellManager.h"
 #include "ChessPieceSelection/ChessPieceSelectionRenderer.h"
-#include "../ChessGui/Renderer/Timeline/RewindTimelineButton.h"
-#include "../ChessGui/Renderer/Timeline/PauseGameTimerButton.h"
-#include "../ChessGui/Renderer/Timeline/FastForwardTimelineButton.h"
+#include "ChessTimer.h"
+#include "QImage"
+#include "QLabel"
+#include "QListWidget"
+#include "QPainter"
+#include "QPushButton"
+#include "QTime"
+#include "QTimer"
+#include "QWidget"
+#include "Settings/ChessSpeedButtons.h"
+#include "Settings/ChessStartButton.h"
+#include "Timeline/ChessTimelineRenderer.h"
+#include <QGridLayout>
+#include <utility>
 
 class QGridLayout;
 
-QListWidget *ChessGuiRenderer::timelineList = nullptr;
-
 ChessGuiRenderer::ChessGuiRenderer(
     ChessFacade *chessFacade,
+    ChessTimelineFacade *chessTimelineFacade,
     ChessGuiCellManager *chessGuiCellManager,
     ChessPieceSelectionRenderer *chessPieceSelectionRenderer,
+    ChessTimelineRenderer *chessTimelineRenderer,
     ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator
 ) {
     this->chessFacade = chessFacade;
+    this->chessTimelineFacade = chessTimelineFacade;
     this->chessGuiCellManager = chessGuiCellManager;
     this->chessPieceSelectionRenderer = chessPieceSelectionRenderer;
+    this->chessTimelineRenderer = chessTimelineRenderer;
     this->chessGuiPieceIconGenerator = chessGuiPieceIconGenerator;
 }
 
@@ -92,10 +88,8 @@ void ChessGuiRenderer::createChessField(QWidget *mainWindow) {
     auto vBoxNumberListLayout = new QVBoxLayout(mainWindow);
     auto hBoxLetterListLayout = new QHBoxLayout(mainWindow);
 
-    auto hBoxTimelineButtonsLayout = new QHBoxLayout(mainWindow);
     auto hBoxCountdownLayoutBlack = new QHBoxLayout(mainWindow);
     auto hBoxCountdownLayoutWhite = new QHBoxLayout(mainWindow);
-    auto hBoxTimelineLayout = new QHBoxLayout(mainWindow);
 
     auto hboxTopPanelLayout = new QHBoxLayout(mainWindow);
     auto hboxBottomPanelLayout = new QHBoxLayout(mainWindow);
@@ -193,18 +187,6 @@ void ChessGuiRenderer::createChessField(QWidget *mainWindow) {
 
     auto chessFieldSideNumberEmpty5 = new QLabel("");
 
-    auto *buttonRewind = new RewindTimelineButton(this);
-    buttonRewind->setText("<<");
-    auto *buttonPause = new PauseGameTimerButton(this);
-    buttonPause->setText(">||");
-    auto *buttonSkip = new FastForwardTimelineButton(this);
-    buttonSkip->setText(">>");
-
-
-
-    auto *rewindListLocal = new QListWidget(mainWindow);
-    ChessGuiRenderer::timelineList = rewindListLocal;
-
     vBoxNumberListLayout->addWidget(chessFieldSideNumber8);
     vBoxNumberListLayout->addWidget(chessFieldSideNumber7);
     vBoxNumberListLayout->addWidget(chessFieldSideNumber6);
@@ -249,11 +231,6 @@ void ChessGuiRenderer::createChessField(QWidget *mainWindow) {
     hboxBottomPanelLayout->addWidget(player1Label);
     hboxBottomPanelLayout->addWidget(player1ActiveLabel);
 
-    // Playbuttons
-    hBoxTimelineButtonsLayout->addWidget(buttonRewind);
-    hBoxTimelineButtonsLayout->addWidget(buttonPause);
-    hBoxTimelineButtonsLayout->addWidget(buttonSkip);
-
     // Countdown
     if (this->speedModeTimerValue > 0) {
         auto *digitalClockBlack = new ChessTimer(2, this->speedModeTimerValue);
@@ -263,17 +240,17 @@ void ChessGuiRenderer::createChessField(QWidget *mainWindow) {
         hBoxCountdownLayoutWhite->addWidget(digitalClockWhite);
     }
 
-
-    // Rewindlist
-    hBoxTimelineLayout->addWidget(timelineList);
+    // Timeline layouts
+    auto hBoxTimelineLayout = this->chessTimelineRenderer->createHBoxChessTimelineLayout();
+    auto hBoxTimelineButtonsLayout = this->chessTimelineRenderer->createHBoxTimelineButtonsLayout(
+        this->chessTimelineFacade,
+        this->chessGuiCellManager
+    );
 
     vBoxSideInformationPanel->addLayout(hBoxCountdownLayoutBlack);
     vBoxSideInformationPanel->addLayout(hBoxTimelineLayout);
     vBoxSideInformationPanel->addLayout(hBoxCountdownLayoutWhite);
     vBoxSideInformationPanel->addLayout(hBoxTimelineButtonsLayout);
-
-
-
 
     // In den horizontalen Rahmen das Grid und die Playerlabel einsetzen
     hBoxMainBracketLayout->addLayout(vBoxNumberListLayout); //Test
@@ -304,6 +281,7 @@ void ChessGuiRenderer::fillFieldWithEmptyCells(QGridLayout *layout) {
                     layout,
                     this->chessFacade,
                     this->chessPieceSelectionRenderer,
+                    this->chessTimelineRenderer,
                     coordinates,
                     this->chessGuiPieceIconGenerator
             );
@@ -374,18 +352,6 @@ void ChessGuiRenderer::addRooksToCells(QGridLayout *layout) {
     this->addChessPieceToCells(layout, ChessConstants::BLACK_ROOK_PIECE_FILENAME, ChessConstants::ROOK_PIECE_TYPE, 0, 7);
     this->addChessPieceToCells(layout, ChessConstants::WHITE_ROOK_PIECE_FILENAME, ChessConstants::ROOK_PIECE_TYPE, 7, 0);
     this->addChessPieceToCells(layout, ChessConstants::WHITE_ROOK_PIECE_FILENAME, ChessConstants::ROOK_PIECE_TYPE, 7, 7);
-}
-
-void ChessGuiRenderer::onSkipButtonPress() {
-
-}
-
-void ChessGuiRenderer::onPauseButtonPress() {
-
-}
-
-void ChessGuiRenderer::onRewindButtonPress() {
-    qDebug() << "Test";
 }
 
 void ChessGuiRenderer::onPressStartButton(QWidget *mainWindow) {

@@ -21,6 +21,10 @@ void ChessGuiFacade::handlePawnPieceSwitch(
     );
 }
 
+void ChessGuiFacade::updateTimelineTurnProperties(int currentTurn) {
+    ChessGuiFacade::getFactory()->createChessTimelineRenderer()->updateTurnProperties(currentTurn);
+}
+
 ChessGuiFactory *ChessGuiFacade::getFactory() {
     return static_cast<ChessGuiFactory*>(this->findFactory(typeid(ChessGuiFactory).name()));
 }

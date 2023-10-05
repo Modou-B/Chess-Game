@@ -60,8 +60,9 @@ ChessPieceStateTransfer *ChessPieceMovementMapper::mapDataToChessPieceStateTrans
     auto *chessPieceStateTransfer = new ChessPieceStateTransfer;
 
     chessPieceStateTransfer->setPlayerOfChessPiece(player)
-      ->setState(state)
-      ->setStartCoordinate(startCoordinates);
+        ->setChessPieceType(pieceType)
+        ->setState(state)
+        ->setStartCoordinate(startCoordinates);
 
     return chessPieceStateTransfer;
 }

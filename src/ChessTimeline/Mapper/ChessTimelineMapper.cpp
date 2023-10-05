@@ -11,7 +11,7 @@
 #include "../../Shared/ChessTimeline/ChessTurnLogTransfer.h"
 #include "iostream"
 
-string ChessTimelineMapper::playerToColorMap[2] = {"white", "black"};
+string ChessTimelineMapper::playerToColorMap[2] = {"-white", "-black"};
 
 void ChessTimelineMapper::mapEndTurnInformationTransferToChessTurnLog(
     EndTurnInformationTransfer endTurnInformationTransfer,
