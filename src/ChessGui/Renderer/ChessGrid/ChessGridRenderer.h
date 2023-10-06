@@ -27,6 +27,8 @@ private:
 
     int minCellWidth;
     int minCellHeight;
+    int iconWidth;
+    int iconHeight;
 
 protected:
     void fillFieldWithEmptyCells(QGridLayout *chessGridlayout);
@@ -54,6 +56,7 @@ public:
     void updateChessGridCellColor(QGridLayout *chessGridPreviewLayout);
 
     void setCellSize(int minWidth, int minHeight);
+    void setIconSize(int minWidth, int minHeight);
 };
 
 #endif // CHESSAPPLICATION_CHESSGRIDRENDERER_H

@@ -28,6 +28,8 @@ ChessGridRenderer::ChessGridRenderer(
 
     this->minCellWidth = 80;
     this->minCellHeight = 80;
+    this->iconWidth = 50;
+    this->iconHeight = 50;
 }
 
 QGridLayout *ChessGridRenderer::createChessFieldWithPieces() {
@@ -130,7 +132,7 @@ void ChessGridRenderer::addChessPieceToCells(QGridLayout *chessGridlayout, strin
     auto icon = this->chessGuiPieceIconGenerator->generateIconFromFile(iconFileName);
 
     chessGuiCell->setChessPieceIcon(ChessGuiConstants::STATE_REAL_CHESS_PIECE_ICON, icon);
-    chessGuiCell->setIconSize(QSize(50, 50));
+    chessGuiCell->setIconSize(QSize(this->iconWidth, this->iconHeight));
     chessGuiCell->setChessPieceType(pieceType);
 }
 
@@ -160,4 +162,10 @@ void ChessGridRenderer::setCellSize(int minWidth, int minHeight)
 {
     this->minCellWidth = minWidth;
     this->minCellHeight = minHeight;
+}
+
+void ChessGridRenderer::setIconSize(int minWidth, int minHeight)
+{
+    this->iconWidth = minWidth;
+    this->iconHeight = minHeight;
 }

@@ -30,7 +30,6 @@ void ChessSettingsRenderer::createSettingsView()
     auto vBoxChooseColorAndPreviewGridLayout = new QVBoxLayout(settingsWindow);
     auto vBoxOtherSettingsLayout = new QVBoxLayout(settingsWindow);
 
-
     auto hBoxPlayerButtonsLayout = new QHBoxLayout();
     auto hBoxPreviewLayout = new QHBoxLayout();
     auto hBoxColorButtonRow1Layout = new QHBoxLayout();
@@ -55,25 +54,19 @@ void ChessSettingsRenderer::createSettingsView()
     auto player2Button = new ChessChoosePlayerColor(this, 2);
     player2Button->setText("Player 2");
 
-
-
-
     auto colorRedButton = new ChessChooseCellColor(this, QColor(255, 0, 0));
     colorRedButton->setText("Red");
     auto colorBlueButton = new ChessChooseCellColor(this, QColor(0,191,255));
     colorBlueButton->setText("Blue");
-    auto colorGreenButton = new ChessChooseCellColor(this, QColor(124,252,0));
+    auto colorGreenButton = new ChessChooseCellColor(this, QColor(23, 87, 23));
     colorGreenButton->setText("Green");
 
-
-    auto colorYellowButton = new ChessChooseCellColor(this, QColor(255,255,0));
+    auto colorYellowButton = new ChessChooseCellColor(this, QColor(255, 250, 225));
     colorYellowButton->setText("Yellow");
     auto colorPurpleButton = new ChessChooseCellColor(this, QColor(128,0,128));
     colorPurpleButton->setText("Purple");
     auto colorOrangeButton = new ChessChooseCellColor(this, QColor(255,140,0));
     colorOrangeButton->setText("Orange");
-
-
 
     // Playerbuttons in hBox
     hBoxPlayerButtonsLayout->addWidget(player1Button);
@@ -89,7 +82,8 @@ void ChessSettingsRenderer::createSettingsView()
     hBoxColorButtonRow2Layout->addWidget(colorOrangeButton);
 
     this->chessGridRenderer->setCellSize(40, 40);
-    auto *chessGridPreviewLayout = this->chessGridRenderer->createEmptyChessField();
+    this->chessGridRenderer->setIconSize(25, 25);
+    auto *chessGridPreviewLayout = this->chessGridRenderer->createChessFieldWithPieces();
     this->chessSettingsDataHolder->setChessGridPreviewLayout(chessGridPreviewLayout);
 
     hBoxPreviewLayout->addLayout(chessGridPreviewLayout);
@@ -100,8 +94,8 @@ void ChessSettingsRenderer::createSettingsView()
     hBoxSaveAndExitLayout->addWidget(saveButton);
 
     vBoxChooseColorAndPreviewGridLayout->addWidget(choosePlayer);
-    vBoxChooseColorAndPreviewGridLayout->addLayout(hBoxPreviewLayout);
     vBoxChooseColorAndPreviewGridLayout->addLayout(hBoxPlayerButtonsLayout);
+    vBoxChooseColorAndPreviewGridLayout->addLayout(hBoxPreviewLayout);
     vBoxChooseColorAndPreviewGridLayout->addWidget(chooseColor);
     vBoxChooseColorAndPreviewGridLayout->addLayout(hBoxColorButtonRow1Layout);
     vBoxChooseColorAndPreviewGridLayout->addLayout(hBoxColorButtonRow2Layout);

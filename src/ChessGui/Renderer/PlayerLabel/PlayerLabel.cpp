@@ -3,17 +3,18 @@
 //
 
 #include "PlayerLabel.h"
-
 #include "QPalette"
 
+PlayerLabel::PlayerLabel(string labelText) {
+    this->labelText = labelText;
+
+    this->setText(QString::fromStdString(labelText));
+}
+
 void PlayerLabel::setCurrentPlayerColor() {
-    QPalette pal = this->palette();
-    pal.setColor(this->foregroundRole(), Qt::red);
-    this->setPalette(pal);
+    this->setText(QString::fromStdString("<font color='red'>"+this->labelText+"</font>"));
 }
 
 void PlayerLabel::removeCurrentPlayerColor() {
-    QPalette pal = this->palette();
-    pal.setColor(this->foregroundRole(), Qt::white);
-    this->setPalette(pal);
+    this->setText(QString::fromStdString("<font color='white'>"+this->labelText+"</font>"));
 }

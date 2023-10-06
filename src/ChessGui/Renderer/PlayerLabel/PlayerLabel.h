@@ -6,11 +6,17 @@
 #define CHESSAPPLICATION_PLAYERLABEL_H
 
 #include "QLabel"
+#include <string>
+
+using namespace std;
 
 class PlayerLabel : public QLabel {
-
 private:
+    string labelText;
+
 public:
+    PlayerLabel(string labelText);
+
     void setCurrentPlayerColor();
     void removeCurrentPlayerColor();
 };
