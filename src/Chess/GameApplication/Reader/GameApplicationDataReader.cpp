@@ -22,7 +22,7 @@ ChessGameStateTransfer *GameApplicationDataReader::getCurrentGameStateData()
     chessGameStateTransfer->setCurrentGameState(this->getCurrentGameState())
         ->setCurrentPlayer(this->getCurrentPlayer())
         ->setCurrentOpponentPlayer(this->getCurrentOpponentPlayer())
-        ->setTurnCounter(this->getTurnCounter()-1)
+        ->setTurnCounter(this->getTurnCounter())
         ->setLastTurnClickedCellCoordinate(GameApplication::getCoordinatesOfLastTurnClickedCell());
 
     return chessGameStateTransfer;

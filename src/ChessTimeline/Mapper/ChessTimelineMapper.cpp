@@ -26,7 +26,6 @@ void ChessTimelineMapper::mapEndTurnInformationTransferToChessTurnLog(
     }
 
     auto *chessGameStateTransfer = endTurnInformationTransfer.getChessGameStateTransfer();
-
     chessTurnLog.setCurrentGameState(chessGameStateTransfer->getCurrentGameState());
     chessTurnLog.setCurrentPlayer(chessGameStateTransfer->getCurrentPlayer());
     chessTurnLog.setCurrentOpponentPlayer(chessGameStateTransfer->getCurrentOpponentPlayer());
@@ -139,7 +138,6 @@ ChessGameStateTransfer *ChessTimelineMapper::mapChessTurnLogToChessGameStateTran
     ChessTurnLog *chessTurnLog
 ) {
     auto *chessGameStateTransfer = new ChessGameStateTransfer();
-
     chessGameStateTransfer->setCurrentGameState(chessTurnLog->getCurrentGameState())
         ->setCurrentPlayer(chessTurnLog->getCurrentPlayer())
         ->setCurrentOpponentPlayer(chessTurnLog->getCurrentOpponentPlayer())

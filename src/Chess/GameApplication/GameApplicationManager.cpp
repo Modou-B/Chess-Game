@@ -8,6 +8,7 @@
 #include "../../Shared/Chess/Transfer/ChessPiece/ChessPiecePositionTransfer.h"
 #include "../../Shared/ChessTimeline/EndTurnInformationTransfer.h"
 #include "../../Shared/ChessTimeline/ChessTurnLogTransfer.h"
+#include "../../Shared/Chess/Transfer/GameState/ChessGameStateTransfer.h"
 #include "../../Shared/Chess/ChessMovementConstants.h"
 #include "GameApplication.h"
 #include "../Movement/ChessPieceMovementManager.h"
@@ -132,18 +133,23 @@ void GameApplicationManager::endCurrentTurn(
 void GameApplicationManager::rewindCurrentTurn(
     ChessTurnLogTransfer *chessTurnLogTransferToRewind
 ) {
+
     this->chessPieceMovementManager->updateChessGrid(chessTurnLogTransferToRewind);
+
+    auto *gameStateTransfer = chessTurnLogTransferToRewind->getChessGameStateTransfer();
+
+    this->chessGuiFacade->updateTimelineTurnProperties(
+        this->gameApplicationDataReader->getTurnCounter()-2
+    );
+
     this->gameApplicationDataWriter->updateGameApplicationData(
-        chessTurnLogTransferToRewind->getChessGameStateTransfer()
+        gameStateTransfer
     );
     this->updateStateLastTurnChessPieces();
     GameApplication::setHasPreviousClickedCell(false);
 
     this->chessPieceMovementManager->clearPossibleMoveCollections();
 
-    this->chessGuiFacade->updateTimelineTurnProperties(
-        this->gameApplicationDataReader->getTurnCounter()
-    );
 
     this->chessTimelineFacade->deleteLastTurnLog();
     this->startNewTurn();

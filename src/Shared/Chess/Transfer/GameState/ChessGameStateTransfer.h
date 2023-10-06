@@ -13,16 +13,17 @@ using namespace std;
 class ChessGameStateTransfer {
 private:
     string currentGameState;
+    int turnCounter;
     int currentPlayer;
     int currentOpponentPlayer;
-    int turnCounter;
+
     pair<int, int> lastTurnClickedCellCoordinate;
 
 public:
     ChessGameStateTransfer *setCurrentGameState(string gameState);
     ChessGameStateTransfer *setCurrentPlayer(int player);
     ChessGameStateTransfer *setCurrentOpponentPlayer(int player);
-    ChessGameStateTransfer *setTurnCounter(int turnCounter);
+    ChessGameStateTransfer *setTurnCounter(int turn);
     ChessGameStateTransfer *setLastTurnClickedCellCoordinate(
         pair<int, int> lastTurnClickedCellCoordinate
     );

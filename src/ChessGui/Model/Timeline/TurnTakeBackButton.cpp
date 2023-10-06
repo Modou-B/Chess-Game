@@ -9,6 +9,7 @@
 #include "../ChessGuiCellManager.h"
 #include "../../../Shared/ChessTimeline/ChessTimelineConstants.h"
 #include "../../../Shared/ChessTimeline/ChessTurnLogTransfer.h"
+#include "iostream"
 
 TurnTakeBackButton::TurnTakeBackButton(
     ChessTimelineRenderer *chessTimelineRenderer,
@@ -29,7 +30,6 @@ void TurnTakeBackButton::takeBackTurn()
     auto currentTurn = this->chessTimelineRenderer->getCurrentTurn();
 
     auto *lastChessTurnLogTransfer = this->chessTimelineFacade->findChessTurnLogForTurn(currentTurn);
-
     if (lastChessTurnLogTransfer->getChessPieceInformationTransfers().empty()) {
         return;
     }

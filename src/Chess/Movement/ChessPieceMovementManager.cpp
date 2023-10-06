@@ -356,6 +356,15 @@ void ChessPieceMovementManager::handleChessPieceStates(
         auto *movedChessGuiCell = GameApplication::getChessCell(chessPieceStateTransfer->getEndCoordinate());
         movedChessGuiCell->setChessPiece(nullptr);
 
+        if (chessPieceStateTransfer->getChessPieceType() == ChessConstants::KING_PIECE_TYPE) {
+            this->gameApplicationDataWriter
+                ->saveChessPieceForChessPlayerData(
+                  chessPiece,
+                  chessPieceStateTransfer->getChessPieceType(),
+                  chessPieceStateTransfer->getPlayerOfChessPiece()
+            );
+        }
+
         return;
     }
 

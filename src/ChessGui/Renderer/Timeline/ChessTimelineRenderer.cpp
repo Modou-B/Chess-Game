@@ -107,6 +107,10 @@ int ChessTimelineRenderer::rewindTurn()
 }
 
 void ChessTimelineRenderer::updateTurnProperties(int turn) {
+    if (turn < 0) {
+        turn = 0;
+    }
+
     ChessTimelineRenderer::selectedTurn = turn;
     ChessTimelineRenderer::currentTurn = turn;
 }
