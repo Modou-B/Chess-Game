@@ -83,8 +83,8 @@ Qt::GlobalColor ChessGuiCell::getCellColor() {
     return this->currentColor;
 }
 
-void ChessGuiCell::setBaseCellSize() {
-    this->setMinimumSize(80,80);
+void ChessGuiCell::setBaseCellSize(int minWidth, int minHeight) {
+    this->setMinimumSize(minWidth,minHeight);
     this->setMaximumSize(1000,1000);
 }
 

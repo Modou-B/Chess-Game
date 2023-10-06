@@ -29,13 +29,6 @@ vector<ChessTurnLogTransfer *> ChessTimelineFacade::findChessTurnLogsForTurnRang
         ->getChessTurnLogsForTurnRange(startTurn, endTurn);
 }
 
-void ChessTimelineFacade::handleChessGridUpdateForGivenTurn(int turn)
-{
-    ChessTimelineFacade::getFactory()
-        ->createChessGridUpdater()
-        ->handleChessGridUpdateForGivenTurn(turn);
-}
-
 void ChessTimelineFacade::deleteLastTurnLog()
 {
     ChessTimelineFacade::getFactory()

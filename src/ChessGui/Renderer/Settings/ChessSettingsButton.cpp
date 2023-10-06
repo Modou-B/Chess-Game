@@ -5,10 +5,14 @@
 #include "ChessSettingsButton.h"
 #include "ChessSettingsRenderer.h"
 
-ChessSettingsButton::ChessSettingsButton() {
+ChessSettingsButton::ChessSettingsButton(
+    ChessSettingsRenderer *chessSettingsRenderer
+) {
+    this->chessSettingsRenderer = chessSettingsRenderer;
+
     connect(this, &QPushButton::released, this, &ChessSettingsButton::openSettings);
 }
 
 void ChessSettingsButton::openSettings() {
-    this->chessSettingsRenderer->onPressSettingsButton();
+    this->chessSettingsRenderer->createSettingsView();
 }

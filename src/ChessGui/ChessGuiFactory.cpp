@@ -11,9 +11,9 @@ ChessGuiRenderer *ChessGuiFactory::createChessGuiRenderer() {
         this->createChessGuiCellManager(),
         this->createChessPieceSelectionRenderer(),
         this->createChessTimelineRenderer(),
-        this->createChessGuiPieceIconGenerator(),
         this->createChessPlayerLabelRenderer(),
-        this->createChessSettingsRenderer()
+        this->createChessSettingsRenderer(),
+        this->createChessGridRenderer()
     );
 }
 
@@ -44,9 +44,28 @@ ChessTimelineFacade *ChessGuiFactory::getChessTimelineFacade() {
 }
 
 PlayerLabelRenderer *ChessGuiFactory::createChessPlayerLabelRenderer() {
-    return new PlayerLabelRenderer;
+    return new PlayerLabelRenderer();
 }
 
 ChessSettingsRenderer *ChessGuiFactory::createChessSettingsRenderer() {
-    return new ChessSettingsRenderer();
+    return new ChessSettingsRenderer(
+      this->createChessGridRenderer(),
+      this->createChessSettingsDataHolder()
+    );
+}
+
+ChessGridRenderer *ChessGuiFactory::createChessGridRenderer()
+{
+    return new ChessGridRenderer(
+        this->getChessFacade(),
+        this->createChessPieceSelectionRenderer(),
+        this->createChessTimelineRenderer(),
+        this->createChessGuiPieceIconGenerator(),
+        this->createChessSettingsDataHolder()
+    );
+}
+
+ChessSettingsDataHolder *ChessGuiFactory::createChessSettingsDataHolder()
+{
+    return new ChessSettingsDataHolder();
 }

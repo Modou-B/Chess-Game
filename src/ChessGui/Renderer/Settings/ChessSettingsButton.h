@@ -17,7 +17,9 @@ private:
     ChessSettingsRenderer *chessSettingsRenderer;
 
 public:
-    ChessSettingsButton();
+    ChessSettingsButton(
+      ChessSettingsRenderer *chessSettingsRenderer
+    );
 
     void openSettings();
 };

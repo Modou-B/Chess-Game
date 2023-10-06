@@ -5,18 +5,18 @@
 #include "ChessChooseCellColor.h"
 #include "ChessSettingsRenderer.h"
 
-ChessChooseCellColor::ChessChooseCellColor(ChessSettingsRenderer *chessSettingsRenderer, QColor playerColor) {
-    this->playerColor = playerColor;
+ChessChooseCellColor::ChessChooseCellColor(
+    ChessSettingsRenderer *chessSettingsRenderer,
+    QColor playerColor
+) {
     this->chessSettingsRenderer = chessSettingsRenderer;
+    this->playerColor = playerColor;
 
     connect(this, &QPushButton::released, this, &ChessChooseCellColor::setColorForCell);
 }
 
 void ChessChooseCellColor::setColorForCell() {
-    this->chessSettingsRenderer->setPlayerColor(this->playerColor);
+    this->chessSettingsRenderer->setColorForSetPlayer(this->playerColor);
 
-    QPalette pal = this->palette();
-    pal.setColor(QPalette::Button, Qt::red);
-    this->setAutoFillBackground(true);
-    this->setPalette(pal);
+    this->chessSettingsRenderer->updateCellColors();
 }

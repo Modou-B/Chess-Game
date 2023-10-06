@@ -6,16 +6,19 @@
 #define CHESSAPPLICATION_CHESSCHOOSEPLAYERCOLOR_H
 
 #include "QPushButton"
-class QColor;
 
 class ChessSettingsRenderer;
 
 class ChessChoosePlayerColor: public QPushButton{
 private:
-    int player;
     ChessSettingsRenderer *chessSettingsRenderer;
+    int player;
+
 public:
-    ChessChoosePlayerColor(ChessSettingsRenderer *chessSettingsRenderer,int player);
+    ChessChoosePlayerColor(
+      ChessSettingsRenderer *chessSettingsRenderer,
+      int player
+    );
 
     void setActivePlayerToChooseColorFor();
 };

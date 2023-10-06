@@ -4,20 +4,17 @@
 
 #include "ChessChoosePlayerColor.h"
 #include "ChessSettingsRenderer.h"
-#include <QColor>
 
-ChessChoosePlayerColor::ChessChoosePlayerColor(ChessSettingsRenderer *chessSettingsRenderer, int player) {
-    this->player = player;
+ChessChoosePlayerColor::ChessChoosePlayerColor(
+    ChessSettingsRenderer *chessSettingsRenderer,
+    int player
+) {
     this->chessSettingsRenderer = chessSettingsRenderer;
+    this->player = player;
 
     connect(this, &QPushButton::released, this, &ChessChoosePlayerColor::setActivePlayerToChooseColorFor);
 }
 
 void ChessChoosePlayerColor::setActivePlayerToChooseColorFor() {
-    this->chessSettingsRenderer->setChoosePlayer(this->player);
-
-    QPalette pal = this->palette();
-    pal.setColor(QPalette::Button, Qt::red);
-    this->setAutoFillBackground(true);
-    this->setPalette(pal);
+    this->chessSettingsRenderer->setPlayerToChooseColor(this->player);
 }

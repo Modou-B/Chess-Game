@@ -23,8 +23,6 @@ public:
     ChessTurnLogTransfer *findChessTurnLogForTurn(int turn);
     vector<ChessTurnLogTransfer *> findChessTurnLogsForTurnRange(int startTurn, int endTurn);
 
-    void handleChessGridUpdateForGivenTurn(int turn);
-
     void deleteLastTurnLog();
 
     ChessTimelineFactory *getFactory() override;

@@ -7,33 +7,23 @@
 #include "QLabel"
 #include "QPushButton"
 #include "QLayout"
-#include "QVBoxLayout"
-#include "QHBoxLayout"
 #include <QColor>
 #include "string"
-
+#include "../ChessGrid/ChessGridRenderer.h"
+#include "../../Model/Settings/ChessSettingsDataHolder.h"
 #include "ChessChoosePlayerColor.h"
 #include "ChessChooseCellColor.h"
-#include "../../../Shared/ChessGui/ChessGuiConstants.h"
 
-int ChessSettingsRenderer::selectedPlayer = 1;
-QColor ChessSettingsRenderer::player1Color = ChessGuiConstants::CELL_YELLOW_COLOR;
-QColor ChessSettingsRenderer::player2Color = ChessGuiConstants::CELL_GREEN_COLOR;
-
-void ChessSettingsRenderer::onPressSettingsButton() {
-    this->createSettingsView();
-    //QWidget *settingsWindow;
-
-    //while ( auto* w = settingsWindow->findChild<QWidget*>() ) {
-     //   delete w;
-    //}
-
-    //this->createChessField(mainGridWindow);
-
-    //settingsWindow->close();
+ChessSettingsRenderer::ChessSettingsRenderer(
+    ChessGridRenderer *chessGridRenderer,
+    ChessSettingsDataHolder *chessSettingsDataHolder
+) {
+    this->chessGridRenderer = chessGridRenderer;
+    this->chessSettingsDataHolder = chessSettingsDataHolder;
 }
 
-void ChessSettingsRenderer::createSettingsView() {
+void ChessSettingsRenderer::createSettingsView()
+{
     auto *settingsWindow = new QWidget;
 
     auto hBoxMainContainerLayout = new QHBoxLayout(settingsWindow);
@@ -98,8 +88,11 @@ void ChessSettingsRenderer::createSettingsView() {
     hBoxColorButtonRow2Layout->addWidget(colorPurpleButton);
     hBoxColorButtonRow2Layout->addWidget(colorOrangeButton);
 
+    this->chessGridRenderer->setCellSize(40, 40);
+    auto *chessGridPreviewLayout = this->chessGridRenderer->createEmptyChessField();
+    this->chessSettingsDataHolder->setChessGridPreviewLayout(chessGridPreviewLayout);
 
-
+    hBoxPreviewLayout->addLayout(chessGridPreviewLayout);
     hBoxSpacerLayout->addWidget(spacer1);
     hBoxSpacerLayout->addWidget(spacer2);
 
@@ -123,24 +116,18 @@ void ChessSettingsRenderer::createSettingsView() {
     settingsWindow->show();
 }
 
-void ChessSettingsRenderer::setChoosePlayer(int player) {
-    qDebug() << std::to_string(player);
-    ChessSettingsRenderer::selectedPlayer = player;
+void ChessSettingsRenderer::updateCellColors() {
+    this->chessGridRenderer->updateChessGridCellColor(
+        this->chessSettingsDataHolder->getChessGridPreviewLayout()
+    );
+}
+void ChessSettingsRenderer::setPlayerToChooseColor(int player)
+{
+    this->chessSettingsDataHolder->setChoosePlayer(player);
 }
 
-void ChessSettingsRenderer::setPlayerColor(QColor playerColor) {
-    if (ChessSettingsRenderer::selectedPlayer == 1) {
-        ChessSettingsRenderer::player1Color = playerColor;
-        return;
-    }
-
-    ChessSettingsRenderer::player2Color = playerColor;
+void ChessSettingsRenderer::setColorForSetPlayer(QColor color)
+{
+    this->chessSettingsDataHolder->setPlayerColor(color);
 }
 
-QColor ChessSettingsRenderer::getColorForPlayer(int player) {
-    if (player == 1) {
-        return ChessSettingsRenderer::player1Color;
-    }
-
-    return ChessSettingsRenderer::player2Color;
-}

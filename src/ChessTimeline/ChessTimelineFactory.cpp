@@ -22,8 +22,3 @@ ChessTimelineMapper *ChessTimelineFactory::createChessTimelineMapper()
 {
     return new ChessTimelineMapper();
 }
-
-ChessGridUpdater *ChessTimelineFactory::createChessGridUpdater()
-{
-    return new ChessGridUpdater();
-}

@@ -5,20 +5,27 @@
 #ifndef CHESSAPPLICATION_CHESSSETTINGSRENDERER_H
 #define CHESSAPPLICATION_CHESSSETTINGSRENDERER_H
 
+class ChessGridRenderer;
+class ChessSettingsDataHolder;
 class QColor;
 
 class ChessSettingsRenderer {
 private:
-    static int selectedPlayer;
-    static QColor player1Color;
-    static QColor player2Color;
+    ChessGridRenderer *chessGridRenderer;
+    ChessSettingsDataHolder *chessSettingsDataHolder;
 
 public:
+    ChessSettingsRenderer(
+      ChessGridRenderer *chessGridRenderer,
+      ChessSettingsDataHolder *chessSettingsDataHolder
+    );
+
     void createSettingsView();
-    void onPressSettingsButton();
-    void setChoosePlayer(int player);
-    void setPlayerColor(QColor playerColor);
-    QColor getColorForPlayer(int player);
+
+    void updateCellColors();
+
+    void setPlayerToChooseColor(int player);
+    void setColorForSetPlayer(QColor color);
 };
 
 
