@@ -25,6 +25,8 @@ public:
     void updateTimelineTurnProperties(int currentTurn);
 
     ChessGuiFactory *getFactory() override;
+
+    void updatePlayerColor(int player);
 };
 
 

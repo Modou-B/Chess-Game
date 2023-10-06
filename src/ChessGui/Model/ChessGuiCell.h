@@ -57,7 +57,7 @@ public:
     string getChessPieceIconState();
     string getChessPieceType();
 
-    void setBaseCellSize();
+    void setBaseCellSize(int minWidth, int minHeight);
     void setCellColor(QColor color);
     void setChessPieceType(string pieceType);
 

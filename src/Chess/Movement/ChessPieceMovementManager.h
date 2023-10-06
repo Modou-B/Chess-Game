@@ -11,25 +11,28 @@
 
 using namespace std;
 
+class BaseChessPiece;
 class ChessField;
 class ChessCreator;
 class ChessCell;
 class ChessPlayerData;
 class ChessMovementResponseTransfer;
 class ChessPiecePossibleMoveTransfer;
+class ChessTurnLogTransfer;
+class ChessPieceInformationTransfer;
 class ChessPieceMovementMapper;
 class ChessPieceMovementReader;
 class ChessPieceMovementWriter;
-class BaseChessPiece;
-
-class ChessTurnLogTransfer;
-class ChessPieceInformationTransfer;
+class ChessPieceCreator;
+class GameApplicationDataWriter;
 
 class ChessPieceMovementManager {
 private:
     ChessPieceMovementMapper *chessPieceMovementMapper;
     ChessPieceMovementWriter *chessPieceMovementWriter;
     ChessPieceMovementReader *chessPieceMovementReader;
+    ChessPieceCreator *chessPieceCreator;
+    GameApplicationDataWriter *gameApplicationDataWriter;
 
 protected:
     ChessMovementResponseTransfer handleMovementWithoutPreviousClickedCell(
@@ -59,11 +62,18 @@ protected:
     ChessMovementResponseTransfer finalizeChessMovementResponse(ChessMovementResponseTransfer chessMovementResponseTransfer);
 
     void expandResponseWithPossibleMoves(ChessMovementResponseTransfer &chessMovementResponseTransfer);
+
+    void handleChessPieceStates(
+        ChessPieceInformationTransfer *chessPieceInformationTransfer
+    );
+
 public:
     ChessPieceMovementManager(
       ChessPieceMovementMapper *chessPieceMovementMapper,
       ChessPieceMovementWriter *chessPieceMovementWriter,
-      ChessPieceMovementReader *chessPieceMovementReader
+      ChessPieceMovementReader *chessPieceMovementReader,
+      ChessPieceCreator *chessPieceCreator,
+      GameApplicationDataWriter *gameApplicationDataWriter
     );
 
     ChessMovementResponseTransfer handleChessMovement(
@@ -74,13 +84,7 @@ public:
     );
 
     void updateChessGrid(
-        ChessTurnLogTransfer *chessTurnLogTransfer,
-        string mode
-    );
-
-    void handleChessPieceStates(
-        ChessPieceInformationTransfer *chessPieceInformationTransfer,
-        string mode
+        ChessTurnLogTransfer *chessTurnLogTransfer
     );
 
     void clearPossibleMoveCollections();

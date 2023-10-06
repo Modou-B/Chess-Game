@@ -10,7 +10,6 @@
 class QWidget;
 class ChessFacade;
 class ChessTimelineFacade;
-class ChessGuiPieceIconGenerator;
 class QIcon;
 class QListWidget;
 class QApplication;
@@ -19,6 +18,9 @@ class QGridLayout;
 class ChessPieceSelectionRenderer;
 class ChessTimelineRenderer;
 class ChessGuiCellManager;
+class PlayerLabelRenderer;
+class ChessSettingsRenderer;
+class ChessGridRenderer;
 
 class ChessGuiRenderer {
 private:
@@ -27,22 +29,15 @@ private:
     ChessGuiCellManager *chessGuiCellManager;
     ChessPieceSelectionRenderer *chessPieceSelectionRenderer;
     ChessTimelineRenderer *chessTimelineRenderer;
-    ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator;
+    PlayerLabelRenderer *playerLabelRenderer;
+    ChessSettingsRenderer *chessSettingsRenderer;
+    ChessGridRenderer *chessGridRenderer;
+
     int speedModeTimerValue;
 
 protected:
-    void fillFieldWithEmptyCells(QGridLayout *layout);
-
-    void addPawnsToCells(QGridLayout *layout);
-    void addQueensToCells(QGridLayout *layout);
-    void addKingsToCells(QGridLayout *layout);
-    void addBishopsToCells(QGridLayout *layout);
-    void addKnightsToCells(QGridLayout *layout);
-    void addRooksToCells(QGridLayout *layout);
-    void addChessPieceToCells(QGridLayout *layout, std::string iconFileName, std::string pieceType, int column, int row);
-
     void createChessPieceSelectionHBoxes();
-    void createChessTimelineLayout();
+
 public:
     ChessGuiRenderer(
       ChessFacade *chessFacade,
@@ -50,7 +45,9 @@ public:
       ChessGuiCellManager *chessGuiCellManager,
       ChessPieceSelectionRenderer *chessPieceSelectionRenderer,
       ChessTimelineRenderer *chessTimelineRenderer,
-      ChessGuiPieceIconGenerator *chessGuiPieceIconGenerator
+      PlayerLabelRenderer *playerLabelRenderer,
+      ChessSettingsRenderer *chessSettingsRenderer,
+      ChessGridRenderer *chessGridRenderer
     );
 
     void createChessField(QWidget *mainWindow);

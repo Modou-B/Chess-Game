@@ -40,6 +40,9 @@ public:
     std::vector<ChessPiecePossibleMoveTransfer*> determinePossibleMovesForSpecificPiece(
             ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate) override;
 
+    void setUsedDoubleMove(bool usedDoubleMove);
+    bool getUsedDoubleMove();
+
     void handleMovement(ChessPiecePossibleMoveTransfer *usedMove) override;
 };
 

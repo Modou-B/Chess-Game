@@ -34,6 +34,10 @@ public:
 
     void updateCurrentGameState(string gameState);
 
+    void rewindCurrentTurn(
+        ChessTurnLogTransfer *chessTurnLogTransfer
+    );
+
     ChessFactory *getFactory() override;
 };
 

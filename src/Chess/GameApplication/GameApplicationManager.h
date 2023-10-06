@@ -20,6 +20,7 @@ class GameApplicationDataWriter;
 class GameApplicationDataReader;
 class ChessTimelineFacade;
 class ChessGuiFacade;
+class ChessTurnLogTransfer;
 
 class GameApplicationManager {
 private:
@@ -66,6 +67,9 @@ public:
         ChessMovementResponseTransfer chessMovementResponseTransfer,
         ChessPiecePositionTransfer chessPiecePositionTransfer
     );
+
+    void rewindCurrentTurn(ChessTurnLogTransfer *chessTurnLogTransferToRewind);
+
     void startNewTurn();
     int getCurrentPlayer();
 };

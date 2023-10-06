@@ -83,8 +83,8 @@ Qt::GlobalColor ChessGuiCell::getCellColor() {
     return this->currentColor;
 }
 
-void ChessGuiCell::setBaseCellSize() {
-    this->setMinimumSize(80,80);
+void ChessGuiCell::setBaseCellSize(int minWidth, int minHeight) {
+    this->setMinimumSize(minWidth,minHeight);
     this->setMaximumSize(1000,1000);
 }
 
@@ -209,7 +209,6 @@ void ChessGuiCell::addChessPiece(string pieceType, string color) {
     auto pieceTypeFilename = pieceType;
     pieceTypeFilename.append(color);
 
-        std::cout << pieceTypeFilename<< std::endl;
     this->setChessPieceIcon(
         ChessGuiConstants::STATE_REAL_CHESS_PIECE_ICON,
         this->chessGuiPieceIconGenerator->generateIconFromFile(pieceTypeFilename)

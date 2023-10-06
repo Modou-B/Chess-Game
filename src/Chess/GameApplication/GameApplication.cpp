@@ -72,6 +72,11 @@ void GameApplication::saveChessMovementResponseTransfer(
     GameApplication::savedChessMovementResponseTransfer = chessMovementResponseTransfer;
 }
 
+void GameApplication::setHasPreviousClickedCell(bool value)
+{
+    GameApplication::hasPreviousClickedCell = value;
+}
+
 void GameApplication::setPreviouslyClickedCellCoordinates(pair<int, int> currentCellCoordinates) {
     GameApplication::previouslyClickedCell = currentCellCoordinates;
 

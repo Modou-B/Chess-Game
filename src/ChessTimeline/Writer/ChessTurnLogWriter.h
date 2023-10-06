@@ -23,6 +23,8 @@ public:
     void logChessPieceStateTransfers(
         EndTurnInformationTransfer endTurnInformationTransfer
     );
+
+    void removeLastTurnLog();
 };
 
 #endif // CHESSAPPLICATION_CHESSTURNLOGWRITER_H

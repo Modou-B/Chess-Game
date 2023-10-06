@@ -20,11 +20,20 @@ ChessTurnLogTransfer *ChessTimelineFacade::findChessTurnLogForTurn(int turn)
         ->getChessTurnLogForSpecificTurn(turn);
 }
 
-void ChessTimelineFacade::handleChessGridUpdateForGivenTurn(int turn)
+vector<ChessTurnLogTransfer *> ChessTimelineFacade::findChessTurnLogsForTurnRange(
+    int startTurn,
+    int endTurn
+) {
+    return ChessTimelineFacade::getFactory()
+        ->createChessTurnLogReader()
+        ->getChessTurnLogsForTurnRange(startTurn, endTurn);
+}
+
+void ChessTimelineFacade::deleteLastTurnLog()
 {
     ChessTimelineFacade::getFactory()
-        ->createChessGridUpdater()
-        ->handleChessGridUpdateForGivenTurn(turn);
+        ->createChessTurnLogWriter()
+        ->removeLastTurnLog();
 }
 
 ChessTimelineFactory *ChessTimelineFacade::getFactory()

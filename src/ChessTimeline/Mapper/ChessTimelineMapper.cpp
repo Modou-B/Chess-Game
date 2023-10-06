@@ -6,6 +6,7 @@
 #include "../Model/ChessTurnLog.h"
 #include "../Model/ChessPieceLog.h"
 #include "../../Shared/Chess/Transfer/ChessPiece/ChessPieceStateTransfer.h"
+#include "../../Shared/Chess/Transfer/GameState/ChessGameStateTransfer.h"
 #include "../../Shared/Chess/Transfer/ChessPiece/ChessPieceInformationTransfer.h"
 #include "../../Shared/ChessTimeline/EndTurnInformationTransfer.h"
 #include "../../Shared/ChessTimeline/ChessTurnLogTransfer.h"
@@ -24,8 +25,17 @@ void ChessTimelineMapper::mapEndTurnInformationTransferToChessTurnLog(
         ));
     }
 
-    chessTurnLog.setCurrentPlayer(endTurnInformationTransfer.getCurrentPlayer());
-    chessTurnLog.setTurnCounter(endTurnInformationTransfer.getTurnCounter());
+    auto *chessGameStateTransfer = endTurnInformationTransfer.getChessGameStateTransfer();
+    chessTurnLog.setCurrentGameState(chessGameStateTransfer->getCurrentGameState());
+    chessTurnLog.setCurrentPlayer(chessGameStateTransfer->getCurrentPlayer());
+    chessTurnLog.setCurrentOpponentPlayer(chessGameStateTransfer->getCurrentOpponentPlayer());
+    chessTurnLog.setTurnCounter(chessGameStateTransfer->getTurnCounter());
+
+    if (chessGameStateTransfer->getTurnCounter() > 0) {
+        chessTurnLog.setCoordinateOfLastTurnClickedCell(
+          chessGameStateTransfer->getLastTurnClickedCellCoordinate());
+    }
+
     chessTurnLog.setChessPieceLogs(chessPieceLogs);
 }
 
@@ -63,10 +73,9 @@ vector<ChessTurnLogTransfer *> ChessTimelineMapper::mapChessTurnLogsToChessTurnL
 ChessTurnLogTransfer *ChessTimelineMapper::mapChessTurnLogToChessTurnLogTransfer(ChessTurnLog *chessTurnLog) {
       auto *chessTurnLogTransfer = new ChessTurnLogTransfer();
 
-      chessTurnLogTransfer->setCurrentPlayer(chessTurnLog->getCurrentPlayer())
-        ->setTurnCounter(chessTurnLog->getTurnCounter());
-
-      chessTurnLogTransfer->setChessPieceInformationTransfers(
+      chessTurnLogTransfer->setChessGameStateTransfer(
+          this->mapChessTurnLogToChessGameStateTransfer(chessTurnLog)
+      )->setChessPieceInformationTransfers(
           this->mapChessPieceLogsToChessPieceInformationTransfers(
               chessTurnLog->getChessPieceLogs()
           )
@@ -123,6 +132,24 @@ ChessPieceStateTransfer *ChessTimelineMapper::mapChessPieceLogToChessPieceStateT
     );
 
     return chessPieceStateTransfer;
+}
+
+ChessGameStateTransfer *ChessTimelineMapper::mapChessTurnLogToChessGameStateTransfer(
+    ChessTurnLog *chessTurnLog
+) {
+    auto *chessGameStateTransfer = new ChessGameStateTransfer();
+    chessGameStateTransfer->setCurrentGameState(chessTurnLog->getCurrentGameState())
+        ->setCurrentPlayer(chessTurnLog->getCurrentPlayer())
+        ->setCurrentOpponentPlayer(chessTurnLog->getCurrentOpponentPlayer())
+        ->setTurnCounter(chessTurnLog->getTurnCounter());
+
+    if (chessTurnLog->getTurnCounter() > 0) {
+        chessGameStateTransfer->setLastTurnClickedCellCoordinate(
+            chessTurnLog->getCoordinateOfLastTurnClickedCell()
+        );
+    }
+
+    return chessGameStateTransfer;
 }
 
 
