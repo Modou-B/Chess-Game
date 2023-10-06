@@ -9,15 +9,12 @@
 #include "Writer/ChessTurnLogWriter.h"
 #include "Reader/ChessTurnLogReader.h"
 #include "Mapper/ChessTimelineMapper.h"
-#include "GridUpdate/ChessGridUpdater.h"
 
 class ChessTimelineFactory: public AbstractFactory {
 public:
     ChessTurnLogWriter *createChessTurnLogWriter();
     ChessTurnLogReader *createChessTurnLogReader();
     ChessTimelineMapper *createChessTimelineMapper();
-
-    ChessGridUpdater *createChessGridUpdater();
 };
 
 #endif // CHESSAPPLICATION_CHESSTIMELINEFACTORY_H

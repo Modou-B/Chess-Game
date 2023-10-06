@@ -8,6 +8,7 @@
 ChessSpeedButtons::ChessSpeedButtons(ChessGuiRenderer *chessGuiRenderer, int speedModeTimerValue) {
     this->chessGuiRenderer = chessGuiRenderer;
     this->speedModeTimerValue = speedModeTimerValue;
+
     connect(this, &QPushButton::released, this, &ChessSpeedButtons::setPlayMode);
 }
 

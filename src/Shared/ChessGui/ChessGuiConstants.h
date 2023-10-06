@@ -14,6 +14,8 @@ namespace ChessGuiConstants
     const QColor CELL_GREEN_COLOR = QColor(23, 87, 23);
     const QColor CELL_BLACK_COLOR = QColor(0,0,0,120);
 
+    const QColor CELL_RED_COLOR = QColor(255,0,0);
+
     const std::string STATE_REAL_CHESS_PIECE_ICON = "STATE_REAL_CHESS_PIECE_ICON";
     const std::string STATE_PREVIEW_CHESS_PIECE_ICON = "STATE_PREVIEW_CHESS_PIECE_ICON";
     const std::string STATE_EMPTY_CHESS_PIECE_ICON = "STATE_EMPTY_CHESS_PIECE_ICON";
