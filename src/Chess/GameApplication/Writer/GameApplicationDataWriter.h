@@ -12,6 +12,8 @@ using namespace std;
 class GameApplicationDataMapper;
 class ChessGameStateTransfer;
 class ChessMovementResponseTransfer;
+class ChessTurnLogTransfer;
+class BaseChessPiece;
 
 class GameApplicationDataWriter {
 private:
@@ -23,9 +25,15 @@ public:
     );
 
     void updateGameApplicationData(ChessGameStateTransfer *chessGameStateTransfer);
+
     void updateGameApplicationCurrentGameState(string gameState);
 
     void saveChessMovementResponseTransfer(ChessMovementResponseTransfer chessMovementResponseTransfer);
+    void saveChessPieceForChessPlayerData(
+        BaseChessPiece *chessPiece,
+        string type,
+        int player
+    );
 };
 
 #endif // CHESSAPPLICATION_GAMEAPPLICATIONDATAWRITER_H

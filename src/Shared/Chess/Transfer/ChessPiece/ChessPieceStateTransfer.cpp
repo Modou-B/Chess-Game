@@ -22,6 +22,18 @@ ChessPieceStateTransfer *ChessPieceStateTransfer::setState(string chessPieceStat
     return this;
 }
 
+ChessPieceStateTransfer *ChessPieceStateTransfer::setMoveCounter(int moveCounter) {
+    this->moveCounter = moveCounter;
+
+    return this;
+}
+
+ChessPieceStateTransfer *ChessPieceStateTransfer::setUsedDoubleMove(bool usedDoubleMove) {
+    this->usedDoubleMove = usedDoubleMove;
+
+    return this;
+}
+
 ChessPieceStateTransfer *ChessPieceStateTransfer::setStartCoordinate(pair<int, int> startCoordinate) {
     this->startCoordinate = startCoordinate;
 
@@ -44,6 +56,14 @@ string ChessPieceStateTransfer::getChessPieceType() {
 
 string ChessPieceStateTransfer::getState() {
     return this->state;
+}
+
+int ChessPieceStateTransfer::getMoveCounter() {
+    return this->moveCounter;
+}
+
+bool ChessPieceStateTransfer::getUsedDoubleMove() {
+    return this->usedDoubleMove;
 }
 
 pair<int, int> ChessPieceStateTransfer::getStartCoordinate() {

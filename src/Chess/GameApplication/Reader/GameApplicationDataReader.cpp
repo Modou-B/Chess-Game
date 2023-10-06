@@ -15,13 +15,15 @@ GameApplicationDataReader::GameApplicationDataReader(GameApplicationDataMapper *
     this->gameApplicationDataMapper = gameApplicationDataMapper;
 }
 
-ChessGameStateTransfer GameApplicationDataReader::getCurrentGameStateData()
+ChessGameStateTransfer *GameApplicationDataReader::getCurrentGameStateData()
 {
-    auto chessGameStateTransfer = ChessGameStateTransfer();
+    auto chessGameStateTransfer = new ChessGameStateTransfer();
 
-    chessGameStateTransfer.setCurrentPlayer(this->getCurrentPlayer())
+    chessGameStateTransfer->setCurrentGameState(this->getCurrentGameState())
+        ->setCurrentPlayer(this->getCurrentPlayer())
         ->setCurrentOpponentPlayer(this->getCurrentOpponentPlayer())
-        ->setTurnCounter(this->getTurnCounter());
+        ->setTurnCounter(this->getTurnCounter())
+        ->setLastTurnClickedCellCoordinate(GameApplication::getCoordinatesOfLastTurnClickedCell());
 
     return chessGameStateTransfer;
 }

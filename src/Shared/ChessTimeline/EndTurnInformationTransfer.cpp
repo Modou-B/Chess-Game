@@ -4,14 +4,10 @@
 
 #include "EndTurnInformationTransfer.h"
 
-EndTurnInformationTransfer *EndTurnInformationTransfer::setCurrentPlayer(int currentPlayer) {
-    this->currentPlayer = currentPlayer;
-
-    return this;
-}
-
-EndTurnInformationTransfer *EndTurnInformationTransfer::setTurnCounter(int turnCounter) {
-    this->turnCounter = turnCounter;
+EndTurnInformationTransfer *EndTurnInformationTransfer::setChessGameStateTransfer(
+    ChessGameStateTransfer *chessGameStateTransfer
+) {
+    this->chessGameStateTransfer = chessGameStateTransfer;
 
     return this;
 }
@@ -24,12 +20,8 @@ EndTurnInformationTransfer *EndTurnInformationTransfer::setChessPieceStateTransf
     return this;
 }
 
-int EndTurnInformationTransfer::getCurrentPlayer() {
-    return this->currentPlayer;
-}
-
-int EndTurnInformationTransfer::getTurnCounter() {
-    return this->turnCounter;
+ChessGameStateTransfer *EndTurnInformationTransfer::getChessGameStateTransfer() {
+    return this->chessGameStateTransfer;
 }
 
 vector<ChessPieceStateTransfer *> EndTurnInformationTransfer::getChessPieceStateTransfers() {

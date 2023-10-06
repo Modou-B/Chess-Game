@@ -14,6 +14,7 @@ class QListWidget;
 class QHBoxLayout;
 class ChessTimelineFacade;
 class ChessGuiCellManager;
+class ChessFacade;
 
 class ChessTimelineRenderer {
 private:
@@ -25,7 +26,8 @@ public:
     QHBoxLayout *createHBoxChessTimelineLayout();
     QHBoxLayout *createHBoxTimelineButtonsLayout(
       ChessTimelineFacade *chessTimelineFacade,
-      ChessGuiCellManager *chessGuiCellManager
+      ChessGuiCellManager *chessGuiCellManager,
+      ChessFacade *chessFacade
     );
 
     void addListWidgetItem(pair<int, int> currentCellCoordinates, string chessPieceType);
@@ -33,7 +35,12 @@ public:
     int fastForwardTurn();
     int rewindTurn();
 
+    int getCurrentTurn();
+    int getSelectedTurn();
+
     void updateTurnProperties(int turn);
+
+    void removeLastTurn();
 };
 
 #endif // CHESSAPPLICATION_CHESSTIMELINERENDERER_H

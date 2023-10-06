@@ -36,6 +36,10 @@ void ChessPlayerData::addPieceByType(BaseChessPiece *chessPiece, std::string pie
     if (pieceType == ChessConstants::QUEEN_PIECE_TYPE) {
         this->activeQueenPieces->push_back(chessPiece);
     }
+
+    if (pieceType == ChessConstants::KING_PIECE_TYPE) {
+        this->activeKingPiece = chessPiece;
+    }
 }
 
 void ChessPlayerData::addPawnPiece(BaseChessPiece *pawnPiece) {

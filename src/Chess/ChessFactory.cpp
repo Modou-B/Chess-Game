@@ -13,7 +13,9 @@ ChessPieceMovementManager *ChessFactory::createChessPieceMovementManager() {
     return new ChessPieceMovementManager(
       this->createChessPieceMovementMapper(),
       this->createChessPieceMovementWriter(),
-      this->createChessPieceMovementReader()
+      this->createChessPieceMovementReader(),
+      this->createChessPieceCreator(),
+      this->createGameApplicationDataWriter()
     );
 }
 
@@ -77,6 +79,13 @@ GameApplicationDataReader *ChessFactory::createGameApplicationDataReader() {
 
 GameApplicationDataMapper *ChessFactory::createGameApplicationDataMapper() {
     return new GameApplicationDataMapper;
+}
+
+ChessPieceCreator *ChessFactory::createChessPieceCreator() {
+    return new ChessPieceCreator(
+      this->createChessPieceMovementMapper(),
+      this->createKingPieceMovementChecker()
+    );
 }
 
 ChessTimelineFacade *ChessFactory::getChessTimelineFacade() {

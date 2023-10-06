@@ -3,12 +3,12 @@
 //
 
 #include "ChessTimelineRenderer.h"
+#include "../../Model/Timeline/FastForwardTimelineButton.h"
+#include "../../Model/Timeline/RewindTimelineButton.h"
+#include "../../Model/Timeline/TurnTakeBackButton.h"
+#include "../ChessCoordinateConverter.h"
 #include "QHBoxLayout"
 #include "QListWidget"
-#include "../../Model/Timeline/RewindTimelineButton.h"
-#include "../../Model/Timeline/PauseGameTimerButton.h"
-#include "../../Model/Timeline/FastForwardTimelineButton.h"
-#include "../ChessCoordinateConverter.h"
 
 QListWidget *ChessTimelineRenderer::timelineList = nullptr;
 int ChessTimelineRenderer::selectedTurn = 0;
@@ -26,7 +26,8 @@ QHBoxLayout *ChessTimelineRenderer::createHBoxChessTimelineLayout()
 
 QHBoxLayout *ChessTimelineRenderer::createHBoxTimelineButtonsLayout(
     ChessTimelineFacade *chessTimelineFacade,
-    ChessGuiCellManager *chessGuiCellManager
+    ChessGuiCellManager *chessGuiCellManager,
+    ChessFacade *chessFacade
 ) {
     auto hBoxTimelineButtonsLayout = new QHBoxLayout();
 
@@ -37,10 +38,11 @@ QHBoxLayout *ChessTimelineRenderer::createHBoxTimelineButtonsLayout(
     );
     buttonRewind->setText("<<");
 
-    auto *buttonPause = new PauseGameTimerButton(
+    auto *buttonPause = new TurnTakeBackButton(
         this,
         chessTimelineFacade,
-        chessGuiCellManager
+        chessGuiCellManager,
+        chessFacade
     );
     buttonPause->setText(">||");
 
@@ -105,6 +107,23 @@ int ChessTimelineRenderer::rewindTurn()
 }
 
 void ChessTimelineRenderer::updateTurnProperties(int turn) {
+    if (turn < 0) {
+        turn = 0;
+    }
+
     ChessTimelineRenderer::selectedTurn = turn;
     ChessTimelineRenderer::currentTurn = turn;
+}
+
+int ChessTimelineRenderer::getCurrentTurn() {
+    return ChessTimelineRenderer::currentTurn;
+}
+
+int ChessTimelineRenderer::getSelectedTurn() {
+    return ChessTimelineRenderer::selectedTurn;
+}
+
+void ChessTimelineRenderer::removeLastTurn() {
+    ChessTimelineRenderer::timelineList->setCurrentRow(ChessTimelineRenderer::timelineList->count() - 1);
+    delete ChessTimelineRenderer::timelineList->currentItem();
 }

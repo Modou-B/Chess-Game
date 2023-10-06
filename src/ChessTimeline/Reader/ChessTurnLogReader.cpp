@@ -26,7 +26,7 @@ ChessTurnLogTransfer *ChessTurnLogReader::getChessTurnLogForSpecificTurn(int tur
 vector<ChessTurnLogTransfer *> ChessTurnLogReader::getChessTurnLogsForTurnRange(int startTurn, int endTurn) {
     vector<ChessTurnLogTransfer *> chessTurnLogTransfers = {};
 
-    for (int i = startTurn; i <= endTurn; ++i) {
+    for (int i = startTurn; i < endTurn; i++) {
         chessTurnLogTransfers.push_back(
             this->getChessTurnLogForSpecificTurn(i)
         );

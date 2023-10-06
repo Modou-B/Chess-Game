@@ -10,26 +10,26 @@
 using namespace std;
 
 class ChessPieceInformationTransfer;
+class ChessGameStateTransfer;
 
 class ChessTurnLogTransfer {
 private:
-    int currentPlayer;
-    int turnCounter;
+    ChessGameStateTransfer *chessGameStateTransfer;
     vector<ChessPieceInformationTransfer*> chessPieceInformationTransfers;
 
 public:
     ChessTurnLogTransfer();
 
-    ChessTurnLogTransfer *setCurrentPlayer(int currentPlayer);
-    ChessTurnLogTransfer *setTurnCounter(int turnCounter);
+    ChessTurnLogTransfer *setChessGameStateTransfer(
+        ChessGameStateTransfer *chessGameStateTransfer
+    );
     ChessTurnLogTransfer *setChessPieceInformationTransfers(
         vector<ChessPieceInformationTransfer*> chessPieceInformationTransfers
     );
 
     void addChessPieceInformationTransfer(ChessPieceInformationTransfer *chessPieceInformationTransfer);
 
-    int getCurrentPlayer();
-    int getTurnCounter();
+    ChessGameStateTransfer *getChessGameStateTransfer();
     vector<ChessPieceInformationTransfer*> getChessPieceInformationTransfers();
 };
 

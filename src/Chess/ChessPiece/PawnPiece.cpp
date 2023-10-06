@@ -8,6 +8,7 @@
 #include "../../Shared/Chess/Transfer/ChessPiecePossibleMoveTransfer.h"
 #include "../Model/ChessField.h"
 #include "../Movement/Mapper/ChessPieceMovementMapper.h"
+#include "iostream"
 
 PawnPiece::PawnPiece(
     int player,
@@ -55,6 +56,7 @@ std::vector<ChessPiecePossibleMoveTransfer*> PawnPiece::determinePossibleMovesFo
     possibleMoves = this->checkForEnPassant(chessField, possibleMoves, xCoordinate, yCoordinate, 1);
 
     yCoordinate++;
+
     if (!this->hasCellChessPiece(chessField, this->generateCoordinates(yCoordinate, xCoordinate))) {
           possibleMoves = this->tryToAddCoordinates(chessField, possibleMoves, xCoordinate, yCoordinate);
           isDoubleMovePossible = true;
@@ -159,6 +161,14 @@ void PawnPiece::handleMovement(ChessPiecePossibleMoveTransfer *usedMove) {
     if (usedMove->getMoveType() == ChessMovementConstants::MOVE_TYPE_PAWN_DOUBLE_MOVE) {
         this->usedDoubleMove = true;
     }
+}
+
+void PawnPiece::setUsedDoubleMove(bool usedDoubleMove) {
+    this->usedDoubleMove = usedDoubleMove;
+}
+
+bool PawnPiece::getUsedDoubleMove() {
+  return this-usedDoubleMove;
 }
 
 bool PawnPiece::wasDoubleMoveUsed() {

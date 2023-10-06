@@ -5,6 +5,7 @@
 #include "ChessPieceMovementManager.h"
 #include "Writer/ChessPieceMovementWriter.h"
 #include "Reader/ChessPieceMovementReader.h"
+#include "../ChessPiece/Creator/ChessPieceCreator.h"
 #include "../../ChessGui/Renderer/ChessGuiRenderer.h"
 #include "../../Shared/Chess/ChessConstants.h"
 #include "../../Shared/Chess/ChessMovementConstants.h"
@@ -19,15 +20,23 @@
 #include "Model/ChessCell.h"
 #include "Model/ChessField.h"
 #include "iostream"
+#include "../../Shared/ChessTimeline/ChessTurnLogTransfer.h"
+#include "../../Shared/Chess/Transfer/ChessPiece/ChessPieceInformationTransfer.h"
+#include "../../Shared/Chess/Transfer/ChessPiece/ChessPieceStateTransfer.h"
+#include "../GameApplication/Writer/GameApplicationDataWriter.h"
 
 ChessPieceMovementManager::ChessPieceMovementManager(
     ChessPieceMovementMapper *chessPieceMovementMapper,
     ChessPieceMovementWriter *chessPieceMovementWriter,
-    ChessPieceMovementReader *chessPieceMovementReader
+    ChessPieceMovementReader *chessPieceMovementReader,
+    ChessPieceCreator * chessPieceCreator,
+    GameApplicationDataWriter *gameApplicationDataWriter
 ) {
     this->chessPieceMovementMapper = chessPieceMovementMapper;
     this->chessPieceMovementWriter = chessPieceMovementWriter;
     this->chessPieceMovementReader = chessPieceMovementReader;
+    this->chessPieceCreator = chessPieceCreator;
+    this->gameApplicationDataWriter = gameApplicationDataWriter;
 }
 
 ChessMovementResponseTransfer ChessPieceMovementManager::handleChessMovement(
@@ -88,11 +97,19 @@ ChessMovementResponseTransfer ChessPieceMovementManager::moveChessPiece(
 
     chessMovementResponseTransfer.setState(ChessMovementConstants::MOVEMENT_STATE_MOVED);
 
+    bool previousUsedDoubleMove = false;
+    if (previousChessCell->getChessPiece()->getType() == ChessConstants::PAWN_PIECE_TYPE) {
+        auto *previousPawnPiece = static_cast<PawnPiece *>(previousChessCell->getChessPiece());
+        previousUsedDoubleMove = previousPawnPiece->getUsedDoubleMove();
+    }
+
     chessMovementResponseTransfer.addChessPieceStateTransfer(
         this->chessPieceMovementMapper->mapDataToChessPieceStateTransfer(
             chessMovementResponseTransfer.getCurrentPlayer(),
             previousChessCell->getChessPiece()->getType(),
             ChessMovementConstants::CHESS_PIECE_STATE_MOVED,
+            previousChessCell->getChessPiece()->getMoveCounter(),
+            previousUsedDoubleMove,
             previousChessCell->getCoordinates(),
             currentChessCell->getCoordinates()
         )
@@ -120,11 +137,19 @@ ChessMovementResponseTransfer ChessPieceMovementManager::moveChessPiece(
     }
 
     if (currentChessCell->getChessPiece() != nullptr) {
+      bool currentUsedDoubleMove = false;
+      if (currentChessCell->getChessPiece()->getType() == ChessConstants::PAWN_PIECE_TYPE) {
+          auto *pawnPiece = static_cast<PawnPiece *>(currentChessCell->getChessPiece());
+          currentUsedDoubleMove = pawnPiece->getUsedDoubleMove();
+      }
+
       chessMovementResponseTransfer.addChessPieceStateTransfer(
         this->chessPieceMovementMapper->mapDataToChessPieceStateTransfer(
             chessMovementResponseTransfer.getCurrentOpponentPlayer(),
             currentChessCell->getChessPiece()->getType(),
             ChessMovementConstants::CHESS_PIECE_STATE_DELETED,
+            currentChessCell->getChessPiece()->getMoveCounter(),
+            currentUsedDoubleMove,
             currentChessCell->getCoordinates()
         )
       );
@@ -147,29 +172,22 @@ ChessMovementResponseTransfer ChessPieceMovementManager::addEnPassantChessPieceM
     auto coordinatesOfOpponentPawnPiece = pair<int,int>();
     if (pawnPiece->getPlayer() == 1) {
       coordinatesOfOpponentPawnPiece = make_pair((currentCoordinates.first+1), currentCoordinates.second);
-
-      chessMovementResponseTransfer.addChessPieceStateTransfer(
-          this->chessPieceMovementMapper->mapDataToChessPieceStateTransfer(
-              chessMovementResponseTransfer.getCurrentOpponentPlayer(),
-              ChessConstants::PAWN_PIECE_TYPE,
-              ChessMovementConstants::CHESS_PIECE_STATE_DELETED_EN_PASSANT,
-              coordinatesOfOpponentPawnPiece
-          )
-      );
     } else {
       coordinatesOfOpponentPawnPiece = make_pair((currentCoordinates.first-1), currentCoordinates.second);
-
-      chessMovementResponseTransfer.addChessPieceStateTransfer(
-          this->chessPieceMovementMapper->mapDataToChessPieceStateTransfer(
-              chessMovementResponseTransfer.getCurrentOpponentPlayer(),
-              ChessConstants::PAWN_PIECE_TYPE,
-              ChessMovementConstants::CHESS_PIECE_STATE_DELETED_EN_PASSANT,
-              coordinatesOfOpponentPawnPiece
-          )
-      );
     }
 
     auto *chessCellWithOpponentPawnPiece = GameApplication::getChessCell(coordinatesOfOpponentPawnPiece);
+
+    chessMovementResponseTransfer.addChessPieceStateTransfer(
+          this->chessPieceMovementMapper->mapDataToChessPieceStateTransfer(
+              chessMovementResponseTransfer.getCurrentOpponentPlayer(),
+              ChessConstants::PAWN_PIECE_TYPE,
+              ChessMovementConstants::CHESS_PIECE_STATE_DELETED_EN_PASSANT,
+              chessCellWithOpponentPawnPiece->getChessPiece()->getMoveCounter(),
+              true,
+              coordinatesOfOpponentPawnPiece
+          )
+      );
 
     opponentPlayerData->removePiece(chessCellWithOpponentPawnPiece->getChessPiece());
     chessCellWithOpponentPawnPiece->setChessPiece(nullptr);
@@ -195,6 +213,8 @@ ChessMovementResponseTransfer ChessPieceMovementManager::addCastlingChessPieceMo
               chessMovementResponseTransfer.getCurrentPlayer(),
               ChessConstants::ROOK_PIECE_TYPE,
               ChessMovementConstants::CHESS_PIECE_STATE_MOVED,
+              0,
+              false,
               oldCoordinatesOfRookPiece,
               newCoordinatesOfRookPiece
           )
@@ -208,6 +228,8 @@ ChessMovementResponseTransfer ChessPieceMovementManager::addCastlingChessPieceMo
               chessMovementResponseTransfer.getCurrentPlayer(),
               ChessConstants::ROOK_PIECE_TYPE,
               ChessMovementConstants::CHESS_PIECE_STATE_MOVED,
+              0,
+              false,
               oldCoordinatesOfRookPiece,
               newCoordinatesOfRookPiece
           )
@@ -300,3 +322,61 @@ void ChessPieceMovementManager::expandResponseWithPossibleMoves(
     )
         ->setPossibleMoveTransfers(possibleMoveCollectionTransfer.getPossibleMoveTransfers());
 }
+
+void ChessPieceMovementManager::updateChessGrid(
+    ChessTurnLogTransfer *chessTurnLogTransfer
+) {
+    vector<ChessPieceInformationTransfer *> chessPieceDeleteInformationStateTransfers;
+    for (auto &chessPieceInformationTransfer: chessTurnLogTransfer->getChessPieceInformationTransfers()) {
+        if (chessPieceInformationTransfer->getChessPieceStateTransfer()->getState() == ChessMovementConstants::CHESS_PIECE_STATE_MOVED) {
+            this->handleChessPieceStates(chessPieceInformationTransfer);
+
+            continue;
+        }
+
+        chessPieceDeleteInformationStateTransfers.push_back(chessPieceInformationTransfer);
+    }
+
+    for (auto &chessPieceInformationTransfer: chessPieceDeleteInformationStateTransfers) {
+        this->handleChessPieceStates(chessPieceInformationTransfer);
+    }
+}
+
+void ChessPieceMovementManager::handleChessPieceStates(
+    ChessPieceInformationTransfer *chessPieceInformationTransfer
+) {
+    auto *chessPieceStateTransfer = chessPieceInformationTransfer->getChessPieceStateTransfer();
+    auto *startChessCell = GameApplication::getChessCell(chessPieceStateTransfer->getStartCoordinate());
+
+    auto *chessPiece = this->chessPieceCreator->createChessPiece(chessPieceStateTransfer);
+
+    startChessCell->setChessPiece(chessPiece);
+
+    if (chessPieceStateTransfer->getState() == ChessMovementConstants::CHESS_PIECE_STATE_MOVED) {
+        auto *movedChessGuiCell = GameApplication::getChessCell(chessPieceStateTransfer->getEndCoordinate());
+        movedChessGuiCell->setChessPiece(nullptr);
+
+        if (chessPieceStateTransfer->getChessPieceType() == ChessConstants::KING_PIECE_TYPE) {
+            this->gameApplicationDataWriter
+                ->saveChessPieceForChessPlayerData(
+                  chessPiece,
+                  chessPieceStateTransfer->getChessPieceType(),
+                  chessPieceStateTransfer->getPlayerOfChessPiece()
+            );
+        }
+
+        return;
+    }
+
+    if (chessPieceStateTransfer->getState() == ChessMovementConstants::CHESS_PIECE_STATE_DELETED
+        || chessPieceStateTransfer->getState() == ChessMovementConstants::CHESS_PIECE_STATE_DELETED_EN_PASSANT) {
+
+        this->gameApplicationDataWriter
+            ->saveChessPieceForChessPlayerData(
+              chessPiece,
+              chessPieceStateTransfer->getChessPieceType(),
+              chessPieceStateTransfer->getPlayerOfChessPiece()
+        );
+    }
+}
+

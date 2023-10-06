@@ -7,6 +7,8 @@
 #include "../../Shared/Chess/Transfer/ChessMovementResponseTransfer.h"
 #include "../../Shared/Chess/Transfer/ChessPiece/ChessPiecePositionTransfer.h"
 #include "../../Shared/ChessTimeline/EndTurnInformationTransfer.h"
+#include "../../Shared/ChessTimeline/ChessTurnLogTransfer.h"
+#include "../../Shared/Chess/Transfer/GameState/ChessGameStateTransfer.h"
 #include "../../Shared/Chess/ChessMovementConstants.h"
 #include "GameApplication.h"
 #include "../Movement/ChessPieceMovementManager.h"
@@ -128,6 +130,31 @@ void GameApplicationManager::endCurrentTurn(
     this->chessPieceMovementManager->clearPossibleMoveCollections();
 }
 
+void GameApplicationManager::rewindCurrentTurn(
+    ChessTurnLogTransfer *chessTurnLogTransferToRewind
+) {
+
+    this->chessPieceMovementManager->updateChessGrid(chessTurnLogTransferToRewind);
+
+    auto *gameStateTransfer = chessTurnLogTransferToRewind->getChessGameStateTransfer();
+
+    this->chessGuiFacade->updateTimelineTurnProperties(
+        this->gameApplicationDataReader->getTurnCounter()-2
+    );
+
+    this->gameApplicationDataWriter->updateGameApplicationData(
+        gameStateTransfer
+    );
+    this->updateStateLastTurnChessPieces();
+    GameApplication::setHasPreviousClickedCell(false);
+
+    this->chessPieceMovementManager->clearPossibleMoveCollections();
+
+
+    this->chessTimelineFacade->deleteLastTurnLog();
+    this->startNewTurn();
+}
+
 void GameApplicationManager::updateStateLastTurnChessPieces() {
     if (GameApplication::getTurnCounter() == 0) {
         return;
@@ -181,12 +208,10 @@ void GameApplicationManager::logCurrentTurn(
     ChessMovementResponseTransfer chessMovementResponseTransfer
 ) {
     EndTurnInformationTransfer endTurnInformationTransfer = {};
+    auto *chessGameStateTransfer = this->gameApplicationDataReader->getCurrentGameStateData();
 
-    endTurnInformationTransfer.setCurrentPlayer(
-        this->gameApplicationDataReader->getCurrentPlayer()
-    )->setTurnCounter(
-            this->gameApplicationDataReader->getTurnCounter()
-    )->setChessPieceStateTransfers(
+    endTurnInformationTransfer.setChessGameStateTransfer(chessGameStateTransfer)
+        ->setChessPieceStateTransfers(
             chessMovementResponseTransfer.getChessPieceStateTransfers()
     );
 

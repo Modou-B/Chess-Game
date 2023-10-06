@@ -43,6 +43,13 @@ void ChessFacade::updateCurrentGameState(string gameState) {
     ChessFacade::getFactory()->createGameApplicationDataWriter()->updateGameApplicationCurrentGameState(gameState);
 }
 
+void ChessFacade::rewindCurrentTurn(
+    ChessTurnLogTransfer *chessTurnLogTransfer
+) {
+    ChessFacade::getFactory()->createGameApplicationManager()
+        ->rewindCurrentTurn(chessTurnLogTransfer);
+}
+
 ChessFactory *ChessFacade::getFactory() {
     return static_cast<ChessFactory*>(this->findFactory(typeid(ChessFactory).name()));
 }

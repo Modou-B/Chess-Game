@@ -17,6 +17,7 @@ class ChessTurnLog;
 class ChessPieceLog;
 class ChessTurnLogTransfer;
 class ChessPieceInformationTransfer;
+class ChessGameStateTransfer;
 
 class ChessTimelineMapper {
 private:
@@ -52,6 +53,8 @@ public:
     ChessPieceStateTransfer *mapChessPieceLogToChessPieceStateTransfer(
         ChessPieceLog *chessPieceLog
     );
+
+    ChessGameStateTransfer *mapChessTurnLogToChessGameStateTransfer(ChessTurnLog *chessTurnLog);
 };
 
 #endif // CHESSAPPLICATION_CHESSTIMELINEMAPPER_H

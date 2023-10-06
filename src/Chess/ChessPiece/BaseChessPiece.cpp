@@ -345,6 +345,10 @@ bool BaseChessPiece::wasChessPieceMovedLastTurn() {
     return this->wasMovedLastTurn;
 }
 
+void BaseChessPiece::setMoveCounter(int moveCounter) {
+    this->moveCounter = moveCounter;
+}
+
 void BaseChessPiece::setCheckBlockAbility(bool value) {
     this->canBlockCheck = value;
 }

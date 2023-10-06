@@ -209,7 +209,6 @@ void ChessGuiCell::addChessPiece(string pieceType, string color) {
     auto pieceTypeFilename = pieceType;
     pieceTypeFilename.append(color);
 
-        std::cout << pieceTypeFilename<< std::endl;
     this->setChessPieceIcon(
         ChessGuiConstants::STATE_REAL_CHESS_PIECE_ICON,
         this->chessGuiPieceIconGenerator->generateIconFromFile(pieceTypeFilename)
