@@ -173,6 +173,7 @@ void GameApplicationManager::startNewTurn() {
       GameApplication::getOpponentChessPlayerData(),
       GameApplication::getCurrentPlayer()
     );
+    this->chessGuiFacade->updatePlayerColor(this->gameApplicationDataReader->getCurrentPlayer());
 }
 
 int GameApplicationManager::getCurrentPlayer() {
