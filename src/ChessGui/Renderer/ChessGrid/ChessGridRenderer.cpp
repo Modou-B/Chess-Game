@@ -145,9 +145,9 @@ void ChessGridRenderer::updateChessGridCellColor(QGridLayout *chessGridPreviewLa
                 chessGridPreviewLayout->itemAtPosition(i, j)->widget());
 
             if (j % 2 - counter == 0) {
-                chessGuiCell->setCellColor(this->chessSettingsDataHolder->getColorForPlayer(1));
+                chessGuiCell->setCellColor(this->chessSettingsDataHolder->getPeviewColorForPlayer(1));
             } else {
-                chessGuiCell->setCellColor(this->chessSettingsDataHolder->getColorForPlayer(2));
+                chessGuiCell->setCellColor(this->chessSettingsDataHolder->getPeviewColorForPlayer(2));
             }
         }
 

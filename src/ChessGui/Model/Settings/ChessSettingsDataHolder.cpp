@@ -8,6 +8,8 @@
 int ChessSettingsDataHolder::selectedPlayer = 1;
 QColor ChessSettingsDataHolder::player1Color = ChessGuiConstants::CELL_YELLOW_COLOR;
 QColor ChessSettingsDataHolder::player2Color = ChessGuiConstants::CELL_GREEN_COLOR;
+QColor ChessSettingsDataHolder::savedPlayer1Color = ChessGuiConstants::CELL_YELLOW_COLOR;
+QColor ChessSettingsDataHolder::savedPlayer2Color = ChessGuiConstants::CELL_GREEN_COLOR;
 QGridLayout *ChessSettingsDataHolder::chessGridPreviewLayout = nullptr;
 
 void ChessSettingsDataHolder::setChoosePlayer(int player)
@@ -15,14 +17,19 @@ void ChessSettingsDataHolder::setChoosePlayer(int player)
     ChessSettingsDataHolder::selectedPlayer = player;
 }
 
-void ChessSettingsDataHolder::setPlayerColor(QColor playerColor)
+void ChessSettingsDataHolder::setPlayerColor(QColor savedPlayerColor)
 {
     if (ChessSettingsDataHolder::selectedPlayer == 1) {
-        ChessSettingsDataHolder::player1Color = playerColor;
+        ChessSettingsDataHolder::savedPlayer1Color = savedPlayerColor;
         return;
     }
 
-    ChessSettingsDataHolder::player2Color = playerColor;
+    ChessSettingsDataHolder::savedPlayer2Color = savedPlayerColor;
+}
+
+void ChessSettingsDataHolder::savePlayerColors() {
+    ChessSettingsDataHolder::player1Color = ChessSettingsDataHolder::savedPlayer1Color;
+    ChessSettingsDataHolder::player2Color = ChessSettingsDataHolder::savedPlayer2Color;
 }
 
 void ChessSettingsDataHolder::setChessGridPreviewLayout(QGridLayout *chessGridPreviewLayout)
@@ -37,6 +44,15 @@ QColor ChessSettingsDataHolder::getColorForPlayer(int player)
     }
 
     return ChessSettingsDataHolder::player2Color;
+}
+
+QColor ChessSettingsDataHolder::getPeviewColorForPlayer(int player)
+{
+    if (player == 1) {
+        return ChessSettingsDataHolder::savedPlayer1Color;
+    }
+
+    return ChessSettingsDataHolder::savedPlayer2Color;
 }
 
 QGridLayout *ChessSettingsDataHolder::getChessGridPreviewLayout()
