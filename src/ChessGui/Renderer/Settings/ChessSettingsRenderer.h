@@ -26,6 +26,8 @@ public:
 
     void setPlayerToChooseColor(int player);
     void setColorForSetPlayer(QColor color);
+
+    void saveCustomColor();
 };
 
 
