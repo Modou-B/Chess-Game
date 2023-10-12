@@ -13,6 +13,8 @@
 #include "../../Model/Settings/ChessSettingsDataHolder.h"
 #include "ChessChoosePlayerColor.h"
 #include "ChessChooseCellColor.h"
+#include "ChessSaveButton.h"
+#include "ChessExitButton.h"
 
 ChessSettingsRenderer::ChessSettingsRenderer(
     ChessGridRenderer *chessGridRenderer,
@@ -38,8 +40,10 @@ void ChessSettingsRenderer::createSettingsView()
     auto hBoxSaveAndExitLayout = new QHBoxLayout();
     auto hBoxSpacerLayout = new QHBoxLayout();
 
-    auto saveButton = new QPushButton("Save");
-    auto exitButton = new QPushButton("Exit");
+    auto saveButton = new ChessSaveButton(this, settingsWindow);
+    saveButton->setText("Save");
+    auto exitButton = new ChessExitButton(this, settingsWindow);
+    exitButton->setText("Exit");
 
     auto spacer1 = new QLabel(" ");
     auto spacer2 = new QLabel(" ");
@@ -123,5 +127,9 @@ void ChessSettingsRenderer::setPlayerToChooseColor(int player)
 void ChessSettingsRenderer::setColorForSetPlayer(QColor color)
 {
     this->chessSettingsDataHolder->setPlayerColor(color);
+}
+
+void ChessSettingsRenderer::saveCustomColor() {
+    this->chessSettingsDataHolder->savePlayerColors();
 }
 

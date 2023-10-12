@@ -13,6 +13,8 @@ private:
     static int selectedPlayer;
     static QColor player1Color;
     static QColor player2Color;
+    static QColor savedPlayer1Color;
+    static QColor savedPlayer2Color;
     static QGridLayout *chessGridPreviewLayout;
 
 public:
@@ -21,7 +23,11 @@ public:
     void setChessGridPreviewLayout(QGridLayout *chessGridPreviewLayout);
 
     QColor getColorForPlayer(int player);
+    QColor getPeviewColorForPlayer(int player);
+
     QGridLayout *getChessGridPreviewLayout();
+
+    void savePlayerColors();
 };
 
 #endif // CHESSAPPLICATION_CHESSSETTINGSDATAHOLDER_H
