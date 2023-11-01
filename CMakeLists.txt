@@ -6,7 +6,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-set(CMAKE_PREFIX_PATH "/usr/local/Cellar/qt/6.5.1_3")
+set(CMAKE_PREFIX_PATH "C:/Qt/Tools/Qt-LIB/6.6.0")
 
 
 find_package(Qt6 COMPONENTS
