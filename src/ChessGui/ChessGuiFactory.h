@@ -8,6 +8,7 @@
 #include "../Application/Factory/AbstractFactory.h"
 #include "Renderer/ChessGuiRenderer.h"
 #include "../Chess/ChessFacade.h"
+#include "../MultiplayerGui/MultiplayerGuiFacade.h"
 #include "../ChessTimeline/ChessTimelineFacade.h"
 #include "Model/Generator/ChessGuiPieceIconGenerator.h"
 #include "Renderer/ChessPieceSelection/ChessPieceSelectionRenderer.h"
@@ -25,7 +26,10 @@ public:
     ChessTimelineRenderer *createChessTimelineRenderer();
     ChessGuiPieceIconGenerator *createChessGuiPieceIconGenerator();
     ChessGuiCellManager *createChessGuiCellManager();
+
     ChessFacade *getChessFacade();
+    MultiplayerGuiFacade *getMultiplayerGuiFacade();
+
     ChessTimelineFacade *getChessTimelineFacade();
     PlayerLabelRenderer *createChessPlayerLabelRenderer();
     ChessSettingsRenderer *createChessSettingsRenderer();

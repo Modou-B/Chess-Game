@@ -49,3 +49,17 @@ void GameApplicationDataWriter::saveChessPieceForChessPlayerData(
 
     chessPlayerData->addPieceByType(chessPiece, type);
 }
+
+void GameApplicationDataWriter::writeMultiplayerStartData(
+    int currentPlayer,
+    int opponentPlayer
+) {
+    GameApplication::setIsMultiplayerMatch(true);
+
+    if (currentPlayer == 2) {
+        GameApplication::setIsOpponentTurn(true);
+    }
+
+    GameApplication::setCurrentPlayer(currentPlayer);
+    GameApplication::setCurrentOpponentPlayer(opponentPlayer);
+}

@@ -16,6 +16,8 @@
 #include "ChessSaveButton.h"
 #include "ChessExitButton.h"
 
+QWidget *ChessSettingsRenderer::settingsWindow = nullptr;
+
 ChessSettingsRenderer::ChessSettingsRenderer(
     ChessGridRenderer *chessGridRenderer,
     ChessSettingsDataHolder *chessSettingsDataHolder
@@ -112,6 +114,8 @@ void ChessSettingsRenderer::createSettingsView()
     hBoxMainContainerLayout->addLayout(vBoxOtherSettingsLayout);
 
     settingsWindow->show();
+
+    this->setSettingsWindow(settingsWindow);
 }
 
 void ChessSettingsRenderer::updateCellColors() {
@@ -132,4 +136,13 @@ void ChessSettingsRenderer::setColorForSetPlayer(QColor color)
 void ChessSettingsRenderer::saveCustomColor() {
     this->chessSettingsDataHolder->savePlayerColors();
 }
+
+void ChessSettingsRenderer::setSettingsWindow(QWidget *settingsWindow) {
+    ChessSettingsRenderer::settingsWindow = settingsWindow;
+}
+
+void ChessSettingsRenderer::closeSettingsWindow() {
+
+}
+
 
