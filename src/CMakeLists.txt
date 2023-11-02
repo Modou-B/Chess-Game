@@ -17,11 +17,11 @@ target_link_libraries(ChessApplication
         Qt::Core
         Qt::Gui
         Qt::Widgets
-        ChessLib
-        ChessGuiLib
-        ChessTimelineLib
         MainLib
+        ChessGuiLib
+        ChessLib
         ApplicationLib
+        ChessTimelineLib
         SharedLib
         )
 
