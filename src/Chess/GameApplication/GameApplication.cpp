@@ -15,6 +15,10 @@ string GameApplication::currentGameState = "";
 
 int GameApplication::currentPlayer = 1;
 int GameApplication::currentOpponentPlayer = 2;
+
+bool GameApplication::isMultiplayerMatch = false;
+bool GameApplication::isOpponentTurn = false;
+
 int GameApplication::turnCounter = 0;
 
 pair<int, int> GameApplication::previouslyClickedCell;
@@ -56,6 +60,14 @@ void GameApplication::setCurrentPlayer(int currentPlayer) {
 
 void GameApplication::setCurrentOpponentPlayer(int currentOpponentPlayer) {
     GameApplication::currentOpponentPlayer = currentOpponentPlayer;
+}
+
+void GameApplication::setIsMultiplayerMatch(bool isMultiplayerMatch) {
+    GameApplication::isMultiplayerMatch = isMultiplayerMatch;
+}
+
+void GameApplication::setIsOpponentTurn(bool isOpponentTurn) {
+    GameApplication::isOpponentTurn = isOpponentTurn;
 }
 
 void GameApplication::setTurnCounter(int turnCounter) {
@@ -137,6 +149,14 @@ ChessPlayerData *GameApplication::getChessPlayerDataForPlayer(int player)
     }
 
     return GameApplication::chessPlayer2Data;
+}
+
+bool GameApplication::getIsMultiplayerMatch() {
+    return GameApplication::isMultiplayerMatch;
+}
+
+bool GameApplication::getIsOpponentTurn() {
+    return GameApplication::isOpponentTurn;
 }
 
 int GameApplication::getCurrentOpponentPlayer() {

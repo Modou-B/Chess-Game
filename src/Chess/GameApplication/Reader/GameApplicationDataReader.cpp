@@ -59,3 +59,11 @@ int GameApplicationDataReader::getTurnCounter() {
 string GameApplicationDataReader::getCurrentGameState() {
     return GameApplication::getCurrentGameState();
 }
+
+bool GameApplicationDataReader::isMultiplayerMatch() {
+    return GameApplication::getIsMultiplayerMatch();
+}
+
+bool GameApplicationDataReader::isOpponentTurn() {
+    return GameApplication::getIsOpponentTurn();
+}

@@ -21,6 +21,8 @@ class ChessPiecePositionTransfer;
 class ChessFacade: public AbstractFacade {
 public:
     void initiateChessGame();
+    void initiateMultiplayerChessGame(QJsonObject startMatchResponseData);
+
     void endCurrentTurn(
         ChessMovementResponseTransfer chessMovementResponseTransfer,
         ChessPiecePositionTransfer chessPiecePositionTransfer

@@ -16,6 +16,8 @@
 #include "ChessSaveButton.h"
 #include "ChessExitButton.h"
 
+QWidget *ChessSettingsRenderer::settingsWindow = nullptr;
+
 ChessSettingsRenderer::ChessSettingsRenderer(
     ChessGridRenderer *chessGridRenderer,
     ChessSettingsDataHolder *chessSettingsDataHolder
@@ -58,18 +60,18 @@ void ChessSettingsRenderer::createSettingsView()
     auto player2Button = new ChessChoosePlayerColor(this, 2);
     player2Button->setText("Player 2");
 
-    auto colorRedButton = new ChessChooseCellColor(this, QColor(255, 0, 0));
+    auto colorRedButton = new ChessChooseCellColor(this, QColor(102, 18, 28));
     colorRedButton->setText("Red");
-    auto colorBlueButton = new ChessChooseCellColor(this, QColor(0,191,255));
+    auto colorBlueButton = new ChessChooseCellColor(this, QColor(104,134,170));
     colorBlueButton->setText("Blue");
     auto colorGreenButton = new ChessChooseCellColor(this, QColor(23, 87, 23));
     colorGreenButton->setText("Green");
 
-    auto colorYellowButton = new ChessChooseCellColor(this, QColor(255, 250, 225));
-    colorYellowButton->setText("Yellow");
+    auto colorWhiteButton = new ChessChooseCellColor(this, QColor(255, 250, 225));
+    colorWhiteButton->setText("White");
     auto colorPurpleButton = new ChessChooseCellColor(this, QColor(128,0,128));
     colorPurpleButton->setText("Purple");
-    auto colorOrangeButton = new ChessChooseCellColor(this, QColor(255,140,0));
+    auto colorOrangeButton = new ChessChooseCellColor(this, QColor(197,120,55));
     colorOrangeButton->setText("Orange");
 
     // Playerbuttons in hBox
@@ -81,7 +83,7 @@ void ChessSettingsRenderer::createSettingsView()
     hBoxColorButtonRow1Layout->addWidget(colorBlueButton);
     hBoxColorButtonRow1Layout->addWidget(colorGreenButton);
 
-    hBoxColorButtonRow2Layout->addWidget(colorYellowButton);
+    hBoxColorButtonRow2Layout->addWidget(colorWhiteButton);
     hBoxColorButtonRow2Layout->addWidget(colorPurpleButton);
     hBoxColorButtonRow2Layout->addWidget(colorOrangeButton);
 
@@ -112,6 +114,8 @@ void ChessSettingsRenderer::createSettingsView()
     hBoxMainContainerLayout->addLayout(vBoxOtherSettingsLayout);
 
     settingsWindow->show();
+
+    this->setSettingsWindow(settingsWindow);
 }
 
 void ChessSettingsRenderer::updateCellColors() {
@@ -132,4 +136,13 @@ void ChessSettingsRenderer::setColorForSetPlayer(QColor color)
 void ChessSettingsRenderer::saveCustomColor() {
     this->chessSettingsDataHolder->savePlayerColors();
 }
+
+void ChessSettingsRenderer::setSettingsWindow(QWidget *settingsWindow) {
+    ChessSettingsRenderer::settingsWindow = settingsWindow;
+}
+
+void ChessSettingsRenderer::closeSettingsWindow() {
+
+}
+
 

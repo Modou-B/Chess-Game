@@ -30,6 +30,9 @@ public:
     int getCurrentOpponentPlayer();
     int getTurnCounter();
     string getCurrentGameState();
+
+    bool isMultiplayerMatch();
+    bool isOpponentTurn();
 };
 
 #endif // CHESSAPPLICATION_GAMEAPPLICATIONDATAREADER_H
