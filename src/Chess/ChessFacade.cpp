@@ -6,9 +6,17 @@
 #include "Model/ChessCell.h"
 #include "../Shared/Chess/Transfer/ChessMovementResponseTransfer.h"
 #include "../Shared/Chess/Transfer/ChessPiece/ChessPiecePositionTransfer.h"
+#include <QJsonObject>
 
 void ChessFacade::initiateChessGame() {
     ChessFacade::getFactory()->createGameApplicationManager()->initiateChessApplication();
+}
+
+void ChessFacade::initiateMultiplayerChessGame(QJsonObject startMatchResponseData)
+{
+    ChessFacade::getFactory()
+            ->createGameApplicationManager()
+            ->startMultiplayerMatch(startMatchResponseData);
 }
 
 ChessMovementResponseTransfer ChessFacade::handleChessCellClick(pair<int, int> currentCellCoordinates) {

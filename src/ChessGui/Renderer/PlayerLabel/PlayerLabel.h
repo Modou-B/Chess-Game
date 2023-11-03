@@ -19,6 +19,7 @@ public:
 
     void setCurrentPlayerColor();
     void removeCurrentPlayerColor();
+    void setLabelText(string labelText);
 };
 
 

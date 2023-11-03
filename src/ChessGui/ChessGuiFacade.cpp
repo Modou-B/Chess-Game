@@ -30,6 +30,15 @@ ChessGuiFactory *ChessGuiFacade::getFactory() {
 }
 
 
-void ChessGuiFacade::updatePlayerColor(int player) {
+void ChessGuiFacade::updatePlayerColor(int player)
+{
     ChessGuiFacade::getFactory()->createChessPlayerLabelRenderer()->updatePlayerColor(player);
+}
+
+void ChessGuiFacade::initGuiForMultiplayerChessGame(
+    MultiplayerChessGuiTransfer *multiplayerChessGuiTransfer
+) {
+    ChessGuiFacade::getFactory()
+        ->createChessGuiRenderer()
+        ->startMultiplayerChessGame(multiplayerChessGuiTransfer);
 }
