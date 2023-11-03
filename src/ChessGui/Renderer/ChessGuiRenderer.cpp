@@ -28,6 +28,7 @@
 #include "PlayerLabel/PlayerLabel.h"
 #include "Settings/ChessSettingsRenderer.h"
 #include "ChessGrid/ChessGridRenderer.h"
+#include "ChessInfo/ChessInfo.h"
 
 ChessGuiRenderer::ChessGuiRenderer(
     ChessFacade *chessFacade,
@@ -56,10 +57,11 @@ void ChessGuiRenderer::createSettingsPage(QWidget *mainWindow) {
 
     auto startPushbutton = new ChessStartButton(this, mainWindow);
     startPushbutton->setText("Start");
-
-
     auto settingsPushbutton = new ChessSettingsButton(this->chessSettingsRenderer);
     settingsPushbutton->setText("Settings");
+    auto chessInfoButton = new ChessInfo();
+    chessInfoButton->setText("Info");
+    
 
     auto speedPushbuttonClassic = new ChessSpeedButtons(this, 0);
     speedPushbuttonClassic->setText("Classic");
@@ -71,8 +73,10 @@ void ChessGuiRenderer::createSettingsPage(QWidget *mainWindow) {
     speedPushbuttonBullet->setText("Bullet");
 
 
+
     vBoxStartAndSettingsButtonsLayout->addWidget(startPushbutton);
     vBoxStartAndSettingsButtonsLayout->addWidget(settingsPushbutton);
+    vBoxStartAndSettingsButtonsLayout->addWidget(chessInfoButton);
 
     vBoxSpeedButtonsLayout->addWidget(speedPushbuttonClassic);
     vBoxSpeedButtonsLayout->addWidget(speedPushbuttonFast);
