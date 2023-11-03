@@ -50,8 +50,8 @@ void PlayerLabelRenderer::updateLabelTextsWithUsername(
     int currentPlayer = multiplayerChessGuiTransfer->getCurrentPlayer();
 
     if (currentPlayer == 1) {
-        PlayerLabelRenderer::playerLabel1->setText(QString::fromStdString(multiplayerChessGuiTransfer->getUsername()));
-        PlayerLabelRenderer::playerLabel2->setText(QString::fromStdString(multiplayerChessGuiTransfer->getOpponentUsername()));
+        PlayerLabelRenderer::playerLabel1->setLabelText(multiplayerChessGuiTransfer->getUsername());
+        PlayerLabelRenderer::playerLabel2->setLabelText(multiplayerChessGuiTransfer->getOpponentUsername());
 
         this->updatePlayerColor(1);
 
@@ -59,8 +59,8 @@ void PlayerLabelRenderer::updateLabelTextsWithUsername(
     }
 
     if (currentPlayer == 2) {
-        PlayerLabelRenderer::playerLabel2->setText(QString::fromStdString(multiplayerChessGuiTransfer->getUsername()));
-        PlayerLabelRenderer::playerLabel1->setText(QString::fromStdString(multiplayerChessGuiTransfer->getOpponentUsername()));
+        PlayerLabelRenderer::playerLabel2->setLabelText(multiplayerChessGuiTransfer->getUsername());
+        PlayerLabelRenderer::playerLabel1->setLabelText(multiplayerChessGuiTransfer->getOpponentUsername());
 
         this->updatePlayerColor(2);
     }

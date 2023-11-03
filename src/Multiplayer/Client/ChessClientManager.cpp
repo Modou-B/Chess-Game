@@ -40,8 +40,6 @@ QJsonObject ChessClientManager::requestJsonData(QJsonObject jsonData) {
 
 void ChessClientManager::handleMultiplayerLobbyJoin()
 {
-    std::cout << "We are gere" << std::endl;
-
     this->chessFacade->initiateMultiplayerChessGame(
         ChessClientManager::chessClient->getResponse("startChessMatch")
     );

@@ -316,18 +316,11 @@ void ChessGuiRenderer::createChessPieceSelectionHBoxes() {
 void ChessGuiRenderer::startMultiplayerChessGame(
     MultiplayerChessGuiTransfer *multiplayerChessGuiTransfer
 ) {
-    std::cout << "No here are gere" << std::endl;
-
     this->playerLabelRenderer->updateLabelTextsWithUsername(multiplayerChessGuiTransfer);
-    std::cout << "No here are gere1" << std::endl;
 
     auto *mainGridWindow = new QWidget;
-        std::cout << "No here are gere2" << std::endl;
 
     this->createChessField(mainGridWindow);
-        std::cout << "No here are gere3" << std::endl;
 
     mainGridWindow->show();
-            std::cout << "No here are gere4" << std::endl;
-
 }
