@@ -33,6 +33,7 @@
 #include "../../MultiplayerGui/Model/Button/MultiplayerStartButton.h"
 #include "../../Shared/ChessGui/Transfer/Multiplayer/MultiplayerChessGuiTransfer.h"
 #include "iostream"
+#include "BackToMenu/BackToMenu.h"
 
 ChessGuiRenderer::ChessGuiRenderer(
     ChessFacade *chessFacade,
@@ -63,7 +64,6 @@ void ChessGuiRenderer::createSettingsPage(QWidget *mainWindow) {
 
     auto startPushbutton = new ChessStartButton(this, mainWindow);
     startPushbutton->setText("Start");
-
     auto settingsPushbutton = new ChessSettingsButton(this->chessSettingsRenderer);
     settingsPushbutton->setText("Settings");
     auto chessInfoButton = new ChessInfo();
@@ -78,6 +78,7 @@ void ChessGuiRenderer::createSettingsPage(QWidget *mainWindow) {
     speedPushbuttonBlitz->setText("Blitz");
     auto speedPushbuttonBullet = new ChessSpeedButtons(this, 180);
     speedPushbuttonBullet->setText("Bullet");
+
 
 
     vBoxStartAndSettingsButtonsLayout->addWidget(startPushbutton);
@@ -103,6 +104,20 @@ void ChessGuiRenderer::createChessField(QWidget *mainWindow) {
     // -- Grid und stuff
     auto hBoxMainBracketLayout = new QHBoxLayout(mainWindow);
     auto vBoxMainContainer = new QVBoxLayout(mainWindow);
+
+    auto hBoxMenuButtonslayout = new QHBoxLayout(mainWindow);
+
+    auto backToMainMenu = new BackToMenu(this, mainWindow);
+    backToMainMenu->setText("Menu");
+    hBoxMenuButtonslayout->addWidget(backToMainMenu);
+    auto spacer1 = new QLabel("");
+    hBoxMenuButtonslayout->addWidget(spacer1);
+    auto spacer3 = new QLabel("");
+    hBoxMenuButtonslayout->addWidget(spacer3);
+    auto spacer4 = new QLabel("");
+    hBoxMenuButtonslayout->addWidget(spacer4);
+
+
     auto vBoxSideInformationPanel = new QVBoxLayout(mainWindow);
 
     auto hBoxFullGridAndSideInformationPanelLayout = new QHBoxLayout(mainWindow);
@@ -239,6 +254,7 @@ void ChessGuiRenderer::createChessField(QWidget *mainWindow) {
     hBoxFullGridAndSideInformationPanelLayout->addLayout(vBoxGridAndLetterContainerLayout);
 
     // MainWindow Player1 -> Grid -> Player2
+    vBoxMainContainer->addLayout(hBoxMenuButtonslayout);
     vBoxMainContainer->addLayout(hboxTopPanelLayout);
     vBoxMainContainer->addLayout(hBoxChessPieceSelectionBottom);
     vBoxMainContainer->addLayout(hBoxFullGridAndSideInformationPanelLayout);
@@ -290,10 +306,6 @@ void ChessGuiRenderer::createChessField(QWidget *mainWindow) {
 
 
 void ChessGuiRenderer::onPressStartButton(QWidget *mainWindow) {
-    while ( auto* w = mainWindow->findChild<QWidget*>() ) {
-        delete w;
-    }
-
     auto *mainGridWindow = new QWidget;
     this->createChessField(mainGridWindow);
 
