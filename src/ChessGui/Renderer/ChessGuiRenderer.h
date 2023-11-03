@@ -21,6 +21,8 @@ class ChessGuiCellManager;
 class PlayerLabelRenderer;
 class ChessSettingsRenderer;
 class ChessGridRenderer;
+class MultiplayerGuiFacade;
+class MultiplayerChessGuiTransfer;
 
 class ChessGuiRenderer {
 private:
@@ -32,6 +34,7 @@ private:
     PlayerLabelRenderer *playerLabelRenderer;
     ChessSettingsRenderer *chessSettingsRenderer;
     ChessGridRenderer *chessGridRenderer;
+    MultiplayerGuiFacade *multiplayerGuiFacade;
 
     int speedModeTimerValue;
 
@@ -47,7 +50,8 @@ public:
       ChessTimelineRenderer *chessTimelineRenderer,
       PlayerLabelRenderer *playerLabelRenderer,
       ChessSettingsRenderer *chessSettingsRenderer,
-      ChessGridRenderer *chessGridRenderer
+      ChessGridRenderer *chessGridRenderer,
+      MultiplayerGuiFacade *multiplayerGuiFacade
     );
 
     void createChessField(QWidget *mainWindow);
@@ -56,6 +60,9 @@ public:
     void onPressStartButton(QWidget *mainWindow);
     void onPressSpeedButton(int speedModeTimerValue);
 
+    void startMultiplayerChessGame(
+        MultiplayerChessGuiTransfer *multiplayerChessGuiTransfer
+    );
 };
 
 

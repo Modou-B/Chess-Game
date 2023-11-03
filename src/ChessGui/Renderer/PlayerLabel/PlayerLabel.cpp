@@ -18,3 +18,9 @@ void PlayerLabel::setCurrentPlayerColor() {
 void PlayerLabel::removeCurrentPlayerColor() {
     this->setText(QString::fromStdString("<font color='white'>"+this->labelText+"</font>"));
 }
+
+void PlayerLabel::setLabelText(string labelText) {
+    this->labelText = labelText;
+
+    this->setText(QString::fromStdString(labelText));
+}

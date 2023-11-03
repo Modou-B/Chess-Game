@@ -3,6 +3,9 @@ add_subdirectory(Chess)
 add_subdirectory(ChessGui)
 add_subdirectory(Shared)
 add_subdirectory(ChessTimeline)
+add_subdirectory(Multiplayer)
+add_subdirectory(MultiplayerGui)
+add_subdirectory(Multiplayer/Socket)
 
 add_library(MainLib
         MainFacade.cpp
@@ -20,6 +23,8 @@ target_link_libraries(ChessApplication
         ChessLib
         ChessGuiLib
         ChessTimelineLib
+        MultiplayerLib
+        MultiplayerGuiLib
         MainLib
         ApplicationLib
         SharedLib

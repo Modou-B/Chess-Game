@@ -10,6 +10,7 @@
 
 class QWidget;
 class QApplication;
+class MultiplayerChessGuiTransfer;
 
 class ChessGuiFacade: public AbstractFacade {
 public:
@@ -27,6 +28,10 @@ public:
     ChessGuiFactory *getFactory() override;
 
     void updatePlayerColor(int player);
+
+    void initGuiForMultiplayerChessGame(
+        MultiplayerChessGuiTransfer *multiplayerChessGuiTransfer
+    );
 };
 
 

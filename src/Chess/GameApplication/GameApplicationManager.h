@@ -21,6 +21,7 @@ class GameApplicationDataReader;
 class ChessTimelineFacade;
 class ChessGuiFacade;
 class ChessTurnLogTransfer;
+class QJsonObject;
 
 class GameApplicationManager {
 private:
@@ -59,6 +60,7 @@ public:
     );
 
     void initiateChessApplication();
+    void startMultiplayerMatch(QJsonObject startMatchResponseData);
 
     ChessMovementResponseTransfer handleChessCellClick(pair<int, int> currentCellCoordinates);
     void handlePawnPieceSwitch(string switchedPieceType);
@@ -72,6 +74,7 @@ public:
 
     void startNewTurn();
     int getCurrentPlayer();
+
 };
 
 

@@ -10,6 +10,7 @@
 #include "../../Shared/ChessTimeline/ChessTurnLogTransfer.h"
 #include "../../Shared/Chess/Transfer/GameState/ChessGameStateTransfer.h"
 #include "../../Shared/Chess/ChessMovementConstants.h"
+#include "../../Shared/ChessGui/Transfer/Multiplayer/MultiplayerChessGuiTransfer.h"
 #include "GameApplication.h"
 #include "../Movement/ChessPieceMovementManager.h"
 #include "../Checkmate/CheckmateManager.h"
@@ -22,6 +23,7 @@
 #include "../../ChessTimeline/ChessTimelineFacade.h"
 #include "../../ChessGui/ChessGuiFacade.h"
 #include "iostream"
+#include <QJsonObject>
 
 GameApplicationManager::GameApplicationManager(
     ChessCreator *chessCreator,
@@ -41,6 +43,7 @@ GameApplicationManager::GameApplicationManager(
     this->chessGuiFacade = chessGuiFacade;
 }
 
+
 void GameApplicationManager::initiateChessApplication() {
     auto *chessField = new ChessField;
     auto *chessPlayer1Data = new ChessPlayerData;
@@ -53,11 +56,29 @@ void GameApplicationManager::initiateChessApplication() {
     GameApplication::setChessPlayer2Data(chessPlayer2Data);
 }
 
+void GameApplicationManager::startMultiplayerMatch(QJsonObject startMatchResponseData)
+{
+    this->gameApplicationDataWriter->writeMultiplayerStartData(
+        startMatchResponseData[QLatin1String("player")].toInt(),
+        startMatchResponseData[QLatin1String("opponentPlayer")].toInt()
+    );
+
+    this->chessGuiFacade->initGuiForMultiplayerChessGame(
+      (new MultiplayerChessGuiTransfer())->fromJsonObject(startMatchResponseData)
+    );
+}
+
 ChessMovementResponseTransfer GameApplicationManager::handleChessCellClick(
     pair<int, int> currentCellCoordinates
 ) {
     auto chessMovementResponseTransfer = ChessMovementResponseTransfer();
     this->expandChessMovementResponseTransfer(chessMovementResponseTransfer);
+
+    if (this->gameApplicationDataReader->isMultiplayerMatch()
+        && this->gameApplicationDataReader->isOpponentTurn()
+    ) {
+        return chessMovementResponseTransfer;
+    }
 
     if (chessMovementResponseTransfer.getState() == ChessMovementConstants::MOVEMENT_STATE_PAWN_SWITCH_SELECTION
         || chessMovementResponseTransfer.getState() == ChessMovementConstants::MOVEMENT_STATE_PAWN_SWITCH_SELECTION_START) {

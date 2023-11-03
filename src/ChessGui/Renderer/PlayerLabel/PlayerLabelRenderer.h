@@ -6,6 +6,7 @@
 #define CHESSAPPLICATION_PLAYERLABELRENDERER_H
 
 class PlayerLabel;
+class MultiplayerChessGuiTransfer;
 
 class PlayerLabelRenderer {
 private:
@@ -16,6 +17,10 @@ public:
     void createPlayerLabels();
     PlayerLabel *getPlayerLabel(int player);
     void updatePlayerColor(int player);
+
+    void updateLabelTextsWithUsername(
+        MultiplayerChessGuiTransfer *multiplayerChessGuiTransfer
+    );
 };
 
 
