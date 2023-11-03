@@ -28,6 +28,7 @@
 #include "PlayerLabel/PlayerLabel.h"
 #include "Settings/ChessSettingsRenderer.h"
 #include "ChessGrid/ChessGridRenderer.h"
+#include "ChessInfo/ChessInfo.h"
 #include "../../MultiplayerGui/MultiplayerGuiFacade.h"
 #include "../../MultiplayerGui/Model/Button/MultiplayerStartButton.h"
 #include "../../Shared/ChessGui/Transfer/Multiplayer/MultiplayerChessGuiTransfer.h"
@@ -65,6 +66,9 @@ void ChessGuiRenderer::createSettingsPage(QWidget *mainWindow) {
 
     auto settingsPushbutton = new ChessSettingsButton(this->chessSettingsRenderer);
     settingsPushbutton->setText("Settings");
+    auto chessInfoButton = new ChessInfo();
+    chessInfoButton->setText("Info");
+    
 
     auto speedPushbuttonClassic = new ChessSpeedButtons(this, 0);
     speedPushbuttonClassic->setText("Classic");
@@ -75,11 +79,13 @@ void ChessGuiRenderer::createSettingsPage(QWidget *mainWindow) {
     auto speedPushbuttonBullet = new ChessSpeedButtons(this, 180);
     speedPushbuttonBullet->setText("Bullet");
 
+
     vBoxStartAndSettingsButtonsLayout->addWidget(startPushbutton);
     vBoxStartAndSettingsButtonsLayout->addWidget(
         this->multiplayerGuiFacade->createMultiplayerStartButton()
     );
     vBoxStartAndSettingsButtonsLayout->addWidget(settingsPushbutton);
+    vBoxStartAndSettingsButtonsLayout->addWidget(chessInfoButton);
 
     vBoxSpeedButtonsLayout->addWidget(speedPushbuttonClassic);
     vBoxSpeedButtonsLayout->addWidget(speedPushbuttonFast);
