@@ -26,6 +26,8 @@ private:
     
     static int currentPlayer;
     static int currentOpponentPlayer;
+    static bool isMultiplayerMatch;
+    static bool isOpponentTurn;
 
     static int turnCounter;
 
@@ -41,6 +43,8 @@ public:
     static ChessPlayerData *getCurrentChessPlayerData();
     static ChessPlayerData *getOpponentChessPlayerData();
     static ChessPlayerData *getChessPlayerDataForPlayer(int player);
+    static bool getIsMultiplayerMatch();
+    static bool getIsOpponentTurn();
 
     static bool wasPreviousCellClicked();
 
@@ -49,6 +53,8 @@ public:
     static void setChessPlayer2Data(ChessPlayerData* chessPlayerData);
     static void setCurrentPlayer(int currentPlayer);
     static void setCurrentOpponentPlayer(int currentOpponentPlayer);
+    static void setIsMultiplayerMatch(bool isMultiplayerMatch);
+    static void setIsOpponentTurn(bool isOpponentTurn);
     static void setTurnCounter(int turnCounter);
     static void setCurrentGameState(string gameState);
     static void saveChessMovementResponseTransfer(

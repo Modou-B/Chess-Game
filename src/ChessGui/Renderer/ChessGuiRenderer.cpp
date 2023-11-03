@@ -29,6 +29,10 @@
 #include "Settings/ChessSettingsRenderer.h"
 #include "ChessGrid/ChessGridRenderer.h"
 #include "ChessInfo/ChessInfo.h"
+#include "../../MultiplayerGui/MultiplayerGuiFacade.h"
+#include "../../MultiplayerGui/Model/Button/MultiplayerStartButton.h"
+#include "../../Shared/ChessGui/Transfer/Multiplayer/MultiplayerChessGuiTransfer.h"
+#include "iostream"
 
 ChessGuiRenderer::ChessGuiRenderer(
     ChessFacade *chessFacade,
@@ -38,9 +42,11 @@ ChessGuiRenderer::ChessGuiRenderer(
     ChessTimelineRenderer *chessTimelineRenderer,
     PlayerLabelRenderer *playerLabelRenderer,
     ChessSettingsRenderer *chessSettingsRenderer,
-    ChessGridRenderer *chessGridRenderer
+    ChessGridRenderer *chessGridRenderer,
+    MultiplayerGuiFacade *multiplayerGuiFacade
 ) {
     this->chessFacade = chessFacade;
+    this->multiplayerGuiFacade = multiplayerGuiFacade;
     this->chessTimelineFacade = chessTimelineFacade;
     this->chessGuiCellManager = chessGuiCellManager;
     this->chessPieceSelectionRenderer = chessPieceSelectionRenderer;
@@ -52,8 +58,8 @@ ChessGuiRenderer::ChessGuiRenderer(
 
 void ChessGuiRenderer::createSettingsPage(QWidget *mainWindow) {
     auto hBoxStartMenuBracketLayout = new QHBoxLayout(mainWindow);
-    auto vBoxStartAndSettingsButtonsLayout = new QVBoxLayout(mainWindow);
-    auto vBoxSpeedButtonsLayout = new QVBoxLayout(mainWindow);
+    auto vBoxStartAndSettingsButtonsLayout = new QVBoxLayout();
+    auto vBoxSpeedButtonsLayout = new QVBoxLayout();
 
     auto startPushbutton = new ChessStartButton(this, mainWindow);
     startPushbutton->setText("Start");
@@ -75,6 +81,9 @@ void ChessGuiRenderer::createSettingsPage(QWidget *mainWindow) {
 
 
     vBoxStartAndSettingsButtonsLayout->addWidget(startPushbutton);
+    vBoxStartAndSettingsButtonsLayout->addWidget(
+        this->multiplayerGuiFacade->createMultiplayerStartButton()
+    );
     vBoxStartAndSettingsButtonsLayout->addWidget(settingsPushbutton);
     vBoxStartAndSettingsButtonsLayout->addWidget(chessInfoButton);
 
@@ -85,6 +94,9 @@ void ChessGuiRenderer::createSettingsPage(QWidget *mainWindow) {
 
     hBoxStartMenuBracketLayout->addLayout(vBoxStartAndSettingsButtonsLayout);
     hBoxStartMenuBracketLayout->addLayout(vBoxSpeedButtonsLayout);
+    hBoxStartMenuBracketLayout->addLayout(
+        this->multiplayerGuiFacade->createLobbyLayout()
+    );
 }
 
 void ChessGuiRenderer::createChessField(QWidget *mainWindow) {
@@ -276,6 +288,7 @@ void ChessGuiRenderer::createChessField(QWidget *mainWindow) {
     this->chessGuiCellManager->setChessGuiCellGrid(chessGridLayout);
 }
 
+
 void ChessGuiRenderer::onPressStartButton(QWidget *mainWindow) {
     while ( auto* w = mainWindow->findChild<QWidget*>() ) {
         delete w;
@@ -304,4 +317,16 @@ void ChessGuiRenderer::createChessPieceSelectionHBoxes() {
         this->chessFacade,
         chessPieceTypes
     );
+}
+
+void ChessGuiRenderer::startMultiplayerChessGame(
+    MultiplayerChessGuiTransfer *multiplayerChessGuiTransfer
+) {
+    this->playerLabelRenderer->updateLabelTextsWithUsername(multiplayerChessGuiTransfer);
+
+    auto *mainGridWindow = new QWidget;
+
+    this->createChessField(mainGridWindow);
+
+    mainGridWindow->show();
 }

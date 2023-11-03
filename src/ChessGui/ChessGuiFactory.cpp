@@ -13,7 +13,8 @@ ChessGuiRenderer *ChessGuiFactory::createChessGuiRenderer() {
         this->createChessTimelineRenderer(),
         this->createChessPlayerLabelRenderer(),
         this->createChessSettingsRenderer(),
-        this->createChessGridRenderer()
+        this->createChessGridRenderer(),
+        this->getMultiplayerGuiFacade()
     );
 }
 
@@ -37,6 +38,10 @@ ChessGuiCellManager *ChessGuiFactory::createChessGuiCellManager() {
 
 ChessFacade *ChessGuiFactory::getChessFacade() {
     return static_cast<ChessFacade*>(this->findFacade(typeid(ChessFacade).name()));
+}
+
+MultiplayerGuiFacade *ChessGuiFactory::getMultiplayerGuiFacade() {
+    return static_cast<MultiplayerGuiFacade*>(this->findFacade(typeid(MultiplayerGuiFacade).name()));
 }
 
 ChessTimelineFacade *ChessGuiFactory::getChessTimelineFacade() {

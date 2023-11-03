@@ -34,6 +34,11 @@ public:
         string type,
         int player
     );
+
+    void writeMultiplayerStartData(
+        int currentPlayer,
+        int opponentPlayer
+    );
 };
 
 #endif // CHESSAPPLICATION_GAMEAPPLICATIONDATAWRITER_H
