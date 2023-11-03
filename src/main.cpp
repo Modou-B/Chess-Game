@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
 
     mainFacade.initializeChessGame();
     mainFacade.initializeGui(window);
-    window->setFixedSize(500,400);
+    //window->setFixedSize(500,400);
 
     window->show();
 
