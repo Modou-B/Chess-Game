@@ -34,7 +34,7 @@ QIcon ChessGuiPieceIconGenerator::generateEmptyIcon() {
 }
 
 std::string ChessGuiPieceIconGenerator::getFullPathToFile(std::string fileName) {
-    std::string pathToFile = std::filesystem::current_path();
+    std::string pathToFile = std::filesystem::current_path().string();
 
     pathToFile.append("/../../public/");
     pathToFile.append(fileName);

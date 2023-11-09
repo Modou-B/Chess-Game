@@ -4,7 +4,11 @@ file(GLOB_RECURSE SOURCES
         )
 
 add_library(ChessGuiLib
-        ${SOURCES})
+        ${SOURCES}
+        Renderer/ChessInfo/ChessInfo.cpp
+        Renderer/ChessInfo/ChessInfo.h
+        Renderer/BackToMenu/BackToMenu.cpp
+        Renderer/BackToMenu/BackToMenu.h)
 
 target_link_libraries(ChessGuiLib
         Qt::Core

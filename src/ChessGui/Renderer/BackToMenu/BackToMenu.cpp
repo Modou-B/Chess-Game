@@ -20,7 +20,7 @@ void BackToMenu::goBackToMainMenu() {
 
     mainFacade.initializeChessGame();
     mainFacade.initializeGui(window);
-    //window->setFixedSize(500,400);
+    window->setFixedSize(500,400);
     window->show();
     this->mainWindow->close();
 }
