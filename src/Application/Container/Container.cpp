@@ -3,6 +3,7 @@
 //
 
 #include "Container.h"
+#include <memory>
 
 std::map<std::string, std::function<std::shared_ptr<AbstractFacade>()>> Container::facadeMap;
 std::map<std::string, std::function<std::shared_ptr<AbstractFactory>()>> Container::factoryMap;

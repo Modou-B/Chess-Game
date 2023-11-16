@@ -8,6 +8,7 @@
 #include <map>
 #include <functional>
 #include <string>
+#include <memory>
 
 class AbstractFactory;
 class AbstractFacade;

@@ -6,9 +6,6 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-set(CMAKE_PREFIX_PATH "/usr/local/Cellar/qt/6.5.1_3")
-
-
 find_package(Qt6 COMPONENTS
         Core
         Gui

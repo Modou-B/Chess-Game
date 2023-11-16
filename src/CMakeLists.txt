@@ -20,13 +20,13 @@ target_link_libraries(ChessApplication
         Qt::Core
         Qt::Gui
         Qt::Widgets
-        ChessLib
+        MainLib
         ChessGuiLib
+        ChessLib
+        ApplicationLib
         ChessTimelineLib
         MultiplayerLib
         MultiplayerGuiLib
-        MainLib
-        ApplicationLib
         SharedLib
         )
 
