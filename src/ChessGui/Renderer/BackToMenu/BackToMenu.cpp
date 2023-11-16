@@ -23,7 +23,7 @@ void BackToMenu::goBackToMainMenu() {
     window->show();
     this->mainWindow->close();
 
-    if (this->isCheckmate == true) {
+    if (this->isCheckmate) {
         checkmateWindow->close();
     }
 
