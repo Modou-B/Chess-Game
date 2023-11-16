@@ -188,6 +188,11 @@ void GameApplicationManager::endCurrentTurn(
     if (isMultiplayerMatch && isOpponentTurn) {
         GameApplication::switchPlayers();
     }
+
+    if (!isMultiplayerMatch) {
+        GameApplication::switchPlayers();
+    }
+
     GameApplication::togglePreviousClickedCellValue();
 
     this->updateStateLastTurnChessPieces();
