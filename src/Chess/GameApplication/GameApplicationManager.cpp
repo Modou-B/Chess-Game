@@ -21,6 +21,7 @@
 #include "Writer/GameApplicationDataWriter.h"
 #include "Reader/GameApplicationDataReader.h"
 #include "../../ChessTimeline/ChessTimelineFacade.h"
+#include "../../Multiplayer/MultiplayerFacade.h"
 #include "../../ChessGui/ChessGuiFacade.h"
 #include "iostream"
 #include <QJsonObject>
@@ -32,7 +33,8 @@ GameApplicationManager::GameApplicationManager(
     GameApplicationDataWriter *gameApplicationDataWriter,
     GameApplicationDataReader *gameApplicationDataReader,
     ChessTimelineFacade *chessTimelineFacade,
-    ChessGuiFacade *chessGuiFacade
+    ChessGuiFacade *chessGuiFacade,
+    MultiplayerFacade *multiplayerFacade
 ) {
     this->chessCreator = chessCreator;
     this->chessPieceMovementManager = chessPieceMovementManager;
@@ -41,6 +43,7 @@ GameApplicationManager::GameApplicationManager(
     this->gameApplicationDataReader = gameApplicationDataReader;
     this->chessTimelineFacade = chessTimelineFacade;
     this->chessGuiFacade = chessGuiFacade;
+    this->multiplayerFacade = multiplayerFacade;
 }
 
 
@@ -77,7 +80,7 @@ ChessMovementResponseTransfer GameApplicationManager::handleChessCellClick(
     if (this->gameApplicationDataReader->isMultiplayerMatch()
         && this->gameApplicationDataReader->isOpponentTurn()
     ) {
-        return chessMovementResponseTransfer;
+        return *chessMovementResponseTransfer.setState(ChessMovementConstants::MOVEMENT_STATE_NOT_MOVED);
     }
 
     if (chessMovementResponseTransfer.getState() == ChessMovementConstants::MOVEMENT_STATE_PAWN_SWITCH_SELECTION
@@ -127,20 +130,64 @@ void GameApplicationManager::handlePawnPieceSwitch(string switchedPieceType)
         this->gameApplicationDataReader->getSavedChessMovementResponseTransfer(),
         chessPiecePositionTransfer
     );
-
-    this->startNewTurn();
 }
 
 void GameApplicationManager::endCurrentTurn(
     ChessMovementResponseTransfer chessMovementResponseTransfer,
     ChessPiecePositionTransfer chessPiecePositionTransfer
 ) {
+    bool isMultiplayerMatch = this->gameApplicationDataReader->isMultiplayerMatch();
+    bool isOpponentTurn = this->gameApplicationDataReader->isOpponentTurn();
+
+    cout << "endCurrentTurn isMultiplayerMatch:"<< isMultiplayerMatch << endl;
+    cout << "endCurrentTurn isOpponentTurn: "<< isOpponentTurn <<endl;
+
+    if (isMultiplayerMatch) {
+        if (!isOpponentTurn) {
+            this->multiplayerFacade
+              ->sendJsonDataToServer(
+                this->buildEndTurnJsonData(
+                      chessMovementResponseTransfer,
+                      chessPiecePositionTransfer
+              )
+            );
+
+            this->gameApplicationDataWriter->setOpponentTurn(true);
+        }
+
+        if (isOpponentTurn) {
+            GameApplication::switchPlayers();
+            this->gameApplicationDataWriter->setOpponentTurn(false);
+
+            this->chessGuiFacade->updateChessGuiGrid(
+                chessMovementResponseTransfer,
+                chessPiecePositionTransfer
+            );
+        }
+    }
+
     this->logCurrentTurn(chessMovementResponseTransfer);
+
+    if (isMultiplayerMatch && isOpponentTurn) {
+          cout << "endCurrentTurn Update: "<< isOpponentTurn <<endl;
+
+        this->chessPieceMovementManager
+            ->updateMultiplayerChessGrid(
+              this->chessTimelineFacade
+                  ->findChessTurnLogForTurn(
+                      this->gameApplicationDataReader->getTurnCounter()
+                  )
+            );
+    }
+
     this->chessGuiFacade->updateTimelineTurnProperties(
         this->gameApplicationDataReader->getTurnCounter()
     );
 
-    GameApplication::switchPlayers();
+
+    if (isMultiplayerMatch && isOpponentTurn) {
+        GameApplication::switchPlayers();
+    }
     GameApplication::togglePreviousClickedCellValue();
 
     this->updateStateLastTurnChessPieces();
@@ -149,12 +196,13 @@ void GameApplicationManager::endCurrentTurn(
     GameApplication::setCoordinatesOfLastTurnClickedCell(chessPiecePositionTransfer.getCurrentChessPieceCoordinates());
 
     this->chessPieceMovementManager->clearPossibleMoveCollections();
+
+    this->startNewTurn();
 }
 
 void GameApplicationManager::rewindCurrentTurn(
     ChessTurnLogTransfer *chessTurnLogTransferToRewind
 ) {
-
     this->chessPieceMovementManager->updateChessGrid(chessTurnLogTransferToRewind);
 
     auto *gameStateTransfer = chessTurnLogTransferToRewind->getChessGameStateTransfer();
@@ -171,8 +219,8 @@ void GameApplicationManager::rewindCurrentTurn(
 
     this->chessPieceMovementManager->clearPossibleMoveCollections();
 
-
     this->chessTimelineFacade->deleteLastTurnLog();
+
     this->startNewTurn();
 }
 
@@ -187,7 +235,8 @@ void GameApplicationManager::updateStateLastTurnChessPieces() {
     }
 }
 
-void GameApplicationManager::startNewTurn() {
+void GameApplicationManager::startNewTurn()
+{
     this->checkmateManager->determineCurrentGameState(
       GameApplication::getChessField(),
       GameApplication::getCurrentChessPlayerData(),
@@ -196,7 +245,6 @@ void GameApplicationManager::startNewTurn() {
     );
 
     this->chessGuiFacade->updatePlayerColor(this->gameApplicationDataReader->getCurrentPlayer());
-
 }
 
 int GameApplicationManager::getCurrentPlayer() {
@@ -240,4 +288,17 @@ void GameApplicationManager::logCurrentTurn(
     );
 
     this->chessTimelineFacade->logCurrentTurnData(endTurnInformationTransfer);
+}
+
+QJsonObject GameApplicationManager::buildEndTurnJsonData(
+    ChessMovementResponseTransfer chessMovementResponseTransfer,
+    ChessPiecePositionTransfer chessPiecePositionTransfer
+) {
+    QJsonObject jsonData;
+
+    jsonData["chessMovementResponseData"] = chessMovementResponseTransfer.toQJsonObject();
+    jsonData["chessPiecePositionData"] = chessPiecePositionTransfer.toQJsonObject();
+    jsonData["requestType"] = QString::fromStdString("endCurrentTurn");
+
+    return jsonData;
 }

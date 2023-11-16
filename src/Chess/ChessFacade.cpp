@@ -39,10 +39,6 @@ void ChessFacade::endCurrentTurn(
       );
 }
 
-void ChessFacade::startNewTurn() {
-    ChessFacade::getFactory()->createGameApplicationManager()->startNewTurn();
-}
-
 int ChessFacade::getCurrentPlayer() {
     return ChessFacade::getFactory()->createGameApplicationManager()->getCurrentPlayer();
 }

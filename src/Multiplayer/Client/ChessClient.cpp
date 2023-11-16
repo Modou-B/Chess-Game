@@ -10,9 +10,14 @@
 #include <QJsonValue>
 #include <QTcpSocket>
 #include <iostream>
+#include "ChessClientResponseDelegator.h"
 
-ChessClient::ChessClient(QObject *parent): QObject(parent) {
+ChessClient::ChessClient(
+    ChessClientResponseDelegator *chessClientResponseDelegator,
+    QObject *parent
+): QObject(parent) {
     this->clientSocket = new QTcpSocket(this);
+    this->chessClientResponseDelegator = chessClientResponseDelegator;
     this->loggedIn = false;
     // Forward the connected and disconnected signals
     connect(this->clientSocket, &QTcpSocket::connected, this, &ChessClient::connected);
@@ -45,23 +50,6 @@ void ChessClient::login(const QString &userName)
         // send the JSON using QDataStream
         clientStream << QJsonDocument(message).toJson(QJsonDocument::Compact);
     }
-}
-
-void ChessClient::sendChessTurnInformation(const QString &text)
-{
-    if (text.isEmpty())
-        return; // We don't send empty messages
-    // create a QDataStream operating on the socket
-    QDataStream clientStream(this->clientSocket);
-    // set the version so that programs compiled with different versions of Qt can agree on how to serialise
-    clientStream.setVersion(QDataStream::Qt_6_5);
-    // Create the JSON we want to send
-    QJsonObject message;
-    message[QStringLiteral("type")] = QStringLiteral("message");
-    message[QStringLiteral("text")] = text;
-    // send the JSON using QDataStream
-
-    clientStream << QJsonDocument(message).toJson();
 }
 
 void ChessClient::disconnectFromHost()
@@ -100,7 +88,11 @@ void ChessClient::onReadyRead()
             if (parseError.error == QJsonParseError::NoError) {
                 // if the data was indeed valid JSON
                 if (jsonDoc.isObject()) {
-                    this->mappedResponseData[jsonDoc.object().value(QLatin1String("responseType")).toString().toStdString()] = jsonDoc.object();
+                    auto responseType = jsonDoc.object().value(QLatin1String("responseType")).toString().toStdString();
+
+                    this->mappedResponseData[responseType] = jsonDoc.object();
+
+                    this->chessClientResponseDelegator->delegateChessClientResponse(responseType, jsonDoc.object());
                 } // and is a JSON object
                     //jsonReceived(jsonDoc.object()); // parse the JSON
             }

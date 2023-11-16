@@ -75,6 +75,10 @@ string ServerWorker::getUserIdentifier() {
     return this->userIdentifier;
 }
 
+string ServerWorker::getOpponentIdentifier() {
+    return this->opponentIdentifier;
+}
+
 void ServerWorker::receiveJson()
 {
     // prepare a container to hold the UTF-8 encoded JSON we receive from the socket

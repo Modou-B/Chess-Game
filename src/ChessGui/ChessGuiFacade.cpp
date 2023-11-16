@@ -3,6 +3,8 @@
 //
 
 #include "ChessGuiFacade.h"
+#include "../Shared/Chess/Transfer/ChessMovementResponseTransfer.h"
+#include "../Shared/Chess/Transfer/ChessPiece/ChessPiecePositionTransfer.h"
 
 void ChessGuiFacade::initializeSettingsPage(QWidget *mainWindow) {
     ChessGuiFacade::getFactory()->createChessGuiRenderer()->createSettingsPage(mainWindow);
@@ -41,4 +43,14 @@ void ChessGuiFacade::initGuiForMultiplayerChessGame(
     ChessGuiFacade::getFactory()
         ->createChessGuiRenderer()
         ->startMultiplayerChessGame(multiplayerChessGuiTransfer);
+}
+
+void ChessGuiFacade::updateChessGuiGrid(
+    ChessMovementResponseTransfer chessMovementResponseTransfer,
+    ChessPiecePositionTransfer chessPiecePositionTransfer
+) {
+    ChessGuiFacade::getFactory()->createChessGuiCellManager()->updateChessGuiGrid(
+      chessMovementResponseTransfer,
+      chessPiecePositionTransfer
+    );
 }

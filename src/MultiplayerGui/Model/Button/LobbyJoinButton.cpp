@@ -22,6 +22,4 @@ void LobbyJoinButton::joinLobby() {
     json[QStringLiteral("opponentIdentifier")] = QString::fromStdString(this->userIdentifier);
 
     this->multiplayerFacade->sendJsonDataToServer(json);
-
-    this->multiplayerFacade->startMultiplayerMatch();
 }

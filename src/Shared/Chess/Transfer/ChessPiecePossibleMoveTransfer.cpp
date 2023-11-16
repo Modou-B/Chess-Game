@@ -3,6 +3,7 @@
 //
 
 #include "ChessPiecePossibleMoveTransfer.h"
+#include <QJsonObject>
 
 ChessPiecePossibleMoveTransfer &ChessPiecePossibleMoveTransfer::setMoveType(std::string moveType) {
     this->moveType = moveType;
@@ -34,3 +35,18 @@ int ChessPiecePossibleMoveTransfer::getYCoordinate() {
     return this->yCoordinate;
 }
 
+QJsonObject ChessPiecePossibleMoveTransfer::toQJsonObject() {
+    QJsonObject jsonObject;
+
+    jsonObject["moveType"] = QString::fromStdString(this->moveType);
+    jsonObject["xCoordinate"] = this->xCoordinate;
+    jsonObject["yCoordinate"] = this->yCoordinate;
+
+    return jsonObject;
+}
+
+void ChessPiecePossibleMoveTransfer::fromQJsonObject(QJsonObject jsonObject) {
+    this->moveType = jsonObject["moveType"].toString().toStdString();
+    this->xCoordinate = jsonObject["xCoordinate"].toInt();
+    this->yCoordinate = jsonObject["yCoordinate"].toInt();
+}

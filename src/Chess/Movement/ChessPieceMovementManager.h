@@ -87,6 +87,10 @@ public:
         ChessTurnLogTransfer *chessTurnLogTransfer
     );
 
+    void updateMultiplayerChessGrid(
+        ChessTurnLogTransfer *chessTurnLogTransfer
+    );
+
     void clearPossibleMoveCollections();
 };
 

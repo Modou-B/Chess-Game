@@ -14,6 +14,7 @@ using namespace std;
 class ChessPieceMovementTransfer;
 class ChessPiecePossibleMoveTransfer;
 class ChessPieceStateTransfer;
+class QJsonObject;
 
 class ChessMovementResponseTransfer {
 private:
@@ -37,6 +38,8 @@ public:
     ChessMovementResponseTransfer *setChessPieceStateTransfers(vector<ChessPieceStateTransfer *> chessPieceStateTransfers);
 
     void addChessPieceStateTransfer(ChessPieceStateTransfer *chessPieceStateTransfer);
+    void addPossibleMoveTransfer(ChessPiecePossibleMoveTransfer * chessPiecePossibleMoveTransfer);
+    void addPreviousPossibleMoveTransfer(ChessPiecePossibleMoveTransfer * chessPiecePossibleMoveTransfer);
 
     string getState();
     int getCurrentPlayer();
@@ -45,6 +48,8 @@ public:
     vector<ChessPiecePossibleMoveTransfer *> getPossibleMoveTransfers();
     vector<ChessPieceStateTransfer *> getChessPieceStateTransfers();
 
+    QJsonObject toQJsonObject();
+    void fromQJsonObject(QJsonObject jsonObject);
 };
 
 

@@ -11,6 +11,8 @@
 class QWidget;
 class QApplication;
 class MultiplayerChessGuiTransfer;
+class ChessMovementResponseTransfer;
+class ChessPiecePositionTransfer;
 
 class ChessGuiFacade: public AbstractFacade {
 public:
@@ -31,6 +33,11 @@ public:
 
     void initGuiForMultiplayerChessGame(
         MultiplayerChessGuiTransfer *multiplayerChessGuiTransfer
+    );
+
+    void updateChessGuiGrid(
+        ChessMovementResponseTransfer chessMovementResponseTransfer,
+        ChessPiecePositionTransfer chessPiecePositionTransfer
     );
 };
 

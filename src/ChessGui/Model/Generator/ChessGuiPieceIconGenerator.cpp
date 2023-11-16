@@ -8,14 +8,17 @@
 #include "Qt"
 #include "../../../Shared/ChessGui/ChessGuiConstants.h"
 #include <filesystem>
+#include "iostream"
 #include "QWidget"
 #include <utility>
 #include "QPainter"
 
 QIcon ChessGuiPieceIconGenerator::generateIconFromFile(std::string fileName) {
     auto pathToFile = this->getFullPathToFile(fileName);
+    auto qFilepath = QString::fromStdString(pathToFile);
+    auto icon = QIcon(qFilepath);
 
-    return QIcon(QString::fromStdString(pathToFile));
+    return icon;
 }
 
 QIcon ChessGuiPieceIconGenerator::generateTransparentIconFromFile(std::string fileName) {

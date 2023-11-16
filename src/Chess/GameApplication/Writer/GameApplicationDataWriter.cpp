@@ -60,6 +60,14 @@ void GameApplicationDataWriter::writeMultiplayerStartData(
         GameApplication::setIsOpponentTurn(true);
     }
 
+    if (currentPlayer == 1) {
+        GameApplication::setIsOpponentTurn(false);
+    }
+
     GameApplication::setCurrentPlayer(currentPlayer);
     GameApplication::setCurrentOpponentPlayer(opponentPlayer);
+}
+
+void GameApplicationDataWriter::setOpponentTurn(bool isOpponentTurn) {
+    GameApplication::setIsOpponentTurn(isOpponentTurn);
 }

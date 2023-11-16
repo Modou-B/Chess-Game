@@ -9,6 +9,8 @@
 
 using namespace std;
 
+class QJsonObject;
+
 class ChessPiecePositionTransfer {
 private:
     pair<int, int> currentCoordinates;
@@ -17,6 +19,9 @@ public:
     ChessPiecePositionTransfer *setCurrentChessPieceCoordinates(pair<int, int> currentCoordinates);
 
     pair<int, int> getCurrentChessPieceCoordinates();
+
+    QJsonObject toQJsonObject();
+    void fromQJsonObject(QJsonObject jsonObject);
 };
 
 #endif // CHESSAPPLICATION_CHESSPIECEPOSITIONTRANSFER_H

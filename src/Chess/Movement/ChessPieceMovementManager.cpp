@@ -326,9 +326,15 @@ void ChessPieceMovementManager::expandResponseWithPossibleMoves(
 void ChessPieceMovementManager::updateChessGrid(
     ChessTurnLogTransfer *chessTurnLogTransfer
 ) {
+
+    cout << "ChessPieceMovementManager::updateChessGrid" <<endl;
+
     vector<ChessPieceInformationTransfer *> chessPieceDeleteInformationStateTransfers;
     for (auto &chessPieceInformationTransfer: chessTurnLogTransfer->getChessPieceInformationTransfers()) {
+
         if (chessPieceInformationTransfer->getChessPieceStateTransfer()->getState() == ChessMovementConstants::CHESS_PIECE_STATE_MOVED) {
+              cout << "ChessPieceMovementManager::moved" <<endl;
+
             this->handleChessPieceStates(chessPieceInformationTransfer);
 
             continue;
@@ -338,7 +344,40 @@ void ChessPieceMovementManager::updateChessGrid(
     }
 
     for (auto &chessPieceInformationTransfer: chessPieceDeleteInformationStateTransfers) {
+        cout << "ChessPieceMovementManager::deleted" <<endl;
+
         this->handleChessPieceStates(chessPieceInformationTransfer);
+    }
+}
+
+void ChessPieceMovementManager::updateMultiplayerChessGrid(
+    ChessTurnLogTransfer *chessTurnLogTransfer
+) {
+    vector<ChessPieceInformationTransfer *> chessPieceDeleteInformationStateTransfers;
+    for (auto &chessPieceInformationTransfer: chessTurnLogTransfer->getChessPieceInformationTransfers()) {
+        if (chessPieceInformationTransfer->getChessPieceStateTransfer()->getState() == ChessMovementConstants::CHESS_PIECE_STATE_MOVED) {
+            auto *chessPieceStateTransfer = chessPieceInformationTransfer->getChessPieceStateTransfer();
+            auto *startChessCell = GameApplication::getChessCell(chessPieceStateTransfer->getStartCoordinate());
+
+            auto *chessPiece = this->chessPieceCreator->createChessPiece(chessPieceStateTransfer);
+            startChessCell->setChessPiece(nullptr);
+
+            auto *movedChessGuiCell = GameApplication::getChessCell(chessPieceStateTransfer->getEndCoordinate());
+            movedChessGuiCell->setChessPiece(chessPiece);
+
+            continue;
+        }
+
+        chessPieceDeleteInformationStateTransfers.push_back(chessPieceInformationTransfer);
+    }
+
+    for (auto &chessPieceInformationTransfer: chessPieceDeleteInformationStateTransfers) {
+        if (chessPieceInformationTransfer->getChessPieceStateTransfer()->getState() == ChessMovementConstants::CHESS_PIECE_STATE_DELETED_EN_PASSANT) {
+            auto *chessPieceStateTransfer = chessPieceInformationTransfer->getChessPieceStateTransfer();
+            auto *startChessCell = GameApplication::getChessCell(chessPieceStateTransfer->getStartCoordinate());
+
+            auto *chessPiece = this->chessPieceCreator->createChessPiece(chessPieceStateTransfer);
+        }
     }
 }
 

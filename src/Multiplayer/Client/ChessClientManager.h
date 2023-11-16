@@ -8,6 +8,7 @@
 class ChessClient;
 class QJsonObject;
 class ChessFacade;
+class ChessClientResponseDelegator;
 
 class ChessClientManager {
 private:
@@ -22,7 +23,9 @@ public:
         ChessFacade *chessFacade
     );
 
-    void initializeChessClient();
+    void initializeChessClient(
+        ChessClientResponseDelegator *chessClientResponseDelegator
+    );
     void sendJsonData(QJsonObject jsonData);
 
     QJsonObject requestJsonData(QJsonObject jsonData);

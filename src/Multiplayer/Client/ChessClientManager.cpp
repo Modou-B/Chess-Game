@@ -8,6 +8,7 @@
 #include <QJsonParseError>
 #include "iostream"
 #include "../../Chess/ChessFacade.h"
+#include "ChessClientResponseDelegator.h"
 
 ChessClient *ChessClientManager::chessClient = nullptr;
 
@@ -17,8 +18,10 @@ ChessClientManager::ChessClientManager(
     this->chessFacade = chessFacade;
 }
 
-void ChessClientManager::initializeChessClient() {
-    ChessClientManager::chessClient = new ChessClient();
+void ChessClientManager::initializeChessClient(
+    ChessClientResponseDelegator *chessClientResponseDelegator
+) {
+    ChessClientManager::chessClient = new ChessClient(chessClientResponseDelegator);
 
     ChessClientManager::chessClient->connectToServer();
 }
