@@ -11,12 +11,16 @@
 #include "../../../../Chess/ChessFacade.h"
 #include "../../../../Shared/ChessTimeline/ChessTurnLogTransfer.h"
 
-acceptRewind::acceptRewind(QWidget *checkmateWindow,QWidget *waitingWindow,bool isCheckmate, ChessTimelineRenderer *chessTimelineRenderer, ChessTimelineFacade *chessTimelineFacade, ChessGuiCellManager *chessGuiCellManager, TurnTakeBackButton *turnTakeBackButton, ChessFacade *chessFacade) {
-    this->checkmateWindow = checkmateWindow;
+acceptRewind::acceptRewind(QWidget *acceptWindow,
+                           QWidget *waitingWindow,
+                           ChessTimelineRenderer *chessTimelineRenderer,
+                           ChessTimelineFacade *chessTimelineFacade,
+                           TurnTakeBackButton *turnTakeBackButton,
+                           ChessFacade *chessFacade)
+{
+    this->checkmateWindow = acceptWindow;
     this->waitingWindow = waitingWindow;
-    this->isCheckmate = isCheckmate;
     this->chessTimelineRenderer = chessTimelineRenderer;
-    this->chessGuiCellManager = chessGuiCellManager;
     this->turnTakeBackButton = turnTakeBackButton;
     this->chessTimelineFacade = chessTimelineFacade;
     this->chessFacade = chessFacade;

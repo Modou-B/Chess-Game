@@ -13,7 +13,6 @@ class ChessSettingsRenderer;
 class QWidget;
 class ChessTimelineRenderer;
 class ChessTimelineFacade;
-class ChessGuiCellManager;
 class TurnTakeBackButton;
 class ChessFacade;
 
@@ -22,14 +21,17 @@ class acceptRewind: public QPushButton{
 private:
     QWidget *checkmateWindow;
     QWidget *waitingWindow;
-    bool isCheckmate;
     ChessTimelineRenderer *chessTimelineRenderer;
     ChessTimelineFacade *chessTimelineFacade;
-    ChessGuiCellManager *chessGuiCellManager;
     TurnTakeBackButton *turnTakeBackButton;
     ChessFacade *chessFacade;
 public:
-    acceptRewind(QWidget *checkmateWindow,QWidget *waitingWindow,bool isCheckmate, ChessTimelineRenderer *chessTimelineRenderer, ChessTimelineFacade *chessTimelineFacade, ChessGuiCellManager *chessGuiCellManager, TurnTakeBackButton *turnTakeBackButton, ChessFacade *chessFacade);
+    acceptRewind(QWidget *acceptWindow,
+                 QWidget *waitingWindow,
+                 ChessTimelineRenderer *chessTimelineRenderer,
+                 ChessTimelineFacade *chessTimelineFacade,
+                 TurnTakeBackButton *turnTakeBackButton,
+                 ChessFacade *chessFacade);
 
     void accept();
 };
