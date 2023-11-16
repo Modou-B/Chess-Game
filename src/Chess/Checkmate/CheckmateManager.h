@@ -33,7 +33,9 @@ public:
 
     void determineCurrentGameState(ChessField *chessField, ChessPlayerData *currentChessPlayerData, ChessPlayerData *opponentChessPlayerData, int player);
 
-    void FinishScreen(int player);
+    void checkmateScreen(int player);
+    void StalemateScreen();
+
 };
 
 #endif // CHESSAPPLICATION_CHECKMATEMANAGER_H
