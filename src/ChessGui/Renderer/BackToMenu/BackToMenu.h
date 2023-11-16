@@ -16,8 +16,10 @@ class QWidget;
 class BackToMenu: public QPushButton{
 private:
     QWidget *mainWindow;
+    QWidget *checkmateWindow;
+    bool isCheckmate;
 public:
-    BackToMenu(QWidget *mainWindow);
+    BackToMenu(QWidget *mainWindow, QWidget *checkmateWindow,bool isCheckmate);
 
     void goBackToMainMenu();
 };

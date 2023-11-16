@@ -69,16 +69,12 @@ bool CheckmateManager::isPlayerInCheckmate(
         if (inCheckResponseTransfer.getAmountOfPiecesThatCheckCell() > 1) {
             std::cout << "Checkmate" << std::endl;
             FinishScreen(currentPlayer);
-
-            //exit(1);
         }
 
         if (amountOfPiecesThatBlockCheck == 0) {
             std::cout << "Checkmate2" << std::endl;
 
             FinishScreen(currentPlayer);
-
-            //exit(1);
         }
     }
 
@@ -86,17 +82,15 @@ bool CheckmateManager::isPlayerInCheckmate(
 }
 
 void CheckmateManager::FinishScreen(int player) {
-        auto *window = new QWidget;
-        //MainFacade mainFacade = MainFacade();
-        //mainFacade.initializeChessGame();
-        //mainFacade.initializeGui(window);
-        window->setFixedSize(300,200);
+        auto *checkmateWindow = new QWidget;
+        checkmateWindow->setFixedSize(300,200);
 
-        auto hBoxContainerLayout = new QHBoxLayout(window);
-        auto vBoxContainerLayout = new QVBoxLayout(window);
+        auto hBoxContainerLayout = new QHBoxLayout(checkmateWindow);
+        auto vBoxContainerLayout = new QVBoxLayout(checkmateWindow);
         auto checkMatePlayer1Label = new QLabel("CHECKMATE - Player 1 wins!!!" );
         auto checkMatePlayer2Label = new QLabel("CHECKMATE - Player 2 wins!!!" );
-        auto backToMenu = new BackToMenu(ChessGuiRenderer::getMainWindow());
+
+        auto backToMenu = new BackToMenu(ChessGuiRenderer::getMainWindow(),checkmateWindow, true);
         backToMenu->setText("Menu");
 
         if (player == 1) {
@@ -108,5 +102,5 @@ void CheckmateManager::FinishScreen(int player) {
         vBoxContainerLayout->addWidget(backToMenu);
         hBoxContainerLayout->addLayout(vBoxContainerLayout);
 
-        window->show();
+        checkmateWindow->show();
 }

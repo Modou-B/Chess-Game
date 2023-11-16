@@ -111,7 +111,8 @@ void ChessGuiRenderer::createChessField(QWidget *mainWindow) {
 
     ChessGuiRenderer::mainChessWindow = mainWindow;
 
-    auto backToMainMenu = new BackToMenu(mainWindow);
+    QWidget *checkmateWindow;
+    auto backToMainMenu = new BackToMenu(mainWindow, checkmateWindow,false);
     backToMainMenu->setText("Menu");
     hBoxMenuButtonslayout->addWidget(backToMainMenu);
     auto spacer1 = new QLabel("");
