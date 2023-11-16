@@ -10,6 +10,12 @@
 #include "../../../Shared/ChessTimeline/ChessTimelineConstants.h"
 #include "../../../Shared/ChessTimeline/ChessTurnLogTransfer.h"
 #include "iostream"
+#include "QHBoxLayout"
+#include "QVBoxLayout"
+#include "QLabel"
+#include "../Timeline/rewindDesicion/acceptRewind.h"
+#include "../Timeline/rewindDesicion/declineRewind.h"
+
 
 TurnTakeBackButton::TurnTakeBackButton(
     ChessTimelineRenderer *chessTimelineRenderer,
@@ -27,18 +33,9 @@ TurnTakeBackButton::TurnTakeBackButton(
 
 void TurnTakeBackButton::takeBackTurn()
 {
-    auto currentTurn = this->chessTimelineRenderer->getCurrentTurn();
-
-    auto *lastChessTurnLogTransfer = this->chessTimelineFacade->findChessTurnLogForTurn(currentTurn);
-    if (lastChessTurnLogTransfer->getChessPieceInformationTransfers().empty()) {
-        return;
-    }
-
-    this->updateChessGridGui(lastChessTurnLogTransfer, currentTurn);
-
-    this->chessTimelineRenderer->removeLastTurn();
-
-    this->chessFacade->rewindCurrentTurn(lastChessTurnLogTransfer);
+    auto *waitingWindow = new QWidget;
+    waitForOpponentResponseScreen(waitingWindow);
+    rewindDesicionScreen(waitingWindow);
 }
 
 void TurnTakeBackButton::updateChessGridGui(
@@ -59,4 +56,42 @@ void TurnTakeBackButton::updateChessGridGui(
         lastChessTurnLogTransfer,
         ChessTimelineConstants::MODE_REWIND
     );
+}
+
+void TurnTakeBackButton::waitForOpponentResponseScreen(QWidget *waitingWindow) {
+    waitingWindow->setFixedSize(300, 200);
+
+    auto hBoxContainerLayout = new QHBoxLayout(waitingWindow);
+    auto vBoxContainerLayout = new QVBoxLayout(waitingWindow);
+    auto waitingLabel = new QLabel("Waiting for player desicion..." );
+
+
+
+    vBoxContainerLayout->addWidget(waitingLabel);
+    hBoxContainerLayout->addLayout(vBoxContainerLayout);
+
+    waitingWindow->show();
+}
+
+void TurnTakeBackButton::rewindDesicionScreen(QWidget *waitingWindow) {
+    auto *acceptWindow = new QWidget;
+    acceptWindow->setFixedSize(300, 200);
+
+    auto hBoxContainerLayout = new QHBoxLayout(acceptWindow);
+    auto vBoxContainerLayout = new QVBoxLayout(acceptWindow);
+    auto rewindLabel = new QLabel("Do you want to rewind the last turn" );
+
+    auto accept = new acceptRewind(acceptWindow, waitingWindow, false, chessTimelineRenderer, chessTimelineFacade, chessGuiCellManager, this, chessFacade);
+    accept->setText("Accept");
+
+    auto decline = new declineRewind();
+    //backToMenu->setText("Menu");
+
+
+    vBoxContainerLayout->addWidget(rewindLabel);
+
+    vBoxContainerLayout->addWidget(accept);
+    hBoxContainerLayout->addLayout(vBoxContainerLayout);
+
+    acceptWindow->show();
 }

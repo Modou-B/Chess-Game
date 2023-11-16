@@ -8,7 +8,11 @@ add_library(ChessGuiLib
         Renderer/ChessInfo/ChessInfo.cpp
         Renderer/ChessInfo/ChessInfo.h
         Renderer/BackToMenu/BackToMenu.cpp
-        Renderer/BackToMenu/BackToMenu.h)
+        Renderer/BackToMenu/BackToMenu.h
+        Model/Timeline/rewindDesicion/acceptRewind.cpp
+        Model/Timeline/rewindDesicion/acceptRewind.h
+        Model/Timeline/rewindDesicion/declineRewind.cpp
+        Model/Timeline/rewindDesicion/declineRewind.h)
 
 target_link_libraries(ChessGuiLib
         Qt::Core

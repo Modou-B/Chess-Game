@@ -7,6 +7,11 @@
 #include "Renderer/Timeline/ChessTimelineRenderer.h"
 #include "../ChessGuiCellManager.h"
 #include "../../../Shared/ChessTimeline/ChessTimelineConstants.h"
+#include "QLabel"
+#include "QHBoxLayout"
+#include "QVBoxLayout"
+#include "rewindDesicion/acceptRewind.h"
+#include "rewindDesicion/declineRewind.h"
 
 RewindTimelineButton::RewindTimelineButton(
     ChessTimelineRenderer *chessTimelineRenderer,

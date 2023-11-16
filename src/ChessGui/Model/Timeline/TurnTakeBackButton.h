@@ -20,13 +20,11 @@ private:
     ChessGuiCellManager *chessGuiCellManager;
     ChessFacade *chessFacade;
 
-protected:
-    void updateChessGridGui(
-      ChessTurnLogTransfer *lastChessTurnLogTransfer,
-      int currentTurn
-    );
-
 public:
+    void updateChessGridGui(
+            ChessTurnLogTransfer *lastChessTurnLogTransfer,
+            int currentTurn
+    );
     TurnTakeBackButton(
       ChessTimelineRenderer *chessTimelineRenderer,
       ChessTimelineFacade *chessTimelineFacade,
@@ -35,6 +33,9 @@ public:
     );
 
     void takeBackTurn();
+
+    void waitForOpponentResponseScreen(QWidget *waitingWindow);
+    void rewindDesicionScreen(QWidget *waitingWindow);
 };
 
 
