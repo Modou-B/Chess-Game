@@ -51,12 +51,12 @@ void CheckmateManager::determineCurrentGameState(ChessField *chessField, ChessPl
           chessField, currentChessPlayerData, kingPieceCoordinates)
     ) {
         std::cout << "Stalemate" << std::endl;
-        exit(1);
+        StalemateScreen();
     }
 
     if (this->bareKingDrawStatusChecker->isCheckmateNotPossible(currentChessPlayerData, opponentChessPlayerData)) {
         std::cout << "Bare King" << std::endl;
-        exit(1);
+        StalemateScreen();
     }
 }
 
@@ -68,20 +68,20 @@ bool CheckmateManager::isPlayerInCheckmate(
     if (possibleMovesForKingPiece.empty()) {
         if (inCheckResponseTransfer.getAmountOfPiecesThatCheckCell() > 1) {
             std::cout << "Checkmate" << std::endl;
-            FinishScreen(currentPlayer);
+            checkmateScreen(currentPlayer);
         }
 
         if (amountOfPiecesThatBlockCheck == 0) {
             std::cout << "Checkmate2" << std::endl;
 
-            FinishScreen(currentPlayer);
+            checkmateScreen(currentPlayer);
         }
     }
 
     return false;
 }
 
-void CheckmateManager::FinishScreen(int player) {
+void CheckmateManager::checkmateScreen(int player) {
         auto *checkmateWindow = new QWidget;
         checkmateWindow->setFixedSize(300,200);
 
@@ -103,4 +103,23 @@ void CheckmateManager::FinishScreen(int player) {
         hBoxContainerLayout->addLayout(vBoxContainerLayout);
 
         checkmateWindow->show();
+}
+
+void CheckmateManager::StalemateScreen() {
+    auto *stalemateWindow = new QWidget;
+    stalemateWindow->setFixedSize(300, 200);
+
+    auto hBoxContainerLayout = new QHBoxLayout(stalemateWindow);
+    auto vBoxContainerLayout = new QVBoxLayout(stalemateWindow);
+    auto stalemateLabel = new QLabel("STALEMATE" );
+
+    auto backToMenu = new BackToMenu(ChessGuiRenderer::getMainWindow(), stalemateWindow, true);
+    backToMenu->setText("Menu");
+
+    vBoxContainerLayout->addWidget(stalemateLabel);
+
+    vBoxContainerLayout->addWidget(backToMenu);
+    hBoxContainerLayout->addLayout(vBoxContainerLayout);
+
+    stalemateWindow->show();
 }
