@@ -35,6 +35,7 @@ private:
     ChessSettingsRenderer *chessSettingsRenderer;
     ChessGridRenderer *chessGridRenderer;
     MultiplayerGuiFacade *multiplayerGuiFacade;
+    static QWidget *mainChessWindow;
 
     int speedModeTimerValue;
 
@@ -63,6 +64,8 @@ public:
     void startMultiplayerChessGame(
         MultiplayerChessGuiTransfer *multiplayerChessGuiTransfer
     );
+
+    static QWidget *getMainWindow();
 };
 
 

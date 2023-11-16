@@ -13,6 +13,13 @@
 #include "../../Shared/Chess/Transfer/Checkmate/InCheckResponseTransfer.h"
 #include "../../Shared/Chess/Transfer/ChessPiecePossibleMoveTransfer.h"
 #include "iostream"
+#include "QWidget"
+#include "../MainFacade.h"
+#include "QHBoxLayout"
+#include "QVBoxLayout"
+#include "QLabel"
+#include "../ChessGui/Renderer/BackToMenu/BackToMenu.h"
+#include "../ChessGui/Renderer/ChessGuiRenderer.h"
 
 CheckmateManager::CheckmateManager(
     InCheckStatusChecker *inCheckStatusChecker, InStalemateStatusChecker *inStalemateStatusChecker, BareKingDrawStatusChecker *bareKingDrawStatusChecker) {
@@ -61,14 +68,45 @@ bool CheckmateManager::isPlayerInCheckmate(
     if (possibleMovesForKingPiece.empty()) {
         if (inCheckResponseTransfer.getAmountOfPiecesThatCheckCell() > 1) {
             std::cout << "Checkmate" << std::endl;
-            exit(1);
+            FinishScreen(currentPlayer);
+
+            //exit(1);
         }
 
         if (amountOfPiecesThatBlockCheck == 0) {
             std::cout << "Checkmate2" << std::endl;
-            exit(1);
+
+            FinishScreen(currentPlayer);
+
+            //exit(1);
         }
     }
 
     return false;
+}
+
+void CheckmateManager::FinishScreen(int player) {
+        auto *window = new QWidget;
+        //MainFacade mainFacade = MainFacade();
+        //mainFacade.initializeChessGame();
+        //mainFacade.initializeGui(window);
+        window->setFixedSize(300,200);
+
+        auto hBoxContainerLayout = new QHBoxLayout(window);
+        auto vBoxContainerLayout = new QVBoxLayout(window);
+        auto checkMatePlayer1Label = new QLabel("CHECKMATE - Player 1 wins!!!" );
+        auto checkMatePlayer2Label = new QLabel("CHECKMATE - Player 2 wins!!!" );
+        auto backToMenu = new BackToMenu(ChessGuiRenderer::getMainWindow());
+        backToMenu->setText("Menu");
+
+        if (player == 1) {
+            vBoxContainerLayout->addWidget(checkMatePlayer2Label);
+        } else {
+            vBoxContainerLayout->addWidget(checkMatePlayer1Label);
+        }
+
+        vBoxContainerLayout->addWidget(backToMenu);
+        hBoxContainerLayout->addLayout(vBoxContainerLayout);
+
+        window->show();
 }

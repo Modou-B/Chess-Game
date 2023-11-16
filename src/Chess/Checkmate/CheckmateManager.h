@@ -16,13 +16,13 @@ class InStalemateStatusChecker;
 class BareKingDrawStatusChecker;
 class InCheckResponseTransfer;
 class ChessPlayerData;
+class QWidget;
 
 class CheckmateManager {
 private:
     InCheckStatusChecker *inCheckStatusChecker;
     InStalemateStatusChecker *inStalemateStatusChecker;
     BareKingDrawStatusChecker *bareKingDrawStatusChecker;
-
 protected:
     bool isPlayerInCheckmate(
       ChessField *chessField, std::pair<int, int> kingPieceCoordinates, ChessPlayerData *chessPlayerData, InCheckResponseTransfer inCheckResponseTransfer, int currentPlayer);
@@ -32,6 +32,8 @@ public:
           InCheckStatusChecker *inCheckStatusChecker, InStalemateStatusChecker *inStalemateStatusChecker, BareKingDrawStatusChecker *bareKingDrawStatusChecker);
 
     void determineCurrentGameState(ChessField *chessField, ChessPlayerData *currentChessPlayerData, ChessPlayerData *opponentChessPlayerData, int player);
+
+    void FinishScreen(int player);
 };
 
 #endif // CHESSAPPLICATION_CHECKMATEMANAGER_H

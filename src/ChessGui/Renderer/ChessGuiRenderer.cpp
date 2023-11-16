@@ -35,6 +35,8 @@
 #include "iostream"
 #include "BackToMenu/BackToMenu.h"
 
+QWidget *ChessGuiRenderer::mainChessWindow = nullptr;
+
 ChessGuiRenderer::ChessGuiRenderer(
     ChessFacade *chessFacade,
     ChessTimelineFacade *chessTimelineFacade,
@@ -107,7 +109,9 @@ void ChessGuiRenderer::createChessField(QWidget *mainWindow) {
 
     auto hBoxMenuButtonslayout = new QHBoxLayout(mainWindow);
 
-    auto backToMainMenu = new BackToMenu(this, mainWindow);
+    ChessGuiRenderer::mainChessWindow = mainWindow;
+
+    auto backToMainMenu = new BackToMenu(mainWindow);
     backToMainMenu->setText("Menu");
     hBoxMenuButtonslayout->addWidget(backToMainMenu);
     auto spacer1 = new QLabel("");
@@ -341,4 +345,8 @@ void ChessGuiRenderer::startMultiplayerChessGame(
     this->createChessField(mainGridWindow);
 
     mainGridWindow->show();
+}
+
+QWidget *ChessGuiRenderer::getMainWindow(){
+    return ChessGuiRenderer::mainChessWindow;
 }

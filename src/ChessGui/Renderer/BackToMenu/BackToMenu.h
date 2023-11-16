@@ -6,7 +6,6 @@
 #define CHESSAPPLICATION_BACKTOMENU_H
 
 #include "QPushButton"
-#include "ChessGuiFactory.h"
 #include "../../../MainFacade.h"
 
 class QColor;
@@ -16,11 +15,9 @@ class QWidget;
 
 class BackToMenu: public QPushButton{
 private:
-    ChessGuiRenderer *chessGuiRenderer;
     QWidget *mainWindow;
-    ChessGuiFactory *chessGuiFactory;
 public:
-    BackToMenu(ChessGuiRenderer *chessGuiRenderer, QWidget *mainWindow);
+    BackToMenu(QWidget *mainWindow);
 
     void goBackToMainMenu();
 };
