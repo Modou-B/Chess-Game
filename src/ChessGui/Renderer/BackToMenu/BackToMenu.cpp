@@ -3,12 +3,9 @@
 //
 
 #include "BackToMenu.h"
-#include "../ChessGuiRenderer.h"
-#include "../../../MainFacade.h"
 #include "QWidget"
 
-BackToMenu::BackToMenu(ChessGuiRenderer *chessGuiRenderer,QWidget *mainWindow) {
-    this->chessGuiRenderer = chessGuiRenderer;
+BackToMenu::BackToMenu(QWidget *mainWindow) {
     this->mainWindow = mainWindow;
 
     connect(this, &QPushButton::released, this, &BackToMenu::goBackToMainMenu);
