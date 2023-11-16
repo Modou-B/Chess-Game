@@ -16,6 +16,7 @@ private:
 
     QVector<ServerWorker *> connectedClients;
     map<string, ServerWorker *> clientsInLobby;
+    map<string, ServerWorker *> clientsInGame;
 
 protected:
     void incomingConnection(qintptr socketDescriptor) override;
@@ -28,6 +29,7 @@ protected:
     void sendLobbyData(ServerWorker *sender);
 
     void sendChessMatchStartData(ServerWorker *playerClient1, ServerWorker *playerClient2);
+    void sendEndTurnData(ServerWorker *sender, const QJsonObject &json);
 public:
     explicit ChessServer(QObject *parent = nullptr);
 

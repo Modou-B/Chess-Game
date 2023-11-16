@@ -9,6 +9,7 @@
 #include <QRandomGenerator>
 #include "iostream"
 #include <QJsonArray>
+
 ChessServer::ChessServer(QObject *parent)
     : QTcpServer(parent)
 {}
@@ -25,7 +26,8 @@ void ChessServer::incomingConnection(qintptr socketDescriptor)
     connect(worker, &ServerWorker::error, this, std::bind(&ChessServer::userError, this, worker));
     connect(worker, &ServerWorker::jsonReceived, this, std::bind(&ChessServer::jsonReceived, this, worker, std::placeholders::_1));
     connect(worker, &ServerWorker::logMessage, this, &ChessServer::logMessage);
-    connectedClients.append(worker);
+
+    this->connectedClients.push_back(worker);
 
     emit logMessage(QStringLiteral("New client Connected"));
 }
@@ -77,6 +79,10 @@ void ChessServer::routeReceivedJson(ServerWorker *sender, const QJsonObject &jso
     if (messageType.toString().compare(QLatin1String("getLobbyData"), Qt::CaseInsensitive) == 0) {
         this->sendLobbyData(sender);
     }
+
+    if (messageType.toString().compare(QLatin1String("endCurrentTurn"), Qt::CaseInsensitive) == 0) {
+        this->sendEndTurnData(sender, json);
+    }
 }
 
 void ChessServer::setClientUsername(ServerWorker *sender, const QJsonObject &json)
@@ -92,7 +98,12 @@ void ChessServer::setClientUsername(ServerWorker *sender, const QJsonObject &jso
 
     std::cout << sender->getUsername().toStdString() << std::endl;
 
-    sender->setUserIdentifier(to_string(QRandomGenerator::global()->generate()));
+    std::cout << "UserIdSave" << std::endl;
+    auto userIdentifier = to_string(QRandomGenerator::global()->generate());
+    std::cout << userIdentifier << std::endl;
+    std::cout << "UserIdSave2" << std::endl;
+
+    sender->setUserIdentifier(userIdentifier);
 }
 
 void ChessServer::addClientToLobby(ServerWorker *sender) {
@@ -119,6 +130,10 @@ void ChessServer::sendLobbyData(ServerWorker *sender) {
 
 void ChessServer::startChessMatch(ServerWorker *sender, const QJsonObject &json) {
     auto opponentClientUserIdentifier = json.value(QLatin1String("opponentIdentifier")).toString().toStdString();
+    std::cout << "Here1" << std::endl;
+
+    std::cout << opponentClientUserIdentifier << std::endl;
+    std::cout << "Here2" << std::endl;
 
     sender->setOpponentIdentifier(opponentClientUserIdentifier);
     sender->setInMatchStatus(true);
@@ -126,6 +141,9 @@ void ChessServer::startChessMatch(ServerWorker *sender, const QJsonObject &json)
     auto opponentClient = this->clientsInLobby[opponentClientUserIdentifier];
     opponentClient->setOpponentIdentifier(sender->getUserIdentifier());
     opponentClient->setInMatchStatus(true);
+
+    this->clientsInGame[sender->getUserIdentifier()] = sender;
+    this->clientsInGame[opponentClientUserIdentifier] = opponentClient;
 
     this->sendChessMatchStartData(sender, opponentClient);
 
@@ -157,6 +175,25 @@ void ChessServer::sendChessMatchStartData(
 
     std::cout << "End" << std::endl;
 
+}
+
+void ChessServer::sendEndTurnData(
+    ServerWorker *sender,
+    const QJsonObject &json
+) {
+    auto opponentClient = this->clientsInGame[sender->getOpponentIdentifier()];
+
+    QJsonObject endCurrentTurnData = json;
+    endCurrentTurnData[QStringLiteral("responseType")] = QStringLiteral("endCurrentTurn");
+
+    std::cout << "Test" << std::endl;
+    std::cout << sender->getOpponentIdentifier() << std::endl;
+    std::cout << opponentClient->getUserIdentifier() << std::endl;
+    std::cout << opponentClient->getUsername().toStdString() << std::endl;
+
+    std::cout << "EndTest" << std::endl;
+
+    opponentClient->sendJson(endCurrentTurnData);
 }
 
 void ChessServer::userDisconnected(ServerWorker *sender)

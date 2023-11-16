@@ -5,23 +5,31 @@
 #ifndef CHESSAPPLICATION_CHESSPIECEPOSSIBLEMOVETRANSFER_H
 #define CHESSAPPLICATION_CHESSPIECEPOSSIBLEMOVETRANSFER_H
 
+
 #include <string>
+
+using namespace std;
+
+class QJsonObject;
 
 class ChessPiecePossibleMoveTransfer {
 private:
-    std::string moveType;
+    string moveType;
 
     int xCoordinate;
     int yCoordinate;
 
 public:
-    ChessPiecePossibleMoveTransfer &setMoveType(std::string moveType);
+    ChessPiecePossibleMoveTransfer &setMoveType(string moveType);
     ChessPiecePossibleMoveTransfer &setXCoordinate(int xCoordinate);
     ChessPiecePossibleMoveTransfer &setYCoordinate(int yCoordinate);
 
-    std::string getMoveType();
+    string getMoveType();
     int getXCoordinate();
     int getYCoordinate();
+
+    QJsonObject toQJsonObject();
+    void fromQJsonObject(QJsonObject jsonObject);
 };
 
 

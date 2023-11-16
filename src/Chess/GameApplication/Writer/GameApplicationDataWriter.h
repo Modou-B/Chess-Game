@@ -39,6 +39,8 @@ public:
         int currentPlayer,
         int opponentPlayer
     );
+
+    void setOpponentTurn(bool isOpponentTurn);
 };
 
 #endif // CHESSAPPLICATION_GAMEAPPLICATIONDATAWRITER_H

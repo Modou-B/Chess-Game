@@ -95,6 +95,9 @@ std::vector<ChessPiecePossibleMoveTransfer*> PawnPiece::checkForDiagonalPieces(
         ChessField *chessField, std::vector<ChessPiecePossibleMoveTransfer*> possibleMoves, int xCoordinate, int yCoordinate) {
 
     std::pair<int, int> leftCoordinates = this->generateCoordinates(yCoordinate, (xCoordinate-1));
+
+    cout << "checkForDiagonalPieces: "<< xCoordinate << " " << yCoordinate <<endl;
+
     if (!this->areCoordinatesOutOfBounds((xCoordinate-1), yCoordinate) && this->hasCellOpponentChessPiece(chessField, leftCoordinates)) {
         possibleMoves.push_back(
                 this->chessPieceMovementMapper->generateChessPiecePossibleMoveTransfer(

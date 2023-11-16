@@ -14,6 +14,7 @@ using namespace std;
 class QHostAddress;
 class QJsonDocument;
 class QJsonObject;
+class ChessClientResponseDelegator;
 
 class ChessClient : public QObject {
     Q_OBJECT
@@ -21,15 +22,19 @@ class ChessClient : public QObject {
 
 private:
     QTcpSocket *clientSocket;
-    bool loggedIn;
+    ChessClientResponseDelegator *chessClientResponseDelegator;
 
+    bool loggedIn;
     map<string, QJsonObject> mappedResponseData;
 
 protected:
     void onReadyRead();
 
 public:
-    explicit ChessClient(QObject *parent = nullptr);
+    ChessClient(
+      ChessClientResponseDelegator *chessClientResponseDelegator,
+      QObject *parent = nullptr
+    );
 
     QTcpSocket *getClientSocket();
     void connectToServer();
@@ -40,7 +45,6 @@ public:
 
 public slots:
     void login(const QString &userName);
-    void sendChessTurnInformation(const QString &text);
     void disconnectFromHost();
 
 signals:

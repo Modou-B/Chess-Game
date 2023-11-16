@@ -20,6 +20,7 @@ class GameApplicationDataWriter;
 class GameApplicationDataReader;
 class ChessTimelineFacade;
 class ChessGuiFacade;
+class MultiplayerFacade;
 class ChessTurnLogTransfer;
 class QJsonObject;
 
@@ -32,6 +33,7 @@ private:
     GameApplicationDataReader *gameApplicationDataReader;
     ChessTimelineFacade *chessTimelineFacade;
     ChessGuiFacade *chessGuiFacade;
+    MultiplayerFacade *multiplayerFacade;
 
 protected:
     void updateStateLastTurnChessPieces();
@@ -48,6 +50,11 @@ protected:
 
     void logCurrentTurn(ChessMovementResponseTransfer chessMovementResponseTransfer);
 
+    QJsonObject buildEndTurnJsonData(
+        ChessMovementResponseTransfer chessMovementResponseTransfer,
+        ChessPiecePositionTransfer chessPiecePositionTransfer
+    );
+
 public:
     GameApplicationManager(
       ChessCreator *chessCreator,
@@ -56,7 +63,8 @@ public:
       GameApplicationDataWriter *gameApplicationDataWriter,
       GameApplicationDataReader *gameApplicationDataReader,
       ChessTimelineFacade *chessTimelineFacade,
-      ChessGuiFacade *chessGuiFacade
+      ChessGuiFacade *chessGuiFacade,
+      MultiplayerFacade *multiplayerFacade
     );
 
     void initiateChessApplication();
@@ -74,7 +82,6 @@ public:
 
     void startNewTurn();
     int getCurrentPlayer();
-
 };
 
 

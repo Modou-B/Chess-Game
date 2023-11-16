@@ -4,7 +4,11 @@
 
 #include "ChessMovementResponseTransfer.h"
 #include "ChessPieceMovementTransfer.h"
+#include "ChessPiece/ChessPieceStateTransfer.h"
 #include "ChessPiecePossibleMoveTransfer.h"
+#include <QJsonObject>
+#include <QJsonArray>
+#include "iostream"
 
 ChessMovementResponseTransfer::ChessMovementResponseTransfer() {
     this->state = "";
@@ -57,6 +61,18 @@ void ChessMovementResponseTransfer::addChessPieceStateTransfer(ChessPieceStateTr
     this->chessPieceStateTransfers.push_back(chessPieceStateTransfer);
 }
 
+void ChessMovementResponseTransfer::addPossibleMoveTransfer(
+    ChessPiecePossibleMoveTransfer *chessPiecePossibleMoveTransfer
+) {
+    this->possibleMoveTransfers.push_back(chessPiecePossibleMoveTransfer);
+}
+
+void ChessMovementResponseTransfer::addPreviousPossibleMoveTransfer(
+    ChessPiecePossibleMoveTransfer *chessPiecePossibleMoveTransfer
+) {
+    this->previousPossibleMoveTransfers.push_back(chessPiecePossibleMoveTransfer);
+}
+
 string ChessMovementResponseTransfer::getState() {
     return this->state;
 }
@@ -79,4 +95,63 @@ vector<ChessPiecePossibleMoveTransfer *> ChessMovementResponseTransfer::getPossi
 
 vector<ChessPieceStateTransfer*> ChessMovementResponseTransfer::getChessPieceStateTransfers() {
     return this->chessPieceStateTransfers;
+}
+
+QJsonObject ChessMovementResponseTransfer::toQJsonObject() {
+    QJsonObject jsonObject;
+
+    jsonObject["state"] = QString::fromStdString(this->state);
+    jsonObject["currentPlayer"] = this->currentPlayer;
+    jsonObject["opponentPlayer"] = this->currentOpponentPlayer;
+
+    QJsonArray possibleMoveData;
+    for (auto possibleMoveTransfer : this->possibleMoveTransfers) {
+        possibleMoveData.append(possibleMoveTransfer->toQJsonObject());
+    }
+    jsonObject["possibleMoves"] = possibleMoveData;
+
+    QJsonArray previousPossibleMoveData;
+    for (auto previousPossibleMoveTransfer : this->previousPossibleMoveTransfers) {
+        previousPossibleMoveData.append(previousPossibleMoveTransfer->toQJsonObject());
+    }
+    jsonObject["previousPossibleMoves"] = previousPossibleMoveData;
+
+    QJsonArray chessPieceStateData;
+    for (auto chessPieceStateTransfer : this->chessPieceStateTransfers) {
+        chessPieceStateData.append(chessPieceStateTransfer->toQJsonObject());
+    }
+    jsonObject["chessPieceStates"] = chessPieceStateData;
+
+    return jsonObject;
+}
+
+void ChessMovementResponseTransfer::fromQJsonObject(QJsonObject jsonObject)
+{
+    this->state = jsonObject["state"].toString().toStdString();
+    this->currentPlayer = jsonObject["currentPlayer"].toInt();
+    this->currentOpponentPlayer = jsonObject["opponentPlayer"].toInt();
+
+    for (auto possibleMoveData : jsonObject["possibleMoves"].toArray()) {
+        auto chessPiecePossibleMoveTransfer = new ChessPiecePossibleMoveTransfer;
+
+        chessPiecePossibleMoveTransfer->fromQJsonObject(possibleMoveData.toObject());
+
+        this->addPossibleMoveTransfer(chessPiecePossibleMoveTransfer);
+    }
+
+    for (auto previousPossibleMoveData : jsonObject["possibleMoves"].toArray()) {
+        auto chessPiecePossibleMoveTransfer = new ChessPiecePossibleMoveTransfer;
+
+        chessPiecePossibleMoveTransfer->fromQJsonObject(previousPossibleMoveData.toObject());
+
+        this->addPreviousPossibleMoveTransfer(chessPiecePossibleMoveTransfer);
+    }
+
+    for (auto chessPieceStateData : jsonObject["chessPieceStates"].toArray()) {
+        auto chessPieceStateTransfer = new ChessPieceStateTransfer;
+
+        chessPieceStateTransfer->fromQJsonObject(chessPieceStateData.toObject());
+
+        this->addChessPieceStateTransfer(chessPieceStateTransfer);
+    }
 }

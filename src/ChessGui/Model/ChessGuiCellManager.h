@@ -15,6 +15,8 @@ class QGridLayout;
 class ChessTurnLogTransfer;
 class ChessPieceInformationTransfer;
 class ChessGuiCell;
+class ChessMovementResponseTransfer;
+class ChessPiecePositionTransfer;
 
 class ChessGuiCellManager {
 private:
@@ -40,6 +42,11 @@ public:
     void updateChessGrid(
         ChessTurnLogTransfer *chessTurnLogTransfer,
         string mode
+    );
+
+    void updateChessGuiGrid(
+        ChessMovementResponseTransfer chessMovementResponseTransfer,
+        ChessPiecePositionTransfer chessPiecePositionTransfer
     );
 };
 

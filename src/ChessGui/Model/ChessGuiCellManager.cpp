@@ -5,10 +5,11 @@
 #include "ChessGuiCellManager.h"
 #include "ChessGuiCell.h"
 #include <QGridLayout>
-#include "iostream"
 #include "../../Shared/ChessTimeline/ChessTurnLogTransfer.h"
 #include "../../Shared/Chess/Transfer/ChessPiece/ChessPieceInformationTransfer.h"
 #include "../../Shared/Chess/Transfer/ChessPiece/ChessPieceStateTransfer.h"
+#include "../../Shared/Chess/Transfer/ChessMovementResponseTransfer.h"
+#include "../../Shared/Chess/Transfer/ChessPiece/ChessPiecePositionTransfer.h"
 #include "../../Shared/ChessTimeline/ChessTimelineConstants.h"
 #include "../../Shared/Chess/ChessMovementConstants.h"
 
@@ -98,4 +99,14 @@ ChessGuiCell *ChessGuiCellManager::getChessGuiCell(pair<int, int> chessCellCoord
               chessCellCoordinate.first, chessCellCoordinate.second
           )->widget()
     );
+}
+
+void ChessGuiCellManager::updateChessGuiGrid(
+    ChessMovementResponseTransfer chessMovementResponseTransfer,
+    ChessPiecePositionTransfer chessPiecePositionTransfer
+) {
+    auto chessGuiCell = this->getChessGuiCell(chessPiecePositionTransfer.getCurrentChessPieceCoordinates());
+
+    chessGuiCell->handleChessPieceMovement(chessMovementResponseTransfer);
+    chessGuiCell->addListWidgetItem();
 }

@@ -10,6 +10,8 @@
 
 using namespace std;
 
+class QJsonObject;
+
 class ChessPieceStateTransfer {
 private:
     int playerOfChessPiece;
@@ -36,6 +38,9 @@ public:
     bool getUsedDoubleMove();
     pair<int, int> getStartCoordinate();
     pair<int, int> getEndCoordinate();
+
+    QJsonObject toQJsonObject();
+    void fromQJsonObject(QJsonObject jsonObject);
 };
 
 #endif // CHESSAPPLICATION_CHESSPIECESTATETRANSFER_H

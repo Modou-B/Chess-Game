@@ -4,11 +4,14 @@
 
 #include "MultiplayerFacade.h"
 #include "Client/ChessClientManager.h"
+#include "Client/ChessClientResponseDelegator.h"
 #include <QJsonObject>
 
 void MultiplayerFacade::initializeMultiplayerConnection()
 {
-    MultiplayerFacade::getFactory()->createChessClientManager()->initializeChessClient();
+    MultiplayerFacade::getFactory()->createChessClientManager()->initializeChessClient(
+          MultiplayerFacade::getFactory()->createChessClientResponseDelegator()
+      );
 }
 
 void MultiplayerFacade::sendJsonDataToServer(QJsonObject jsonData) {

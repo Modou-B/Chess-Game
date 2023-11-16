@@ -63,7 +63,8 @@ GameApplicationManager *ChessFactory::createGameApplicationManager() {
       this->createGameApplicationDataWriter(),
       this->createGameApplicationDataReader(),
       this->getChessTimelineFacade(),
-      this->getChessGuiFacade()
+      this->getChessGuiFacade(),
+      this->getMultiplayerFacade()
     );
 }
 
@@ -94,4 +95,8 @@ ChessTimelineFacade *ChessFactory::getChessTimelineFacade() {
 
 ChessGuiFacade *ChessFactory::getChessGuiFacade() {
     return static_cast<ChessGuiFacade*>(this->findFacade(typeid(ChessGuiFacade).name()));
+}
+
+MultiplayerFacade *ChessFactory::getMultiplayerFacade() {
+    return static_cast<MultiplayerFacade*>(this->findFacade(typeid(MultiplayerFacade).name()));
 }

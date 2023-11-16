@@ -21,9 +21,11 @@
 #include "GameApplication/Writer/GameApplicationDataWriter.h"
 #include "GameApplication/Reader/GameApplicationDataReader.h"
 #include "../ChessTimeline/ChessTimelineFacade.h"
+#include "../Multiplayer/MultiplayerFacade.h"
 #include "ChessPiece/Creator/ChessPieceCreator.h"
 
 class ChessGuiFacade;
+class MultiplayerFacade;
 
 class ChessFactory: public AbstractFactory {
 public:
@@ -49,6 +51,7 @@ public:
 
     ChessTimelineFacade *getChessTimelineFacade();
     ChessGuiFacade *getChessGuiFacade();
+    MultiplayerFacade *getMultiplayerFacade();
 };
 
 

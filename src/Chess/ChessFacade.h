@@ -28,7 +28,6 @@ public:
         ChessPiecePositionTransfer chessPiecePositionTransfer
     );
 
-    void startNewTurn();
     int getCurrentPlayer();
 
     ChessMovementResponseTransfer handleChessCellClick(pair<int, int> currentCellCoordinates);
