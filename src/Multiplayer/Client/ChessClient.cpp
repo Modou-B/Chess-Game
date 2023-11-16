@@ -60,7 +60,7 @@ void ChessClient::disconnectFromHost()
 
 void ChessClient::connectToServer()
 {
-    this->clientSocket->connectToHost(QHostAddress("192.168.43.39"), 1999);
+    this->clientSocket->connectToHost(QHostAddress("192.168.178.25"), 1999);
 }
 
 void ChessClient::onReadyRead()
